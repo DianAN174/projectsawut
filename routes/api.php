@@ -24,4 +24,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', 'App\Http\Controllers\Auth\ApiAuthController@logout')->name('logout.api');
 
     Route::post('/wakaf/penerimaan/create', 'App\Http\Controllers\Wakaf\Penerimaan@Create');
+    Route::get('/wakaf/penerimaan', 'App\Http\Controllers\Wakaf\Penerimaan@Index');
+    Route::delete('/wakaf/penerimaan/{id}', 'App\Http\Controllers\Wakaf\Penerimaan@Delete');
 });

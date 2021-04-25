@@ -90,7 +90,7 @@ Class Penerimaan
                         return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                     }
 
-                break;
+                    break;
                 case "temporer":
                     $newPTT = new PenerimaanTunaiTemporer();
                     $newPTT->tanggal_transaksi = $request->tanggal_transaksi;
@@ -114,6 +114,47 @@ Class Penerimaan
 
             return Response::HttpResponse(200, $newDataWakif, "Success", false);
         } catch (Exception $e) {
+            return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
+        }
+    }
+
+    public function Index(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'page' => 'numeric',
+            'limit' => 'numeric',
+        ]);
+
+        if ($validator->fails()) {
+            $response = ['errors' => $validator->errors()->all()];
+            return Response::HttpResponse(422, $response, "Invalid Data", false);
+        }
+
+        $datas = DataWakif::with("ptp","ptt")->paginate($request->limit);
+        foreach ($datas as $d_key => $data) {
+            $data["nominal"] = empty($data["ptp"]) ? $data->ptt['saldo'] : $data->ptp['saldo'];
+            $data["tanggal_transaksi"] = empty($data["ptp"]) ? $data->ptt['tanggal_transaksi'] : $data->ptp['tanggal_transaksi'];
+        }
+
+        return Response::HttpResponse(200, $datas, "Index", false);
+    }
+
+    public function Delete(Request $request,int $id) {
+        try {
+            $currData = DataWakif::find($id);
+
+            $this->admin = $request->user();
+
+            $currData->deleted_by = $this->admin->name;
+
+            $currData->save();
+            
+            $currData->delete();
+
+
+            return Response::HttpResponse(200, null, "Success", true);
+        }catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
     }
