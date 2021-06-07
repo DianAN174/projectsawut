@@ -22,7 +22,7 @@ Route::group(['middleware' => ['json.response']], function () {
 
 Route::middleware('auth:api')->group(function () {
     
-    Route::get('auth/user', function (Request $request) {
+    Route::get('/auth/user', function (Request $request) {
         return $request->user();
     });
     Route::post('/logout', 'App\Http\Controllers\Auth\ApiAuthController@logout')->name('logout.api');
