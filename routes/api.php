@@ -21,7 +21,10 @@ Route::group(['middleware' => ['json.response']], function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    // our routes to be protected will go in here
+    
+    Route::get('auth/user', function (Request $request) {
+        return $request->user();
+    });
     Route::post('/logout', 'App\Http\Controllers\Auth\ApiAuthController@logout')->name('logout.api');
 
     //dashboard
