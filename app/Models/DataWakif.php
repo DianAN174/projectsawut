@@ -18,11 +18,18 @@ class DataWakif extends Model
     {
         return $this->hasOne(PenerimaanTunaiPermanen::class);
     }
-
-    public function ptt()
+    //wtpd = wakaf temporer jangka pendek
+    public function wtpd()
     {
-        return $this->hasOne(PenerimaanTunaiTemporer::class);
+        return $this->hasOne(WakafTemporerJangkaPendek::class);
     }
+
+    //wtpj = wakaf temporer jangka panjang
+    public function wtpj()
+    {
+        return $this->hasOne(WakafTemporerJangkaPanjang::class);
+    }
+
 
     // this is the recommended way for declaring event handlers
     public static function boot() {
@@ -31,8 +38,11 @@ class DataWakif extends Model
             $dataWakif->ptp()->each(function($ptp) {
                 $ptp->delete(); // <-- direct deletion
             });
-            $dataWakif->ptt()->each(function($ptt) {
-                $ptt->delete(); // <-- raise another deleting event on Post to delete comments
+            $dataWakif->wtpd()->each(function($wtpd) {
+                $wtpd->delete(); // <-- raise another deleting event on Post to delete comments
+            });
+            $dataWakif->wtpj()->each(function($wtpj) {
+                $wtpj->delete(); // <-- raise another deleting event on Post to delete comments
             });
         });
     }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/wakaf/carbon', 'App\Http\Controllers\Wakaf\Tahun@Coba');
+
 Route::resource('/role', 'App\Http\Controllers\RoleController')->except([
     'create', 'show', 'edit', 'update'
 ]);

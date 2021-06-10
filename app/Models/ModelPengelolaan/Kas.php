@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\ModelPengelolaan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PenerimaanWakaf extends Model
+class Kas extends Model
 {
     use HasFactory;
-    protected $table = 'akun_penerimaan_wakaf';
+    protected $table = 'kas';
+    protected $primaryKey = 'id';
 }

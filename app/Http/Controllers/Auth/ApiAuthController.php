@@ -21,8 +21,7 @@ class ApiAuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:6|confirmed',
-                //'type' => 'integer',
+                'password' => 'required|string|min:6',  
             ]);
             if ($validator->fails()) {
                 return response(['errors' => $validator->errors()->all()], 422);
@@ -48,7 +47,7 @@ class ApiAuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'email' => 'required|string|email|max:255',
-                'password' => 'required|string|min:6|confirmed',
+                'password' => 'required|string|min:6',
             ]);
             if ($validator->fails()) {
                 return Response::HttpResponse(422, ['errors' => $validator->errors()->all()], "Failed Login", false);
@@ -58,7 +57,8 @@ class ApiAuthController extends Controller
                 if (Hash::check($request->password, $user->password)) {
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                     $response = ['token' => $token];
-                    return Response::HttpResponse(200, $response, "Success Login", false);
+                    //return Response::HttpResponse(200, $response, "Success Login", false);
+                    return $response;
                 } else {
                     $response = null;
                     return Response::HttpResponse(422, $response, "Password mismatch", false);
@@ -82,5 +82,10 @@ class ApiAuthController extends Controller
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", false);
         }
+    }
+
+    public function show(User $user)
+    {
+        return response()->json($user,200);
     }
 }
