@@ -25,15 +25,16 @@ Class DataAkun
 
     //halaman Data Akun
 
-    public function Index(Request $request, $id)
+    public function Index(Request $request)
     {
         try 
         {
-            $user = User::join("roles","users.role_id","=","roles.id")
+            $dataUser = $request->user();
+            /* $user = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.name, users.email, users.password"), "roles.name as nama_peran")  
             ->where("users.id",$id)            
-            ->get();
-            return Response::HttpResponse(200, $user, "Info User yang akan diedit berhasil ditampilkan", false);
+            ->get();*/
+            return Response::HttpResponse(200, $dataUser, "Info User yang akan diedit berhasil ditampilkan", false); 
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -73,21 +74,22 @@ Class DataAkun
 
     }
     
-    public function EditProfil(Request $request, $id)
+    public function EditProfil(Request $request)
     {
         try 
         {
-            $user = User::join("roles","users.role_id","=","roles.id")
+            /* $user = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.name, users.email, users.password"), "roles.name as nama_peran")      
             ->where('users.id',$id)                  
-            ->get();
+            ->get(); */
+            $dataUser = $request->user();
             return Response::HttpResponse(200, $user, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
     }
 
-    public function Update(Request $request,$id)
+    public function Update(Request $request)
     {
 
         try {
@@ -107,8 +109,8 @@ Class DataAkun
 
             DB::beginTransaction();
 
-            $user = User::find($id);
-
+            //$user = User::find($id);
+            $user = $request->user()->id;
             $request['password'] = Hash::make($request['password']);
             $user->name = $request->nama_pengguna;
             $user->email = $request->email;

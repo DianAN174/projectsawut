@@ -35,8 +35,8 @@ class PengelolaanWakaf
             'akun_asal' => 'required|in:tunai,tabwakaf,tabbagihasil,tabnonbagihasil,deposito',
             'akun_tujuan' => 'required|in:tunai,tabwakaf,tabbagihasil,tabnonbagihasil,deposito',
             'saldo' => 'required|numeric',
-            'keterangan' => 'required|alpha_num|max:255',
-            'tanggal_transaksi' => 'required|date_format:Y-m-d',
+            /* 'keterangan' => 'required|max:255',
+            'tanggal_transaksi' => 'required|date_format:Y-m-d', */
         ]);
 
         if ($validator->fails()) {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Wakaf;
 
 use App\Models\ModelPengelolaanLain\DataAsetTetap;
 use App\Models\ModelPengelolaanLain\DataUtang;
-use App\Models\ModelPengelolaanLain\AkunPersediaan;
+//use App\Models\ModelPengelolaanLain\AkunPersediaan;
 use App\Models\ModelPengelolaanLain\AkunMesindanKendaraan;
 use App\Models\ModelPengelolaanLain\AkunGedungdanBangunandanBangunandanBangunan;
 use App\Models\ModelPengelolaanLain\AkunTanah;
@@ -39,7 +39,8 @@ Class DataAsetTetapController
 
             $validator = Validator::make($request->all(), [
                 'nama_aset' => 'required|string|max:255',
-                'kelompok' => 'required|in:persediaan,kendaraan,gedung,tanah,peralatan,asetlain',
+                //'kelompok' => 'required|in:persediaan,kendaraan,gedung,tanah,peralatan,asetlain',
+                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,asetlain',
                 'tanggal_beli' => 'required|date_format:Y-m-d',
                 'harga_perolehan' => 'required|numeric',
                 'nilai_bersih' => 'required|numeric',
@@ -57,8 +58,8 @@ Class DataAsetTetapController
                 'beban_per_bulan' => 'required|numeric',
                 'nilai_penyusutan' => 'required|numeric',
 
-                'keterangan' => 'required|string|max:255',
-                'tanggal_transaksi' => 'required|date_format:Y-m-d',
+                /* 'keterangan' => 'required|string|max:255',
+                'tanggal_transaksi' => 'required|date_format:Y-m-d', */
             ]);
 
             if ($validator->fails()) {
@@ -146,22 +147,7 @@ Class DataAsetTetapController
                     }
 
             break;    
-                
-            case "persediaan":
-                $newPersediaan = new AkunPersediaan();
-                $newPersediaan->tanggal_transaksi = $request->tanggal_transaksi;
-                $newPersediaan->keterangan = $request->keterangan;
-                $newPersediaan->saldo = $dataAsetTetap->harga_perolehan;
-                $newPersediaan->type = 'debit';
-                $newPersediaan->data_aset_tetap_id = $dataAsetTetap->id;
-                $newPersediaan = $newPersediaan->save();
-
-                if (!$newPersediaan) {
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-
-            break;    
+            
 
             case "peralatan":
                 $newPeralatan = new AkunPeralatandanPerlengkapanKantor();
@@ -303,7 +289,7 @@ Class DataAsetTetapController
 
             $validator = Validator::make($request->all(), [
                 'nama_aset' => 'required|string|max:255',
-                'kelompok' => 'required|in:persediaan,kendaraan,gedung,tanah,peralatan,asetlain',
+                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,asetlain',
                 'tanggal_beli' => 'required|date_format:Y-m-d',
                 'harga_perolehan' => 'required|numeric',
                 'nilai_bersih' => 'required|numeric',
@@ -321,8 +307,8 @@ Class DataAsetTetapController
                 'beban_per_bulan' => 'required|numeric',
                 'nilai_penyusutan' => 'required|numeric',
 
-                'keterangan' => 'required|string|max:255',
-                'tanggal_transaksi' => 'required|date_format:Y-m-d',
+                /* 'keterangan' => 'required|string|max:255',
+                'tanggal_transaksi' => 'required|date_format:Y-m-d', */
             ]);
 
             if ($validator->fails()) {
@@ -427,22 +413,6 @@ Class DataAsetTetapController
 
            break;   
 
-            case "persediaan":
-                $newPersediaan = new AkunPersediaan();
-                $newPersediaan->tanggal_transaksi = $request->tanggal_transaksi;
-                $newPersediaan->keterangan = $request->keterangan;
-                $newPersediaan->saldo = $dataAsetTetap->harga_perolehan;
-                $newPersediaan->type = 'debit';
-                $newPersediaan->data_aset_tetap_id = $dataAsetTetap->id;
-                $newPersediaan = $newPersediaan->save();
-
-                if (!$newPersediaan) {
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-
-            break;    
-
             case "asetlain":
                 $newAsetLain = new AkunAsetLainLain();
                 $newAsetLain->tanggal_transaksi = $request->tanggal_transaksi;
@@ -492,7 +462,7 @@ Class DataAsetTetapController
     }
 
     public function DropdownKelompok(Request $request){
-        $kelompok=['persediaan'=>'Persediaan','kendaraan'=>'Kendaraan','gedung'=>'Gedung','tanah'=>'Tanah','peralatan'=>'Peralatan dan Perlengkapan Kantor','asetlain'=>'Aset Lain Lain'];
+        $kelompok=['kendaraan'=>'Kendaraan','gedung'=>'Gedung','tanah'=>'Tanah','peralatan'=>'Peralatan dan Perlengkapan Kantor','asetlain'=>'Aset Lain Lain'];
 
         return Response::HttpResponse(200, $kelompok, "Success", true);
     }

@@ -16,13 +16,13 @@ use App\Http\Controllers\Auth;
 
 //Route::group(['middleware' => ['cors', 'json.response']], function () {
 Route::group(['middleware' => ['json.response']], function () {
-    Route::post('/login', 'App\Http\Controllers\Auth\ApiAuthController@login')->name('login.api');
+    Route::post('/auth/login', 'App\Http\Controllers\Auth\ApiAuthController@login')->name('login.api');
     Route::post('/register','App\Http\Controllers\Auth\ApiAuthController@register')->name('register.api');
 });
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::get('auth/user', function (Request $request) {
+    Route::get('/auth/user', function (Request $request) {
         return $request->user();
     });
     Route::post('/logout', 'App\Http\Controllers\Auth\ApiAuthController@logout')->name('logout.api');
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/wakaf/penerimaan/{id}/edit', 'App\Http\Controllers\Wakaf\Penerimaan@Edit');
     Route::put('/wakaf/penerimaan/{id}', 'App\Http\Controllers\Wakaf\Penerimaan@Update');
     Route::delete('/wakaf/penerimaan/{id}', 'App\Http\Controllers\Wakaf\Penerimaan@Delete');
-    Route::get('/wakaf/dropdown-jenis', 'App\Http\Controllers\Wakaf\Penerimaan@DropdownJenisWakaf');
+    Route::get('/wakaf/penerimaan/dropdown-jenis', 'App\Http\Controllers\Wakaf\Penerimaan@DropdownJenisWakaf');
     Route::get('/wakaf/search-penerimaan', 'App\Http\Controllers\Wakaf\Penerimaan@Search');
 
     //fitur pengelolaan wakaf
@@ -55,8 +55,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/wakaf/penyaluran/{id}/edit', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Edit');
     Route::put('/wakaf/penyaluran/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Update');
     Route::delete('/wakaf/penyaluran/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Delete');
-    Route::get('/wakaf/dropdown-sumber', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@DropdownSumberBiaya');
-    Route::get('/wakaf/dropdown-jenis', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@DropdownJenisPiutang');
+    Route::get('/wakaf/penyaluran/dropdown-sumber', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@DropdownSumberBiaya');
+    Route::get('/wakaf/penyaluran/dropdown-jenis', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@DropdownJenisPiutang');
     Route::get('/wakaf/search-penyaluran', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Search');
     Route::put('/wakaf/penyaluran/kelayakan/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@TesKelayakan');
     Route::put('/wakaf/penyaluran/persetujuan/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Persetujuan');
@@ -83,7 +83,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/wakaf/pelunasan/{id}', 'App\Http\Controllers\Wakaf\PelunasanPiutang@Update');
     Route::delete('/wakaf/pelunasan/{id}', 'App\Http\Controllers\Wakaf\PelunasanPiutang@Delete');
     Route::get('/wakaf/search-pelunasan', 'App\Http\Controllers\Wakaf\PelunasanPiutang@Search');
-    Route::put('/wakaf/pelunasan/persetujuan/{id}', 'App\Http\Controllers\Wakaf\PelunasanPiutang@Persetujuan');
+    //Route::put('/wakaf/pelunasan/persetujuan/{id}', 'App\Http\Controllers\Wakaf\PelunasanPiutang@Persetujuan');
 
     //fitur data aset tetap
     Route::get('/wakaf/data-aset-tetap/', 'App\Http\Controllers\Wakaf\DataAsetTetapController@Index');
@@ -106,17 +106,18 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/wakaf/data-utang/persetujuan/{id}', 'App\Http\Controllers\Wakaf\DataUtangController@Persetujuan');
     
     //fitur data akun
-    Route::get('/wakaf/data-akun/{id}', 'App\Http\Controllers\Wakaf\DataAkun@Index');
-    Route::get('/wakaf/data-akun/{id}/edit', 'App\Http\Controllers\Wakaf\DataAkun@EditProfil');
-    Route::put('/wakaf/data-akun/{id}', 'App\Http\Controllers\Wakaf\DataAkun@Update');
+    Route::get('/wakaf/data-akun/', 'App\Http\Controllers\Wakaf\DataAkun@Index');
+    Route::get('/wakaf/data-akun/edit', 'App\Http\Controllers\Wakaf\DataAkun@EditProfil');
+    Route::put('/wakaf/data-akun/', 'App\Http\Controllers\Wakaf\DataAkun@Update');
 
     //fitur daftar pengguna
-    Route::get('/wakaf/pengguna/', 'App\Http\Controllers\Wakaf\DaftarPengguna@Index');
-    Route::post('/wakaf/pengguna/create', 'App\Http\Controllers\Wakaf\DaftarPengguna@Create');
-    Route::get('/wakaf/pengguna/{id}/edit', 'App\Http\Controllers\Wakaf\DaftarPengguna@Edit');
-    Route::put('/wakaf/pengguna/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Update');
-    Route::delete('/wakaf/pengguna/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Delete');
-    Route::get('/wakaf/dropdown-peran', 'App\Http\Controllers\Wakaf\DaftarPengguna@DropdownPeran');
-    Route::get('/wakaf/search-pengguna', 'App\Http\Controllers\Wakaf\DaftarPengguna@Search');
-    Route::put('/wakaf/pengguna/status/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Status');
+    Route::get('/wakaf/daftar-pengguna/', 'App\Http\Controllers\Wakaf\DaftarPengguna@Index');
+    Route::post('/wakaf/daftar-pengguna/create', 'App\Http\Controllers\Wakaf\DaftarPengguna@Create');
+    Route::get('/wakaf/daftar-pengguna/{id}/edit', 'App\Http\Controllers\Wakaf\DaftarPengguna@Edit');
+    Route::put('/wakaf/daftar-pengguna/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Update');
+    Route::delete('/wakaf/daftar-pengguna/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Delete');
+    Route::get('/wakaf/daftar-pengguna/dropdown-peran', 'App\Http\Controllers\Wakaf\DaftarPengguna@DropdownPeran');
+    Route::get('/wakaf/search-daftar-pengguna', 'App\Http\Controllers\Wakaf\DaftarPengguna@Search');
+    Route::put('/wakaf/daftar-pengguna/status/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Status');
+
 });

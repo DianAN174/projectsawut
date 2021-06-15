@@ -32,6 +32,7 @@ use App\Models\ModelPengelolaanLain\DataAkumulasi;
 
 use App\Models\User;
 use App\Utils\Response;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -44,11 +45,13 @@ Class LaporanPosisiKeuangan
 {
 
     //GET YEAR
-    $year = Carbon::now()->format('Y');
+    
 
     public function LaporanPosisiKeuanganx2(Request $request)
     {
 
+        $year = Carbon::now()->format('Y');
+        
         //ASET LANCAR
         //KAS DAN SEJENIS KAS
             

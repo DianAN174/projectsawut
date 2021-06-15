@@ -37,7 +37,7 @@ use App\Models\ModelPengelolaanLain\DataAkumulasi;
 
 use App\Models\User;
 use App\Utils\Response;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -48,10 +48,12 @@ use Mockery\Exception;
 Class LaporanRincianAsetWakaf
 {
     //GET YEAR
-    $year = Carbon::now()->format('Y');
+    
 
     public function LaporanRincianAsetWakafx2(Request $request)
     {
+        $year = Carbon::now()->format('Y');
+
         //KAS DAN SETARA KAS
             //WAKIF
             //tunai
@@ -146,34 +148,34 @@ Class LaporanRincianAsetWakaf
         //KAS DAN SETARA KAS
             //WAKIF
             //tunai
-            $sumKasTunaiWakif = KasTunai::whereYear('created_at', '=', ($year-1)))->where('data_wakif_id','!=','0')->sum('saldo');
-            $sumKreditTunaiWakif = KasTunai::whereYear('created_at', '=', ($year-1)))->where('data_wakif_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sumKasTunaiWakif = KasTunai::whereYear('created_at', '=', ($year-1))->where('data_wakif_id','!=','0')->sum('saldo');
+            $sumKreditTunaiWakif = KasTunai::whereYear('created_at', '=', ($year-1))->where('data_wakif_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhirKasTunaiWakif =$sumKasTunaiWakif - $sumKreditTunaiWakif;
 
             //HASIL PENGELOLAAN
             //tunai
-            $sumKasTunai = KasTunai::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->sum('saldo');
-            $sumKreditTunai = KasTunai::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sumKasTunai = KasTunai::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->sum('saldo');
+            $sumKreditTunai = KasTunai::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhirKasTunai=$sumKasTunai - $sumKreditTunai;
 
             //ktw=kas tabungan wakaf
-            $sum_ktw = KasTabWakaf::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->sum('saldo');
-            $sumKredit_ktw = KasTabWakaf::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sum_ktw = KasTabWakaf::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->sum('saldo');
+            $sumKredit_ktw = KasTabWakaf::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_ktw=$sum_ktw - $sumKredit_ktw;
 
             //ktbh=kas tabungan bagi hasil
-            $sum_ktbh = KasTabBagiHasil::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->sum('saldo');
-            $sumKredit_ktbh = KasTabBagiHasil::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sum_ktbh = KasTabBagiHasil::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->sum('saldo');
+            $sumKredit_ktbh = KasTabBagiHasil::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_ktbh=$sum_ktbh - $sumKredit_ktbh;
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->sum('saldo');
-            $sumKredit_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->sum('saldo');
+            $sumKredit_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_ktbnh = $sum_ktbnh - $sumKredit_ktbnh;
 
             //kdw = kas deposito wakaf
-            $sum_kdw = KasDepositoWakaf::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->sum('saldo');
-            $sumKredit_kdw = KasDepositoWakaf::whereYear('created_at', '=', ($year-1)))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
+            $sum_kdw = KasDepositoWakaf::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->sum('saldo');
+            $sumKredit_kdw = KasDepositoWakaf::whereYear('created_at', '=', ($year-1))->where('pengelolaan_id','!=','0')->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_kdw = $sum_kdw - $sumKredit_kdw;
 
             $jumlah_kas = $saldoTerakhirKasTunaiWakif + $saldoTerakhirKasTunai + $saldoTerakhir_ktw + $saldoTerakhir_ktbh + $saldoTerakhir_ktbnh + $saldoTerakhir_kdw;
@@ -181,36 +183,36 @@ Class LaporanRincianAsetWakaf
         //PIUTANG
         //HASIL PENGELOLAAN
             //pjp = piutang jangka pendek
-            $sum_pjp = PiutangJangkaPendek::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_pjp = PiutangJangkaPendek::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $sum_pjp = PiutangJangkaPendek::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_pjp = PiutangJangkaPendek::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_pjp = $sum_pjp - $sumKredit_pjp;
 
             //pja = piutang jangka panjang
-            $sum_pja = PiutangJangkaPanjang::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_pja = PiutangJangkaPanjang::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $sum_pja = PiutangJangkaPanjang::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_pja = PiutangJangkaPanjang::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_pja = $sum_pja - $sumKredit_pja;
 
         $jumlah_piutang = $saldoTerakhir_pjp + $saldoTerakhir_pja;
 
         //ASET TETAP
             //TANAH
-            $sum_tanah = AkunTanah::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_tanah = AkunTanah::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $sum_tanah = AkunTanah::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_tanah = AkunTanah::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_tanah = $sum_tanah - $sumKredit_tanah;
 
             //BANGUNAN
-            $sum_gedung = AkunGedungdanBangunan::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_gedung = AkunGedungdanBangunan::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $sum_gedung = AkunGedungdanBangunan::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_gedung = AkunGedungdanBangunan::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_gedung = $sum_gedung - $sumKredit_gedung;
 
             //KENDARAAN
-            $kendaraan = AkunMesindanKendaraan::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_kendaraan = AkunMesindanKendaraan::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $kendaraan = AkunMesindanKendaraan::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_kendaraan = AkunMesindanKendaraan::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_kendaraan = $sum_kendaraan - $sumKredit_kendaraan;
 
             //LAINNYA
-            $aset_lain = AkunAsetLainLain::whereYear('created_at', '=', ($year-1)))->sum('saldo');
-            $sumKredit_aset_lain = AkunAsetLainLain::whereYear('created_at', '=', ($year-1)))->where('type','=','kredit')->sum('saldo');
+            $aset_lain = AkunAsetLainLain::whereYear('created_at', '=', ($year-1))->sum('saldo');
+            $sumKredit_aset_lain = AkunAsetLainLain::whereYear('created_at', '=', ($year-1))->where('type','=','kredit')->sum('saldo');
             $saldoTerakhir_aset_lain = $sumKredit_aset_lain - $sumKredit_aset_lain;
 
             $saldo_terakhir_aset_tetap =  $saldoTerakhir_kendaraan + $saldoTerakhir_gedung + $saldoTerakhir_tanah + $saldoTerakhir_aset_lain;
