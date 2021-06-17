@@ -79,7 +79,7 @@ Class PengajuanBiayaOperasional
                 $newKasTunai->saldo = $pengajuanBiaya->nominal;
                 $newKasTunai->type = 'pengeluaran';
                 $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
-                $newKasTunai = $newBagiHasil->save();
+                $newKasTunai = $newKasTunai->save();
     
                     if (!$newKasTunai) {
                         DB::rollBack();
@@ -298,7 +298,7 @@ Class PengajuanBiayaOperasional
                 $newKasTunai->saldo = $pengajuanBiaya->nominal;
                 $newKasTunai->type = 'pengeluaran';
                 $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
-                $newKasTunai = $newBagiHasil->save();
+                $newKasTunai = $newKasTunai->save();
     
                     if (!$newKasTunai) {
                         DB::rollBack();
