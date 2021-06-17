@@ -67,6 +67,115 @@ Class PengajuanBiayaOperasional
                 DB::rollBack();
                 return Response::HttpResponse(400, null, "Failed to create data", true);
             }
+            
+            $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
+            $sumberBiaya = $pengajuanBiaya->sumber_biaya;
+        
+            switch ($sumberBiaya) {
+                case "tunai":
+                $newKasTunai = new KasTunai();
+                $newKasTunai->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                $newKasTunai->keterangan = $request->keterangan;
+                $newKasTunai->saldo = $pengajuanBiaya->nominal;
+                $newKasTunai->type = 'pengeluaran';
+                $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
+                $newKasTunai = $newBagiHasil->save();
+    
+                    if (!$newKasTunai) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;
+
+                case "bagihasil":
+                        $newBagiHasil = new KasTabBagiHasil();
+                        $newBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                        $newBagiHasil->keterangan = $request->keterangan;
+                        $newBagiHasil->saldo = $pengajuanBiaya->nominal;
+                        $newBagiHasil->type = 'pengeluaran';
+                        $newBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
+                        $newBagiHasil = $newBagiHasil->save();
+        
+                        if (!$newBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+                    case "nonbagihasil":
+                        $newNonBagiHasil = new KasTabNonBagiHasil();
+                        $newNonBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                        $newNonBagiHasil->keterangan = $request->keterangan;
+                        $newNonBagiHasil->saldo = $pengajuanBiaya->nominal;
+                        $newNonBagiHasil->type = 'pengeluaran';
+                        $newNonBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
+                        $newNonBagiHasil = $newNonBagiHasil->save();
+        
+                        if (!$newNonBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+        
+                    default:
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+            
+            switch ($kategoriBiaya) {
+                case "1":
+                    $newBPP = new BebanPengelolaandanPengembangan();
+                    $newBPP->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newBPP->keterangan = $request->keterangan;
+                    $newBPP->saldo = $pengajuanBiaya->nominal;
+                    $newBPP->type = 'pemasukan';
+                    $newBPP->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newBPP = $newBPP->save();
+
+                    if (!$newBPP) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                    break;
+                case "2":
+                    $newBagianNazhir = new BagianNazhir();
+                    $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newBagianNazhir->keterangan = $request->keterangan;
+                    $newBagianNazhir->saldo = $pengajuanBiaya->nominal;
+                    $newBagianNazhir->type = 'pemasukan';
+                    $newBagianNazhir->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newBagianNazhir = $newBagianNazhir->save();
+
+                    if (!$newBagianNazhir) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;
+
+                case "3":
+                    $newPentasyarufan = new PentasyarufanManfaat();
+                    $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newPentasyarufan->keterangan = $request->keterangan;
+                    $newPentasyarufan->saldo = $pengajuanBiaya->nominal;                        
+                    $newPentasyarufan->type = 'pemasukan';
+                    $newPentasyarufan->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newPentasyarufan = $newPentasyarufan->save();
+
+                    if (!$newPentasyarufan) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+                    
+                break;
+
+                default:
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data ", true);
+            }
 
             DB::commit();
 
@@ -178,6 +287,115 @@ Class PengajuanBiayaOperasional
                 return Response::HttpResponse(400, null, "Failed to create data", true);
             }
 
+            $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
+            $sumberBiaya = $pengajuanBiaya->sumber_biaya;
+        
+            switch ($sumberBiaya) {
+                case "tunai":
+                $newKasTunai = new KasTunai();
+                $newKasTunai->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                $newKasTunai->keterangan = $request->keterangan;
+                $newKasTunai->saldo = $pengajuanBiaya->nominal;
+                $newKasTunai->type = 'pengeluaran';
+                $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
+                $newKasTunai = $newBagiHasil->save();
+    
+                    if (!$newKasTunai) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;
+
+                case "bagihasil":
+                        $newBagiHasil = new KasTabBagiHasil();
+                        $newBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                        $newBagiHasil->keterangan = $request->keterangan;
+                        $newBagiHasil->saldo = $pengajuanBiaya->nominal;
+                        $newBagiHasil->type = 'pengeluaran';
+                        $newBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
+                        $newBagiHasil = $newBagiHasil->save();
+        
+                        if (!$newBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+                    case "nonbagihasil":
+                        $newNonBagiHasil = new KasTabNonBagiHasil();
+                        $newNonBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                        $newNonBagiHasil->keterangan = $request->keterangan;
+                        $newNonBagiHasil->saldo = $pengajuanBiaya->nominal;
+                        $newNonBagiHasil->type = 'pengeluaran';
+                        $newNonBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
+                        $newNonBagiHasil = $newNonBagiHasil->save();
+        
+                        if (!$newNonBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+        
+                    default:
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+            
+            switch ($kategoriBiaya) {
+                case "1":
+                    $newBPP = new BebanPengelolaandanPengembangan();
+                    $newBPP->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newBPP->keterangan = $request->keterangan;
+                    $newBPP->saldo = $pengajuanBiaya->nominal;
+                    $newBPP->type = 'pemasukan';
+                    $newBPP->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newBPP = $newBPP->save();
+
+                    if (!$newBPP) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                    break;
+                case "2":
+                    $newBagianNazhir = new BagianNazhir();
+                    $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newBagianNazhir->keterangan = $request->keterangan;
+                    $newBagianNazhir->saldo = $pengajuanBiaya->nominal;
+                    $newBagianNazhir->type = 'pemasukan';
+                    $newBagianNazhir->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newBagianNazhir = $newBagianNazhir->save();
+
+                    if (!$newBagianNazhir) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;
+
+                case "3":
+                    $newPentasyarufan = new PentasyarufanManfaat();
+                    $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->approved_at;
+                    $newPentasyarufan->keterangan = $request->keterangan;
+                    $newPentasyarufan->saldo = $pengajuanBiaya->nominal;                        
+                    $newPentasyarufan->type = 'pemasukan';
+                    $newPentasyarufan->pengajuan_biaya_id = $pengajuanBiaya->id;
+                    $newPentasyarufan = $newPentasyarufan->save();
+
+                    if (!$newPentasyarufan) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+                    
+                break;
+
+                default:
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data ", true);
+            }
+
             DB::commit();
 
             return Response::HttpResponse(200, $newPengajuanBiaya, "Success", false);
@@ -251,8 +469,7 @@ Class PengajuanBiayaOperasional
             $this->admin = $request->user();
             $pengajuanBiaya = PengajuanBiaya::find($id);
 
-            $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
-            $sumberBiaya = $pengajuanBiaya->sumber_biaya;
+            
             $pencairan = $pengajuanBiaya->pencairan;
             
             DB::beginTransaction();
@@ -269,112 +486,6 @@ Class PengajuanBiayaOperasional
                     DB::rollBack();
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
-
-            switch ($sumberBiaya) {
-                case "tunai":
-                $newKasTunai = new KasTunai();
-                $newKasTunai->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                $newKasTunai->keterangan = 'Pencairan Pengajuan Biaya';
-                $newKasTunai->saldo = $pengajuanBiaya->nominal;
-                $newKasTunai->type = 'kredit';
-                $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
-                $newKasTunai = $newBagiHasil->save();
-    
-                    if (!$newKasTunai) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                break;
-
-                case "bagihasil":
-                        $newBagiHasil = new KasTabBagiHasil();
-                        $newBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                        $newBagiHasil->keterangan = 'Pencairan Pengajuan Biaya';
-                        $newBagiHasil->saldo = $pengajuanBiaya->nominal;
-                        $newBagiHasil->type = 'kredit';
-                        $newBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
-                        $newBagiHasil = $newBagiHasil->save();
-        
-                        if (!$newBagiHasil) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data ", true);
-                        }
-        
-                        break;
-                    case "nonbagihasil":
-                        $newNonBagiHasil = new KasTabNonBagiHasil();
-                        $newNonBagiHasil->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                        $newNonBagiHasil->keterangan = 'Pencairan Pengajuan Biaya';
-                        $newNonBagiHasil->saldo = $pengajuanBiaya->nominal;
-                        $newNonBagiHasil->type = 'kredit';
-                        $newNonBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
-                        $newNonBagiHasil = $newNonBagiHasil->save();
-        
-                        if (!$newNonBagiHasil) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data ", true);
-                        }
-        
-                        break;
-        
-                    default:
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-            
-            switch ($kategoriBiaya) {
-                case "1":
-                    $newBPP = new BebanPengelolaandanPengembangan();
-                    $newBPP->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                    $newBPP->keterangan = 'Pencairan Penyaluran Manfaat';
-                    $newBPP->saldo = $pengajuanBiaya->nominal;
-                    $newBPP->type = 'debit';
-                    $newBPP->pengajuan_biaya_id = $pengajuanBiaya->id;
-                    $newBPP = $newBPP->save();
-
-                    if (!$newBPP) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                    break;
-                case "2":
-                    $newBagianNazhir = new BagianNazhir();
-                    $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                    $newBagianNazhir->keterangan = 'Pencairan Penyaluran Manfaat';
-                    $newBagianNazhir->saldo = $pengajuanBiaya->nominal;
-                    $newBagianNazhir->type = 'debit';
-                    $newBagianNazhir->pengajuan_biaya_id = $pengajuanBiaya->id;
-                    $newBagianNazhir = $newBagianNazhir->save();
-
-                    if (!$newBagianNazhir) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                break;
-
-                case "3":
-                    $newPentasyarufan = new PentasyarufanManfaat();
-                    $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->approved_at;
-                    $newPentasyarufan->keterangan = 'Pencairan Penyaluran Manfaat';
-                    $newPentasyarufan->saldo = $pengajuanBiaya->nominal;                        
-                    $newPentasyarufan->type = 'debit';
-                    $newPentasyarufan->pengajuan_biaya_id = $pengajuanBiaya->id;
-                    $newPentasyarufan = $newPentasyarufan->save();
-
-                    if (!$newPentasyarufan) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-                    
-                break;
-
-                default:
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-            }
 
             DB::commit();
 

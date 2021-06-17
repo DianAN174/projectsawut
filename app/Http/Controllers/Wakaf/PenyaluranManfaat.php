@@ -40,17 +40,16 @@ Class PenyaluranManfaat
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|string|max:255',
+                'nama_penerima' => 'required|string|max:255',
                 'nik' => 'required|numeric|max:255',
                 'alamat' => 'required|string|max:255',
-                'phone' => 'required|numeric|max:255',
+                'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
                 'deskripsi_usaha' => 'required|string|max:255',
-                'nominal' => 'required|numeric',
+                'nominal_peminjaman' => 'required|numeric',
                 'sumber_biaya' => 'required|in:bagihasil,nonbagihasil',
                 //pjp=piutang jangka pendek, pja=piutang jangka panjang
                 'jenis_piutang' => 'required|in:pjp,pja',
-                //dalam bulan atau tahun?
                 'periode_peminjaman' => 'required|numeric',
                 'periode_awal' => 'required|date_format:Y-m-d',
                 'periode_akhir' => 'required|date_format:Y-m-d',
@@ -133,7 +132,7 @@ Class PenyaluranManfaat
             $penyaluranBiaya->nama_penerima = $penyaluranTemp->nama_penerima;
             $penyaluranBiaya->nik = $penyaluranTemp->nik;
             $penyaluranBiaya->alamat = $penyaluranTemp->alamat;
-            $penyaluranBiaya->no_telepon = $penyaluranTemp->no_telepon;
+            $penyaluranBiaya->telepon = $penyaluranTemp->telepon;
             $penyaluranBiaya->jenis_usaha = $penyaluranTemp->jenis_usaha;
             $penyaluranBiaya->deskripsi_usaha = $penyaluranTemp->deskripsi_usaha;
             $penyaluranBiaya->nominal_peminjaman = $penyaluranTemp->nominal_peminjaman;
@@ -169,16 +168,17 @@ Class PenyaluranManfaat
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'nama' => 'required',
-                'nik' => 'required',
-                'alamat' => 'required',
-                'phone' => 'required',
+                'nama_penerima' => 'required|string|max:255',
+                'nik' => 'required|numeric|max:255',
+                'alamat' => 'required|string|max:255',
+                'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
-                'deskripsi_usaha' => 'required',
-                'nominal' => 'required',
+                'deskripsi_usaha' => 'required|string|max:255',
+                'nominal_peminjaman' => 'required|numeric',
                 'sumber_biaya' => 'required|in:bagihasil,nonbagihasil',
+                //pjp=piutang jangka pendek, pja=piutang jangka panjang
                 'jenis_piutang' => 'required|in:pjp,pja',
-                'periode_peminjaman' => 'required',
+                'periode_peminjaman' => 'required|numeric',
                 'periode_awal' => 'required|date_format:Y-m-d',
                 'periode_akhir' => 'required|date_format:Y-m-d',
             ]);
@@ -194,13 +194,13 @@ Class PenyaluranManfaat
 
             $penyaluranTemp = new PenyaluranTemp();
 
-            $penyaluranTemp->nama_penerima = $request->nama;
+            $penyaluranTemp->nama_penerima = $request->nama_penerima;
             $penyaluranTemp->nik = $request->nik;
             $penyaluranTemp->alamat = $request->alamat;
-            $penyaluranTemp->no_telepon = $request->phone;
+            $penyaluranTemp->telepon = $request->telepon;
             $penyaluranTemp->jenis_usaha = $request->jenis_usaha;
             $penyaluranTemp->deskripsi_usaha = $request->deskripsi_usaha;
-            $penyaluranTemp->nominal_peminjaman = $request->nominal;
+            $penyaluranTemp->nominal_peminjaman = $request->nominal_peminjaman;
             $penyaluranTemp->sumber_biaya = $request->sumber_biaya;
             $penyaluranTemp->jenis_piutang = $request->jenis_piutang;
             $penyaluranTemp->periode_peminjaman = $request->periode_peminjaman;
@@ -556,17 +556,16 @@ Class PenyaluranManfaat
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|string|max:255',
+                'nama_penerima' => 'required|string|max:255',
                 'nik' => 'required|numeric|max:255',
                 'alamat' => 'required|string|max:255',
-                'phone' => 'required|numeric|max:255',
+                'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
                 'deskripsi_usaha' => 'required|string|max:255',
-                'nominal' => 'required|numeric',
+                'nominal_peminjaman' => 'required|numeric',
                 'sumber_biaya' => 'required|in:bagihasil,nonbagihasil',
                 //pjp=piutang jangka pendek, pja=piutang jangka panjang
                 'jenis_piutang' => 'required|in:pjp,pja',
-                //dalam bulan atau tahun?
                 'periode_peminjaman' => 'required|numeric',
                 'periode_awal' => 'required|date_format:Y-m-d',
                 'periode_akhir' => 'required|date_format:Y-m-d',
@@ -582,20 +581,20 @@ Class PenyaluranManfaat
             $penyaluranBiaya = Penyaluran::find($id);
             //dd($penyaluranBiaya, $id);
             
-            $penyaluranBiaya->nama_penerima = $request->nama;
-            $penyaluranBiaya->nik = $request->nik;
-            $penyaluranBiaya->alamat = $request->alamat;
-            $penyaluranBiaya->no_telepon = $request->phone;
-            $penyaluranBiaya->jenis_usaha = $request->jenis_usaha;
-            $penyaluranBiaya->deskripsi_usaha = $request->deskripsi_usaha;
-            $penyaluranBiaya->sumber_biaya = $request->sumber_biaya;
-            $penyaluranBiaya->jenis_piutang = $request->jenis_piutang;
-            $penyaluranBiaya->nominal_peminjaman = $request->nominal;
-            $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
-            $penyaluranBiaya->periode_awal = $request->periode_awal;
-            $penyaluranBiaya->periode_akhir = $request->periode_akhir;
-            $penyaluranBiaya->created_by = $this->admin->name;
-            $penyaluranBiaya->modified_by = $this->admin->name; 
+            $penyaluranTemp->nama_penerima = $request->nama_penerima;
+            $penyaluranTemp->nik = $request->nik;
+            $penyaluranTemp->alamat = $request->alamat;
+            $penyaluranTemp->telepon = $request->telepon;
+            $penyaluranTemp->jenis_usaha = $request->jenis_usaha;
+            $penyaluranTemp->deskripsi_usaha = $request->deskripsi_usaha;
+            $penyaluranTemp->nominal_peminjaman = $request->nominal_peminjaman;
+            $penyaluranTemp->sumber_biaya = $request->sumber_biaya;
+            $penyaluranTemp->jenis_piutang = $request->jenis_piutang;
+            $penyaluranTemp->periode_peminjaman = $request->periode_peminjaman;
+            $penyaluranTemp->periode_awal = $request->periode_awal;
+            $penyaluranTemp->periode_akhir = $request->periode_akhir;
+            $penyaluranTemp->created_by = $this->admin->name;
+            $penyaluranTemp->modified_by = $this->admin->name;
 
             $newPenyaluran = $penyaluranBiaya->save();
 
