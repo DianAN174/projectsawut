@@ -16,7 +16,7 @@ class Penyaluran extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'pengajuan_penerimaan_manfaat';
+    protected $table = 'penyaluran_manfaat';
     protected $primaryKey = 'id';
 
     public function KasTabBagiHasil()

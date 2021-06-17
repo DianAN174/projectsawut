@@ -114,8 +114,8 @@ Class PelunasanPiutang
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
-            $datas = Pelunasan::all()->paginate($request->limit);
-
+            //$datas = Pelunasan::all()->paginate($request->limit);
+            $datas = Pelunasan::paginate($request->limit);
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);

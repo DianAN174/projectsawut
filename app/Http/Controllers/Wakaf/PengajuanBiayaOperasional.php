@@ -95,18 +95,18 @@ Class PengajuanBiayaOperasional
             $datas = PengajuanBiaya::with("KasTunai","KasTabBagiHasil","KasTabNonBagiHasil")->paginate($request->limit);
             foreach ($datas as $d_key => $data) {
 
-                $data["tanggal_transaksi"] = null;
+                //$data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
 
                 if (empty($data["KasTunai"])){
                     switch (true) {
                         case empty($data["KasTabBagiHasil"]):
-                            $data["tanggal_transaksi"] = $data->KasTabNonBagiHasil['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->KasTabNonBagiHasil['tanggal_transaksi'];
                             $data["nominal"] = $data->KasTabNonBagiHasil['saldo'];
                             break;
 
                         case empty($data["KasTabNonBagiHasil"]):
-                            $data["tanggal_transaksi"] = $data->KasTabBagiHasil['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->KasTabBagiHasil['tanggal_transaksi'];
                             $data["nominal"] = $data->KasTabBagiHasil['saldo'];
                         break;
                 
@@ -115,7 +115,7 @@ Class PengajuanBiayaOperasional
                         break;
                     }
                 }else{
-                    $data["tanggal_transaksi"] = $data->KasTunai['tanggal_transaksi'];
+                    //$data["tanggal_transaksi"] = $data->KasTunai['tanggal_transaksi'];
                     $data["nominal"] = $data->KasTunai['saldo'];
                 }
             }

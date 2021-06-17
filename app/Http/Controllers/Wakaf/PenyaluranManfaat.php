@@ -103,7 +103,7 @@ Class PenyaluranManfaat
 
             $this->admin = $request->user();
 
-            $validator = Validator::make($request->all(), [
+            /* $validator = Validator::make($request->all(), [
                 'nama' => 'required|string|max:255',
                 'nik' => 'required|numeric|max:255',
                 'alamat' => 'required|string|max:255',
@@ -123,25 +123,26 @@ Class PenyaluranManfaat
             if ($validator->fails()) {
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", true);
-            }
+            } */
 
             DB::beginTransaction();
 
             $penyaluranTemp = PenyaluranTemp::find($id);
             $penyaluranBiaya = new Penyaluran();
 
-            $penyaluranBiaya->nama_penerima = $penyaluranTemp->nama;
+            $penyaluranBiaya->nama_penerima = $penyaluranTemp->nama_penerima;
             $penyaluranBiaya->nik = $penyaluranTemp->nik;
             $penyaluranBiaya->alamat = $penyaluranTemp->alamat;
-            $penyaluranBiaya->no_telepon = $penyaluranTemp->phone;
+            $penyaluranBiaya->no_telepon = $penyaluranTemp->no_telepon;
             $penyaluranBiaya->jenis_usaha = $penyaluranTemp->jenis_usaha;
             $penyaluranBiaya->deskripsi_usaha = $penyaluranTemp->deskripsi_usaha;
-            $penyaluranBiaya->nominal_peminjaman = $penyaluranTemp->nominal;
+            $penyaluranBiaya->nominal_peminjaman = $penyaluranTemp->nominal_peminjaman;
             $penyaluranBiaya->sumber_biaya = $penyaluranTemp->sumber_biaya;
             $penyaluranBiaya->jenis_piutang = $penyaluranTemp->jenis_piutang;
             $penyaluranBiaya->periode_peminjaman = $penyaluranTemp->periode_peminjaman;
             $penyaluranBiaya->periode_awal = $penyaluranTemp->periode_awal;
             $penyaluranBiaya->periode_akhir = $penyaluranTemp->periode_akhir;
+            $penyaluranBiaya->kelayakan = $penyaluranTemp->kelayakan;
             $penyaluranBiaya->created_by = $this->admin->name;
             $penyaluranBiaya->modified_by = $this->admin->name; 
 
@@ -242,22 +243,34 @@ Class PenyaluranManfaat
 
             DB::beginTransaction();
 
-            $penyaluranTemp = PenyaluranTemp::find($id);
-            //dd($penyaluranTemp);
-            $kelayakanFirst = new TempTable();
+            $penyaluranTemp = PenyaluranTemp::find($id)->id;
+            //$answers = [$request->answers];
+            //$answers_array = [];
+            //dd($answers[0]);
+            for ($i=1; $i<=11; $i++) {
+                $answers_array[] = [
+                    'penyaluran_temp_id' => $penyaluranTemp,
+                    'question_id' => $i,
+                    'answer_id' => $request->answer,
+                    'created_by' => $this->admin->name,  
+                    'modified_by' => $this->admin->name
+                ];
+            }
 
-            $kelayakanFirst->penyaluran_temp_id = $penyaluranTemp->id;
-            for ($i=1; $i<=Questions::count('id'); $i++) {
+        $newKelayakanFirst = TempTable::insert($answers_array); 
+
+            
+            /* for ($i=1; $i<=11; $i++) {
+                $kelayakanFirst = new TempTable();
+                $kelayakanFirst->penyaluran_temp_id = $penyaluranTemp->id;
                 $kelayakanFirst->question_id = $i;
                 $kelayakanFirst->answer_id = $request->answer;
                 
                 $kelayakanFirst->created_by = $this->admin->name;
-                $kelayakanFirst->modified_by = $this->admin->name;
-                $newKelayakanFirst = $kelayakanFirst->save();
-
-                }
+                $kelayakanFirst->modified_by = $this->admin->name;}
             
-
+                
+                $newKelayakanFirst = $kelayakanFirst->save(); */
             
 
             if (!$newKelayakanFirst) {
@@ -292,19 +305,20 @@ Class PenyaluranManfaat
 
             DB::beginTransaction();
 
-            $penyaluranTemp = PenyaluranTemp::find($id);
-            $kelayakanSecond = new TempTable();
+            $penyaluranTemp = PenyaluranTemp::find($id)->id;
+            //$kelayakanSecond = new TempTable();
 
-            $kelayakanSecond->penyaluran_temp_id = $penyaluranTemp->id;
-            for ($i=1; $i<=Questions::count('id'); $i++) {
-                $kelayakanSecond->question_id = '$i';
-                $kelayakanSecond->answer_id = $request->answer;
-                }
-            
-            /* $kelayakanFirst->created_by = $this->admin->name;
-            $kelayakanFirst->modified_by = $this->admin->name;  */
+            for ($i=1; $i<=6; $i++) {
+                $answers_array[] = [
+                    'penyaluran_temp_id' => $penyaluranTemp,
+                    'question_id' => ($i+11),
+                    'answer_id' => $request->answer,
+                    'created_by' => $this->admin->name,  
+                    'modified_by' => $this->admin->name
+                ];
+            }
 
-            $newKelayakanSecond = $kelayakanSecond->save();
+            $newKelayakanSecond = TempTable::insert($answers_array);
 
             if (!$newKelayakanSecond) {
                 DB::rollBack();
@@ -313,7 +327,34 @@ Class PenyaluranManfaat
 
             DB::commit();
 
-            return Response::HttpResponse(200, $newKelayakanSecond, "Success", false);
+            //return Response::HttpResponse(200, $newKelayakanSecond, "Success", false);
+
+            $skor = TempTable::join("answers","temp_table.answer_id","=","answers.id")
+            ->where('temp_table.penyaluran_temp_id',$id)   
+            ->sum('answers.score');
+            //dd($skor);
+                $skor_max = 47;
+                $skor_akhir=($skor/$skor_max)*100;
+
+                $penyaluranBiaya = PenyaluranTemp::find($id);
+                //dd($penyaluranBiaya);
+    
+                if($skor_akhir>50)
+                {
+    
+                    $penyaluranBiaya->kelayakan = '1';
+                }
+                else{
+                    $penyaluranBiaya->kelayakan = '0';
+                }
+    
+                $newPenyaluranBiaya = $penyaluranBiaya->save();
+    
+                    if (!$newPenyaluranBiaya) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data", true);
+                    }
+            return Response::HttpResponse(200, $skor_akhir, "Skor berhasil diproses", false); 
 
         }catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
