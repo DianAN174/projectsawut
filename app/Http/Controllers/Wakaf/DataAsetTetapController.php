@@ -232,23 +232,31 @@ Class DataAsetTetapController
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
-            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah")->paginate($request->limit);
+            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunAsetLainLain")->paginate($request->limit);
             foreach ($datas as $d_key => $data) {
                 /* $data["nominal"] = empty($data["ptp"]) ? $data->ptt['saldo'] : $data->ptp['saldo'];
                 $data["tanggal_transaksi"] = empty($data["ptp"]) ? $data->ptt['tanggal_transaksi'] : $data->ptp['tanggal_transaksi']; */
                 
-                $data["tanggal_transaksi"] = null;
+                //$data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
 
                 if (empty($data["AkunMesindanKendaraan"])){
                     switch (true) {
                         case empty($data["AkunGedungdanBangunan"]):
-                            $data["tanggal_transaksi"] = $data->AkunTanah['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->AkunTanah['tanggal_transaksi'];
                             $data["nominal"] = $data->AkunTanah['saldo'];
                             break;
 
                         case empty($data["AkunTanah"]):
-                            $data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
+                        break;
+                        case empty($data["AkunPeralatandanPerlengkapanKantor"]):
+                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
+                        break;
+                        case empty($data["AkunAsetLainLain"]):
+                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
                             $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
                         break;
                 
@@ -257,7 +265,7 @@ Class DataAsetTetapController
                         break;
                     }
                 }else{
-                    $data["tanggal_transaksi"] = $data->AkunMesindanKendaraan['tanggal_transaksi'];
+                    //$data["tanggal_transaksi"] = $data->AkunMesindanKendaraan['tanggal_transaksi'];
                     $data["nominal"] = $data->AkunMesindanKendaraan['saldo'];
                 }
             }

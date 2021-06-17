@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models\ModelPengelolaanLain;
-use App\Models\ModelPengelolaanLain\AkunPersediaan;
+//use App\Models\ModelPengelolaanLain\AkunPersediaan;
 use App\Models\ModelPengelolaanLain\AkunMesindanKendaraan;
 use App\Models\ModelPengelolaanLain\AkunGedungdanBangunandanBangunan;
 use App\Models\ModelPengelolaanLain\AkunTanah;
@@ -20,10 +20,10 @@ class DataAsetTetap extends Model
     protected $table = 'data_aset_tetap';
     protected $primaryKey = 'id';
 
-    public function AkunPersediaan()
+    /* public function AkunPersediaan()
     {
         return $this->hasOne(AkunPersediaan::class);
-    }
+    } */
 
     public function AkunMesindanKendaraan()
     {

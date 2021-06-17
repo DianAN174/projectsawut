@@ -255,7 +255,7 @@ Class PengajuanBiayaOperasional
 
             $validator = Validator::make($request->all(), [
                 'nama_pengaju' => 'required|string|max:255',
-                'kategori_biaya' => 'required',
+                'kategori_biaya' => 'required|in:bebanpengelolaan,bagiannazhir,pentasyarufan',
                 'jenis_biaya' => 'required',
                 'keterangan_biaya' => 'required|string|max:255',
                 'nominal' => 'required|numeric',
