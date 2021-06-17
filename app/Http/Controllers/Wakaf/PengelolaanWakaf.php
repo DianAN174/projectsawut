@@ -246,29 +246,29 @@ class PengelolaanWakaf
     {
         try
         {
-            $sumKasTunai = KasTunai::sum('saldo');
+            $sumKasTunai = KasTunai::where('type','pemasukan')->sum('saldo');
             $sumKreditTunai = KasTunai::where('type','pengeluaran')->sum('saldo');
-            $saldoTerakhirKasTunai=$sumKasTunai - $sumKreditTunai;
-
+            $saldoTerakhirKasTunai = $sumKasTunai - $sumKreditTunai;
+            
             //ktw=kas tabungan wakaf
-            $sum_ktw = KasTabWakaf::sum('saldo');
+            $sum_ktw = KasTabWakaf::where('type','pemasukan')->sum('saldo');
             $sumKredit_ktw = KasTabWakaf::where('type','pengeluaran')->sum('saldo');
-            $saldoTerakhir_ktw=$sum_ktw - $sumKredit_ktw;
+            $saldoTerakhir_ktw = ($sum_ktw - $sumKredit_ktw);
 
             //ktbh=kas tabungan bagi hasil
-            $sum_ktbh = KasTabBagiHasil::sum('saldo');
+            $sum_ktbh = KasTabBagiHasil::where('type','pemasukan')->sum('saldo');
             $sumKredit_ktbh = KasTabBagiHasil::where('type','pengeluaran')->sum('saldo');
-            $saldoTerakhir_ktbh=$sum_ktbh - $sumKredit_ktbh;
+            $saldoTerakhir_ktbh= ($sum_ktbh - $sumKredit_ktbh);
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::sum('saldo');
+            $sum_ktbnh = KasTabNonBagiHasil::where('type','pemasukan')->sum('saldo');
             $sumKredit_ktbnh = KasTabNonBagiHasil::where('type','pengeluaran')->sum('saldo');
-            $saldoTerakhir_ktbnh = $sum_ktbnh - $sumKredit_ktbnh;
+            $saldoTerakhir_ktbnh = ($sum_ktbnh - $sumKredit_ktbnh);
 
             //kdw = kas deposito wakaf
-            $sum_kdw = KasDepositoWakaf::sum('saldo');
+            $sum_kdw = KasDepositoWakaf::where('type','pemasukan')->sum('saldo');
             $sumKredit_kdw = KasDepositoWakaf::where('type','pengeluaran')->sum('saldo');
-            $saldoTerakhir_kdw = $sum_kdw - $sumKredit_kdw;
+            $saldoTerakhir_kdw = ($sum_kdw - $sumKredit_kdw);
 
             $saldo_terakhir_kas = [$saldoTerakhirKasTunai, $saldoTerakhir_ktw, $saldoTerakhir_ktbh, $saldoTerakhir_ktbnh, $saldoTerakhir_kdw];
 
