@@ -36,7 +36,7 @@ Class PengajuanBiayaOperasional
 
             $validator = Validator::make($request->all(), [
                 'nama_pengaju' => 'required|string|max:255',
-                'kategori_biaya' => 'required',
+                'kategori_biaya' => 'required|in:bebanpengelolaan,bagiannazhir,pentasyarufan',
                 'jenis_biaya' => 'required',
                 'keterangan_biaya' => 'required|string|max:255',
                 'nominal' => 'required|numeric',
@@ -125,7 +125,7 @@ Class PengajuanBiayaOperasional
                 }
             
             switch ($kategoriBiaya) {
-                case "1":
+                case "bebanpengelolaan":
                     $newBPP = new BebanPengelolaandanPengembangan();
                     $newBPP->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newBPP->keterangan = $request->keterangan;
@@ -140,7 +140,7 @@ Class PengajuanBiayaOperasional
                     }
 
                     break;
-                case "2":
+                case "bagiannazhir":
                     $newBagianNazhir = new BagianNazhir();
                     $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newBagianNazhir->keterangan = $request->keterangan;
@@ -156,7 +156,7 @@ Class PengajuanBiayaOperasional
 
                 break;
 
-                case "3":
+                case "pentasyarufan":
                     $newPentasyarufan = new PentasyarufanManfaat();
                     $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newPentasyarufan->keterangan = $request->keterangan;
@@ -344,7 +344,7 @@ Class PengajuanBiayaOperasional
                 }
             
             switch ($kategoriBiaya) {
-                case "1":
+                case "bebanpengelolaan":
                     $newBPP = new BebanPengelolaandanPengembangan();
                     $newBPP->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newBPP->keterangan = $request->keterangan;
@@ -359,7 +359,7 @@ Class PengajuanBiayaOperasional
                     }
 
                     break;
-                case "2":
+                case "bagiannazhir":
                     $newBagianNazhir = new BagianNazhir();
                     $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newBagianNazhir->keterangan = $request->keterangan;
@@ -375,7 +375,7 @@ Class PengajuanBiayaOperasional
 
                 break;
 
-                case "3":
+                case "pentasyarufan":
                     $newPentasyarufan = new PentasyarufanManfaat();
                     $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->approved_at;
                     $newPentasyarufan->keterangan = $request->keterangan;
