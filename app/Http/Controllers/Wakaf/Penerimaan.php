@@ -186,18 +186,18 @@ Class Penerimaan
                 /* $data["nominal"] = empty($data["ptp"]) ? $data->ptt['saldo'] : $data->ptp['saldo'];
                 $data["tanggal_transaksi"] = empty($data["ptp"]) ? $data->ptt['tanggal_transaksi'] : $data->ptp['tanggal_transaksi']; */
                 
-                $data["tanggal_transaksi"] = null;
+                //$data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
 
                 if (empty($data["ptp"])){
                     switch (true) {
                         case empty($data["wtpd"]):
-                            $data["tanggal_transaksi"] = $data->wtpj['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->wtpj['tanggal_transaksi'];
                             $data["nominal"] = $data->wtpj['saldo'];
                             break;
 
                         case empty($data["wtpj"]):
-                            $data["tanggal_transaksi"] = $data->wtpd['tanggal_transaksi'];
+                            //$data["tanggal_transaksi"] = $data->wtpd['tanggal_transaksi'];
                             $data["nominal"] = $data->wtpd['saldo'];
                         break;
                 
@@ -206,7 +206,7 @@ Class Penerimaan
                         break;
                     }
                 }else{
-                    $data["tanggal_transaksi"] = $data->ptp['tanggal_transaksi'];
+                    //$data["tanggal_transaksi"] = $data->ptp['tanggal_transaksi'];
                     $data["nominal"] = $data->ptp['saldo'];
                 }
             }
