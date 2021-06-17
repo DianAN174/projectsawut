@@ -135,7 +135,7 @@ class PengelolaanWakaf
                     $newDeposito->saldo = $pengelolaan->saldo;
                     $newDeposito->type = 'pengeluaran';
                     $newDeposito->pengelolaan_id = $pengelolaan->id;;
-                    $newDeposito = $newTabNonBagiHasil->save();
+                    $newDeposito = $newDeposito->save();
 
                     if (!$newDeposito) {
                         DB::rollBack();
@@ -223,7 +223,7 @@ class PengelolaanWakaf
                     $newDeposito->saldo = $pengelolaan->saldo;
                     $newDeposito->type = 'pemasukan';
                     $newDeposito->pengelolaan_id = $pengelolaan->id;
-                    $newDeposito = $newTabNonBagiHasil->save();
+                    $newDeposito = $newDeposito->save();
 
                     if (!$newDeposito) {
                         DB::rollBack();
