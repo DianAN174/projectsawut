@@ -35,13 +35,13 @@ Class Penerimaan
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|string|max:255',
+                'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
                 'nomor_aiw' => 'required|numeric',
                 'alamat' => 'required|string|max:255',
-                'phone' => 'required|numeric',
+                'telepon' => 'required|numeric',
                 'jenis_wakaf' => 'required|in:temporer,permanen',
-                'jangka_temporer' => 'required|numeric',
+                'jangka_waktu_temporer' => 'required|numeric',
                 'nominal' => 'required|numeric',
                 'metode_pembayaran' => 'required|in:tunai,transfer',
                 //'keterangan' => 'required',
@@ -57,13 +57,13 @@ Class Penerimaan
 
             $dataWakif = new DataWakif();
 
-            $dataWakif->nama_wakif = $request->nama;
+            $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
-            $dataWakif->no_aiw = $request->nomor_aiw;
+            $dataWakif->nomor_aiw = $request->nomor_aiw;
             $dataWakif->alamat = $request->alamat;
-            $dataWakif->telepon = $request->phone;
+            $dataWakif->telepon = $request->telepon;
             $dataWakif->jenis_wakaf = $request->jenis_wakaf;
-            $dataWakif->jangka_waktu_temporer = $request->jangka_temporer;
+            $dataWakif->jangka_waktu_temporer = $request->jangka_waktu_temporer;
             $dataWakif->nominal = $request->nominal;
             $dataWakif->metode_pembayaran = $request->metode_pembayaran;
             $dataWakif->created_by = $this->admin->name;
@@ -221,7 +221,7 @@ Class Penerimaan
     {
         try 
         {
-            $dataWakif = DataWakif::select('nama_wakif','nik','no_aiw','alamat','telepon','jenis_wakaf','jangka_waktu_temporer','metode_pembayaran')
+            $dataWakif = DataWakif::select('nama_wakif','nik','nomor_aiw','alamat','telepon','jenis_wakaf','jangka_waktu_temporer','nominal','metode_pembayaran')
             ->where('id',$id)->get();
             return Response::HttpResponse(200, $dataWakif, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
@@ -236,13 +236,13 @@ Class Penerimaan
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|string|max:255',
+                'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
                 'nomor_aiw' => 'required|numeric',
                 'alamat' => 'required|string|max:255',
-                'phone' => 'required|numeric',
+                'telepon' => 'required|numeric',
                 'jenis_wakaf' => 'required|in:temporer,permanen',
-                'jangka_temporer' => 'required|numeric',
+                'jangka_waktu_temporer' => 'required|numeric',
                 'nominal' => 'required|numeric',
                 'metode_pembayaran' => 'required|in:tunai,transfer',
                 //'keterangan' => 'required',
@@ -258,13 +258,13 @@ Class Penerimaan
 
             $dataWakif=DataWakif::find($id);
             
-            $dataWakif->nama_wakif = $request->nama;
+            $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
-            $dataWakif->no_aiw = $request->nomor_aiw;
+            $dataWakif->nomor_aiw = $request->nomor_aiw;
             $dataWakif->alamat = $request->alamat;
-            $dataWakif->telepon = $request->phone;
+            $dataWakif->telepon = $request->telepon;
             $dataWakif->jenis_wakaf = $request->jenis_wakaf;
-            $dataWakif->jangka_waktu_temporer = $request->jangka_temporer;
+            $dataWakif->jangka_waktu_temporer = $request->jangka_waktu_temporer;
             $dataWakif->nominal = $request->nominal;
             $dataWakif->metode_pembayaran = $request->metode_pembayaran;
             $dataWakif->created_by = $this->admin->name;
