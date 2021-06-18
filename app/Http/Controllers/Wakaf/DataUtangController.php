@@ -87,6 +87,7 @@ Class DataUtangController
 
             $datas = DataUtang::with("UtangBiaya","UtangJangkaPanjang")->paginate($request->limit)
             ->makeHidden(['created_at','updated_at','deleted_at','created_by','modified_by','deleted_by']);
+            
             /* foreach ($datas as $d_key => $data) {
                 $data["nominal"] = empty($data["UtangBiaya"]) ? $data->UtangJangkaPanjang['saldo'] : $data->UtangBiaya['saldo'];
                 $data["tanggal_transaksi"] = empty($data["UtangBiaya"]) ? $data->UtangJangkaPanjang['tanggal_transaksi'] : $data->UtangBiaya['tanggal_transaksi']; 

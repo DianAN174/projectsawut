@@ -94,18 +94,18 @@ Class DataAsetTetapController
 
             if (!$newDataAsetTetap) {
                 DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                return Response::HttpResponse(400, null, "Failed to create data", true);
             }
 
             $kelompok = $dataAsetTetap->kelompok;
-
+            
             switch ($kelompok) {
                 case "kendaraan":
                     $newKendaraan = new AkunMesindanKendaraan();
                     $newKendaraan->tanggal_transaksi = $request->tanggal_transaksi;
                     $newKendaraan->keterangan = $request->keterangan;
                     $newKendaraan->saldo = $dataAsetTetap->harga_perolehan;
-                    $newKendaraan->type = 'debit';
+                    $newKendaraan->type = 'pemasukan';
                     $newKendaraan->data_aset_tetap_id = $dataAsetTetap->id;
                     $newKendaraan = $newKendaraan->save();
 
@@ -121,7 +121,7 @@ Class DataAsetTetapController
                     $newGedung->tanggal_transaksi = $request->tanggal_transaksi;
                     $newGedung->keterangan = $request->keterangan;
                     $newGedung->saldo = $dataAsetTetap->harga_perolehan;
-                    $newGedung->type = 'debit';
+                    $newGedung->type = 'pemasukan';
                     $newGedung->data_aset_tetap_id = $dataAsetTetap->id;
                     $newGedung = $newGedung->save();
 
@@ -137,7 +137,7 @@ Class DataAsetTetapController
                     $newTanah->tanggal_transaksi = $request->tanggal_transaksi;
                     $newTanah->keterangan = $request->keterangan;
                     $newTanah->saldo = $dataAsetTetap->harga_perolehan;
-                    $newTanah->type = 'debit';
+                    $newTanah->type = 'pemasukan';
                     $newTanah->data_aset_tetap_id = $dataAsetTetap->id;
                     $newTanah = $newTanah->save();
 
@@ -154,7 +154,7 @@ Class DataAsetTetapController
                 $newPeralatan->tanggal_transaksi = $request->tanggal_transaksi;
                 $newPeralatan->keterangan = $request->keterangan;
                 $newPeralatan->saldo = $dataAsetTetap->harga_perolehan;
-                $newPeralatan->type = 'debit';
+                $newPeralatan->type = 'pemasukan';
                 $newPeralatan->data_aset_tetap_id = $dataAsetTetap->id;
                 $newPeralatan = $newPeralatan->save();
 
@@ -170,7 +170,7 @@ Class DataAsetTetapController
                 $newAsetLain->tanggal_transaksi = $request->tanggal_transaksi;
                 $newAsetLain->keterangan = $request->keterangan;
                 $newAsetLain->saldo = $dataAsetTetap->harga_perolehan;
-                $newAsetLain->type = 'debit';
+                $newAsetLain->type = 'pemasukan';
                 $newAsetLain->data_aset_tetap_id = $dataAsetTetap->id;
                 $newAsetLain = $newAsetLain->save();
 
@@ -231,11 +231,9 @@ Class DataAsetTetapController
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
-
+            
             $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunAsetLainLain")->paginate($request->limit);
             foreach ($datas as $d_key => $data) {
-                /* $data["nominal"] = empty($data["ptp"]) ? $data->ptt['saldo'] : $data->ptp['saldo'];
-                $data["tanggal_transaksi"] = empty($data["ptp"]) ? $data->ptt['tanggal_transaksi'] : $data->ptp['tanggal_transaksi']; */
                 
                 //$data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
@@ -243,21 +241,21 @@ Class DataAsetTetapController
                 if (empty($data["AkunMesindanKendaraan"])){
                     switch (true) {
                         case empty($data["AkunGedungdanBangunan"]):
-                            //$data["tanggal_transaksi"] = $data->AkunTanah['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunTanah['saldo'];
+                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
                             break;
 
                         case empty($data["AkunTanah"]):
-                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
+                            //$data["tanggal_transaksi"] = $data->AkunTanah['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunTanah['saldo'];
                         break;
                         case empty($data["AkunPeralatandanPerlengkapanKantor"]):
-                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
+                            //$data["tanggal_transaksi"] = $data->AkunPeralatandanPerlengkapanKantor['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunPeralatandanPerlengkapanKantor['saldo'];
                         break;
                         case empty($data["AkunAsetLainLain"]):
-                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
+                            //$data["tanggal_transaksi"] = $data->AkunAsetLainLain['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunAsetLainLain['saldo'];
                         break;
                 
                         default:
@@ -362,7 +360,7 @@ Class DataAsetTetapController
                     $newKendaraan->tanggal_transaksi = $request->tanggal_transaksi;
                     $newKendaraan->keterangan = $request->keterangan;
                     $newKendaraan->saldo = $dataAsetTetap->harga_perolehan;
-                    $newKendaraan->type = 'debit';
+                    $newKendaraan->type = 'pemasukan';
                     $newKendaraan->data_aset_tetap_id = $dataAsetTetap->id;
                     $newKendaraan = $newKendaraan->save();
 
@@ -378,7 +376,7 @@ Class DataAsetTetapController
                     $newGedung->tanggal_transaksi = $request->tanggal_transaksi;
                     $newGedung->keterangan = $request->keterangan;
                     $newGedung->saldo = $dataAsetTetap->harga_perolehan;
-                    $newGedung->type = 'debit';
+                    $newGedung->type = 'pemasukan';
                     $newGedung->data_aset_tetap_id = $dataAsetTetap->id;
                     $newGedung = $newGedung->save();
 
@@ -394,7 +392,7 @@ Class DataAsetTetapController
                     $newTanah->tanggal_transaksi = $request->tanggal_transaksi;
                     $newTanah->keterangan = $request->keterangan;
                     $newTanah->saldo = $dataAsetTetap->harga_perolehan;
-                    $newTanah->type = 'debit';
+                    $newTanah->type = 'pemasukan';
                     $newTanah->data_aset_tetap_id = $dataAsetTetap->id;
                     $newTanah = $newTanah->save();
 
@@ -410,7 +408,7 @@ Class DataAsetTetapController
                 $newPeralatan->tanggal_transaksi = $request->tanggal_transaksi;
                 $newPeralatan->keterangan = $request->keterangan;
                 $newPeralatan->saldo = $dataAsetTetap->harga_perolehan;
-                $newPeralatan->type = 'debit';
+                $newPeralatan->type = 'pemasukan';
                 $newPeralatan->data_aset_tetap_id = $dataAsetTetap->id;
                 $newPeralatan = $newPeralatan->save();
 
@@ -426,7 +424,7 @@ Class DataAsetTetapController
                 $newAsetLain->tanggal_transaksi = $request->tanggal_transaksi;
                 $newAsetLain->keterangan = $request->keterangan;
                 $newAsetLain->saldo = $dataAsetTetap->harga_perolehan;
-                $newAsetLain->type = 'debit';
+                $newAsetLain->type = 'pemasukan';
                 $newAsetLain->data_aset_tetap_id = $dataAsetTetap->id;
                 $newAsetLain = $newAsetLain->save();
 

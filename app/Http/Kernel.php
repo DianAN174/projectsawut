@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
-        \Fruitcake\Cors\HandleCors::class,
+        //\Fruitcake\Cors\HandleCors::class,
         //\App\Http\Middleware\Cors::class,
         \App\Http\Middleware\ForceJsonResponse::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -43,6 +43,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            'cors',
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -57,7 +58,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
-        //'cors' => \App\Http\Middleware\Cors::class,
+        'cors' => \App\Http\Middleware\Cors::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

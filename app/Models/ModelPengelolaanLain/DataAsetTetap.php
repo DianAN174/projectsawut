@@ -52,10 +52,7 @@ class DataAsetTetap extends Model
 
     public static function boot() {
         parent::boot();
-        self::deleting(function($dataAsetTetap) { 
-            $dataAsetTetap->AkunPersediaan()->each(function($AkunPersediaan) {
-                $AkunPersediaan->delete(); 
-            });
+        self::deleting(function($dataAsetTetap) {
             $dataAsetTetap->AkunMesindanKendaraan()->each(function($AkunMesindanKendaraan) {
                 $AkunMesindanKendaraan->delete(); 
             });

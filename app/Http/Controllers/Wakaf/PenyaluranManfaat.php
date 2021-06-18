@@ -233,7 +233,17 @@ Class PenyaluranManfaat
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'answer' => 'required',
+                'answer_1' => 'required',
+                'answer_2' => 'required',
+                'answer_3' => 'required',
+                'answer_4' => 'required',
+                'answer_5' => 'required',
+                'answer_6' => 'required',
+                'answer_7' => 'required',
+                'answer_8' => 'required',
+                'answer_9' => 'required',
+                'answer_10' => 'required',
+                'answer_11' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -244,14 +254,16 @@ Class PenyaluranManfaat
             DB::beginTransaction();
 
             $penyaluranTemp = PenyaluranTemp::find($id)->id;
-            //$answers = [$request->answers];
+            $answers = [$request->answer_1,$request->answer_2,$request->answer_3,$request->answer_4,
+            $request->answer_5,$request->answer_6,$request->answer_7,$request->answer_8,$request->answer_9,
+            $request->answer_10,$request->answer_11];
             //$answers_array = [];
             //dd($answers[0]);
             for ($i=1; $i<=11; $i++) {
                 $answers_array[] = [
                     'penyaluran_temp_id' => $penyaluranTemp,
                     'question_id' => $i,
-                    'answer_id' => $request->answer,
+                    'answer_id' => $answers[$i-1],
                     'created_by' => $this->admin->name,  
                     'modified_by' => $this->admin->name
                 ];
@@ -295,7 +307,12 @@ Class PenyaluranManfaat
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
-                'answer' => 'required',
+                'answer_12' => 'required',
+                'answer_13' => 'required',
+                'answer_14' => 'required',
+                'answer_15' => 'required',
+                'answer_16' => 'required',
+                'answer_17' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -307,12 +324,13 @@ Class PenyaluranManfaat
 
             $penyaluranTemp = PenyaluranTemp::find($id)->id;
             //$kelayakanSecond = new TempTable();
-
+            $answers = [$request->answer_12,$request->answer_13,$request->answer_14,
+            $request->answer_15,$request->answer_16,$request->answer_17];
             for ($i=1; $i<=6; $i++) {
                 $answers_array[] = [
                     'penyaluran_temp_id' => $penyaluranTemp,
                     'question_id' => ($i+11),
-                    'answer_id' => $request->answer,
+                    'answer_id' => $answers[$i-1],
                     'created_by' => $this->admin->name,  
                     'modified_by' => $this->admin->name
                 ];
