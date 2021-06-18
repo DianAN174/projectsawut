@@ -14,12 +14,12 @@ use App\Http\Controllers\Auth;
 |
 */
 
-Route::group(['middleware' => ['cors', 'json.response']], function () {
+Route::group(['middleware' => ['json.response']], function () {
     Route::post('/auth/login', 'App\Http\Controllers\Auth\ApiAuthController@login')->name('login.api');
     Route::post('/register','App\Http\Controllers\Auth\ApiAuthController@register')->name('register.api');
 });
 
-Route::middleware('cors','auth:api')->group(function () {
+Route::middleware('auth:api')->group(function () {
 
     Route::get('/auth/user', function (Request $request) {
         return $request->user();
