@@ -19,7 +19,7 @@ Route::group(['middleware' => ['json.response']], function () {
     Route::post('/register','App\Http\Controllers\Auth\ApiAuthController@register')->name('register.api');
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api','json.response'])->group(function () {
 
     Route::get('/auth/user', function (Request $request) {
         return $request->user();
