@@ -15,7 +15,7 @@ use App\Http\Controllers\Auth;
 */
 
 //Route::group(['middleware' => ['cors', 'json.response']], function () {
-Route::group(['middleware' => ['json.response']], function () {
+Route::group(['middleware' => ['cors','json.response']], function () {
     Route::post('/auth/login', 'App\Http\Controllers\Auth\ApiAuthController@login')->name('login.api');
     Route::post('/register','App\Http\Controllers\Auth\ApiAuthController@register')->name('register.api');
 });
