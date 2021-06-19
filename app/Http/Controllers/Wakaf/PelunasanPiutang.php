@@ -62,12 +62,12 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
-
+            dd($kekuranganCicilan);
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if($request->kekuranganCicilan >= 0)
+            if(kekuranganCicilan >= 0)
             {
                 $pelunasan->kekurangan = $kekuranganCicilan;
             }
@@ -158,38 +158,38 @@ Class PelunasanPiutang
 
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
-            $pelunasan = Pelunasan::find($id);
-            $nikQuery = Penyaluran::where('nik',$request->nik);
+            $pelunasan = new Pelunasan();
+            $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
             if($nikQuery == null)
             {
                 return Response::HttpResponse(400, null, "NIK not found", true);
             }
 
-            $namaPeminjam = Penyaluran::select('nama_penerima')->where('nik',$request->nik);
-            $jumlahPinjaman = Penyaluran::select('nominal_peminjaman')->where('nik',$request->nik);
-            $periodeAkhir = Penyaluran::select('periode_akhir')->where('nik',$request->nik);
-            $kekuranganCicilan = $jumlahPinjaman - $request->kekurangan;
-
+            $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
+            $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
+            $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
+            dd($kekuranganCicilan);
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
-            $pelunasan->nama_peminjam = $namaPeminjam;
+            $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if($request->kekurangan >= $jumlahPinjaman)
+            if(kekuranganCicilan >= 0)
             {
-                $pelunasan->kekurangan = ($jumlahPinjaman - $request->kekurangan);
+                $pelunasan->kekurangan = $kekuranganCicilan;
             }
             else
             {
                 DB::rollBack();
+                return Response::HttpResponse(400, null, "Failed to create data", true);
             }
-            $pelunasan->tanggal_jatuh_tempo = $periodeAkhir;
-            if($pelunasan->jumlah_cicilan = 0)
+            $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
+            if($pelunasan->kekurangan = 0)
             {
-                $pelunasan->status_pelunasan = 'lunas';
+                $pelunasan->pelunasan = '1';
             }
             $pelunasan->created_by = $this->admin->name;
             $pelunasan->modified_by = $this->admin->name;
-            
             $newPelunasan = $pelunasan->save();
 
             if (!$newPelunasan) {
