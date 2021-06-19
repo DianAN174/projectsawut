@@ -41,7 +41,7 @@ Class PenyaluranManfaat
 
             $validator = Validator::make($request->all(), [
                 'nama_penerima' => 'required|string|max:255',
-                'nik' => 'required|numeric|max:255',
+                'nik' => 'required|numeric',
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
@@ -169,7 +169,7 @@ Class PenyaluranManfaat
 
             $validator = Validator::make($request->all(), [
                 'nama_penerima' => 'required|string|max:255',
-                'nik' => 'required|numeric|max:255',
+                'nik' => 'required|numeric',
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
@@ -575,7 +575,7 @@ Class PenyaluranManfaat
 
             $validator = Validator::make($request->all(), [
                 'nama_penerima' => 'required|string|max:255',
-                'nik' => 'required|numeric|max:255',
+                'nik' => 'required|numeric',
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric|max:255',
                 'jenis_usaha' => 'required|in:perdagangan,fashion,otomotif,kerajinan,it,lainnya',
