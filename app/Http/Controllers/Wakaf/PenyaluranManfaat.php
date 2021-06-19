@@ -159,9 +159,9 @@ Class PenyaluranManfaat
                 case "bagihasil":
                         $newBagiHasil = new KasTabBagiHasil();
                         $newBagiHasil->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                        $newBagiHasil->keterangan = 'Pencairan Penyaluran Manfaat';
+                        $newBagiHasil->keterangan = $penyaluranBiaya->keterangan;
                         $newBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
-                        $newBagiHasil->type = 'kredit';
+                        $newBagiHasil->type = 'pengeluaran';
                         $newBagiHasil->penyaluran_id = $penyaluranBiaya->id;
                         $newBagiHasil = $newBagiHasil->save();
         
@@ -174,9 +174,9 @@ Class PenyaluranManfaat
                     case "nonbagihasil":
                         $newNonBagiHasil = new KasTabNonBagiHasil();
                         $newNonBagiHasil->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                        $newNonBagiHasil->keterangan = 'Pencairan Penyaluran Manfaat';
+                        $newNonBagiHasil->keterangan = $penyaluranBiaya->keterangan;
                         $newNonBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
-                        $newNonBagiHasil->type = 'kredit';
+                        $newNonBagiHasil->type = 'pengeluaran';
                         $newNonBagiHasil->penyaluran_id = $penyaluranBiaya->id;
                         $newNonBagiHasil = $newNonBagiHasil->save();
         
@@ -197,9 +197,9 @@ Class PenyaluranManfaat
                 case "pjp":
                     $newPjp = new PiutangJangkaPendek();
                     $newPjp->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                    $newPjp->keterangan = 'Pencairan Penyaluran Manfaat';
+                    $newPjp->keterangan = $penyaluranBiaya->keterangan;
                     $newPjp->saldo = $penyaluranBiaya->nominal_peminjaman;
-                    $newPjp->type = 'debit';
+                    $newPjp->type = 'pemasukan';
                     $newPjp->penyaluran_id = $penyaluranBiaya->id;
                     $newPjp = $newPjp->save();
 
@@ -212,9 +212,9 @@ Class PenyaluranManfaat
                 case "pja":
                     $newPja = new PiutangJangkaPanjang();
                     $newPja->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                    $newPja->keterangan = 'Pencairan Penyaluran Manfaat';
+                    $newPja->keterangan = $penyaluranBiaya->keterangan;
                     $newPja->saldo = $penyaluranBiaya->nominal_peminjaman;
-                    $newPja->type = 'kredit';
+                    $newPja->type = 'pengeluaran';
                     $newPja->penyaluran_id = $penyaluranBiaya->id;
                     $newPja = $newPja->save();
 
@@ -543,10 +543,11 @@ Class PenyaluranManfaat
             }
 
             $datas = Penyaluran::with("PiutangJangkaPendek","PiutangJangkaPanjang")->paginate($request->limit);
-            foreach ($datas as $d_key => $data) {
-                $data["nominal"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['saldo'] : $data->PiutangJangkaPendek['saldo'];
+            //$datas = Penyaluran::with("PiutangJangkaPendek","PiutangJangkaPanjang")->paginate($request->limit);
+            //foreach ($datas as $d_key => $data) {
+            //    $data["nominal"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['saldo'] : $data->PiutangJangkaPendek['saldo'];
                 //$data["tanggal_transaksi"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['tanggal_transaksi'] : $data->PiutangJangkaPendek['tanggal_transaksi'];
-            }
+            //}
 
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
