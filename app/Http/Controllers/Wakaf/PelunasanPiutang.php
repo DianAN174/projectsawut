@@ -67,7 +67,7 @@ Class PelunasanPiutang
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if(kekuranganCicilan >= 0)
+            if($kekuranganCicilan >= 0)
             {
                 $pelunasan->kekurangan = $kekuranganCicilan;
             }
@@ -174,7 +174,7 @@ Class PelunasanPiutang
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if(kekuranganCicilan >= 0)
+            if($kekuranganCicilan >= 0)
             {
                 $pelunasan->kekurangan = $kekuranganCicilan;
             }
