@@ -62,22 +62,15 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
-            //dd($kekuranganCicilan);
+            
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if($kekuranganCicilan >= 0)
-            {
-                $pelunasan->kekurangan = $kekuranganCicilan;
-            }
-            else
-            {
-                DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data", true);
-            }
+            $pelunasan->kekurangan = $kekuranganCicilan;
+            
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
-            if($pelunasan->kekurangan = 0)
+            if($pelunasan->kekurangan == 0)
             {
                 $pelunasan->pelunasan = '1';
             }
@@ -174,17 +167,10 @@ Class PelunasanPiutang
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if($kekuranganCicilan >= 0)
-            {
-                $pelunasan->kekurangan = $kekuranganCicilan;
-            }
-            else
-            {
-                DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data", true);
-            }
+            $pelunasan->kekurangan = $kekuranganCicilan;
+            
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
-            if($pelunasan->kekurangan = 0)
+            if($pelunasan->kekurangan == 0)
             {
                 $pelunasan->pelunasan = '1';
             }
