@@ -62,7 +62,7 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
-            dd($kekuranganCicilan);
+            //dd($kekuranganCicilan);
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
@@ -169,7 +169,7 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
-            dd($kekuranganCicilan);
+            
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
