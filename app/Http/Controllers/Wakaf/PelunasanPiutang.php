@@ -137,7 +137,7 @@ Class PelunasanPiutang
         }
     }
 
-    public function Update(Request $request)
+    public function Update(Request $request, $id)
     {
 
         try {
@@ -160,30 +160,28 @@ Class PelunasanPiutang
 
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
-            $pelunasan = new Pelunasan();
+            $pelunasan = Pelunasan::find($id);
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
 
-            $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
-            if($nikPelunasanQuery == null)
+            $idQuery = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->count('id');
+            if($idQuery == 0)
             {
-                $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
-                if($nikQuery == null)
-                {
-                    return Response::HttpResponse(400, null, "NIK not found", true);
-                }
                 $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
+                $pelunasan->kekurangan = $kekuranganCicilan;
             }else
             {
-                $kekuranganCicilan =  (Pelunasan::where('nik',$request->nik)->sum('kekurangan')) - $request->jumlah_cicilan;
+                $sumKekurangan = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->sum('kekurangan');
+                $kekuranganCicilan =  $sumKekurangan - $request->jumlah_cicilan;
+                
+                $pelunasan->kekurangan = $kekuranganCicilan;
             }
 
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            $pelunasan->kekurangan = $kekuranganCicilan;
             
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
             if($pelunasan->kekurangan == 0)
