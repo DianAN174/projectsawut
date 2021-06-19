@@ -52,17 +52,25 @@ Class PelunasanPiutang
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
             $pelunasan = new Pelunasan();
-            $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
-            if($nikQuery == null)
-            {
-                return Response::HttpResponse(400, null, "NIK not found", true);
-            }
-
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
-            $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
+
+            $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
+            if($nikPelunasanQuery == null)
+            {
+                $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
+                if($nikQuery == null)
+                {
+                    return Response::HttpResponse(400, null, "NIK not found", true);
+                }
+            }else
+            {
+                $kekuranganCicilan =  (Pelunasan::where('nik',$request->nik)->sum('kekurangan')) - $request->jumlah_cicilan;
+            }
+
             
+            $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
@@ -152,11 +160,19 @@ Class PelunasanPiutang
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
             $pelunasan = new Pelunasan();
-            $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
-            if($nikQuery == null)
+            $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
+            if($nikPelunasanQuery == null)
             {
-                return Response::HttpResponse(400, null, "NIK not found", true);
+                $nikQuery = Penyaluran::where('nik',$request->nik)->first('nik');
+                if($nikQuery == null)
+                {
+                    return Response::HttpResponse(400, null, "NIK not found", true);
+                }
+            }else
+            {
+                $kekuranganCicilan =  $jumlahPinjaman - (Pelunasan::where('nik',$request->nik)->sum('kekurangan'));
             }
+            
 
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
