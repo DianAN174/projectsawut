@@ -61,24 +61,25 @@ Class PelunasanPiutang
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
-            $kekuranganCicilan = $jumlahPinjaman - $request->kekurangan;
+            $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
 
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
             $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            if($request->kekurangan >= 0)
+            if($request->kekuranganCicilan >= 0)
             {
                 $pelunasan->kekurangan = $kekuranganCicilan;
             }
             else
             {
                 DB::rollBack();
+                return Response::HttpResponse(400, null, "Failed to create data", true);
             }
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
             if($pelunasan->kekurangan = 0)
             {
-                $pelunasan->status_pelunasan = 'lunas';
+                $pelunasan->pelunasan = '1';
             }
             $pelunasan->created_by = $this->admin->name;
             $pelunasan->modified_by = $this->admin->name;
@@ -188,7 +189,6 @@ Class PelunasanPiutang
             }
             $pelunasan->created_by = $this->admin->name;
             $pelunasan->modified_by = $this->admin->name;
-            
             
             $newPelunasan = $pelunasan->save();
 
