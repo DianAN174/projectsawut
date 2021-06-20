@@ -35,6 +35,7 @@ Class Penerimaan
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
+                'tanggal' => 'required|date_format:Y-m-d',
                 'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
                 'nomor_aiw' => 'required|numeric',
@@ -45,7 +46,6 @@ Class Penerimaan
                 'nominal' => 'required|numeric',
                 'metode_pembayaran' => 'required|in:tunai,transfer',
                 //'keterangan' => 'required',
-                //'tanggal_transaksi' => 'required|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
@@ -57,6 +57,7 @@ Class Penerimaan
 
             $dataWakif = new DataWakif();
 
+            $dataWakif->tanggal = $request->tanggal;
             $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
             $dataWakif->nomor_aiw = $request->nomor_aiw;
@@ -82,7 +83,7 @@ Class Penerimaan
             switch ($jenisWakaf) {
                 case "permanen":
                     $newPTP = new PenerimaanTunaiPermanen();
-                    $newPTP->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newPTP->tanggal_transaksi = $request->tanggal;
                     $newPTP->keterangan = $request->keterangan;
                     $newPTP->saldo = $request->nominal;
                     $newPTP->type = 'pemasukan';
@@ -95,7 +96,7 @@ Class Penerimaan
                     }
 
                     $newTunai = new KasTunai();
-                    $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newTunai->tanggal_transaksi = $request->tanggal;
                     $newTunai->keterangan = $request->keterangan;
                     $newTunai->saldo = $request->nominal;
                     $newTunai->type = 'pemasukan';
@@ -112,7 +113,7 @@ Class Penerimaan
                     if($jangkaWaktu <1)
                     {
                         $newWTPD = new WakafTemporerJangkaPendek();
-                        $newWTPD->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newWTPD->tanggal_transaksi = $request->tanggal;
                         $newWTPD->keterangan = $request->keterangan;
                         $newWTPD->saldo = $request->nominal;
                         $newWTPD->type = 'pemasukan';
@@ -125,7 +126,7 @@ Class Penerimaan
                         }
                     }else{
                         $newWTPJ = new WakafTemporerJangkaPanjang();
-                        $newWTPJ->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newWTPJ->tanggal_transaksi = $request->tanggal;
                         $newWTPJ->keterangan = $request->keterangan;
                         $newWTPJ->saldo = $request->nominal;
                         $newWTPJ->type = 'pemasukan';
@@ -138,7 +139,7 @@ Class Penerimaan
                         }
 
                         $newTunai = new KasTunai();
-                        $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newTunai->tanggal_transaksi = $request->tanggal;
                         $newTunai->keterangan = $request->keterangan;
                         $newTunai->saldo = $request->nominal;
                         $newTunai->type = 'pemasukan';
@@ -182,22 +183,19 @@ Class Penerimaan
             }
 
             $datas = DataWakif::with("ptp","wtpd","wtpj")->paginate($request->limit);
-            foreach ($datas as $d_key => $data) {
-                /* $data["nominal"] = empty($data["ptp"]) ? $data->ptt['saldo'] : $data->ptp['saldo'];
-                $data["tanggal_transaksi"] = empty($data["ptp"]) ? $data->ptt['tanggal_transaksi'] : $data->ptp['tanggal_transaksi']; */
-                
-                //$data["tanggal_transaksi"] = null;
+            /* foreach ($datas as $d_key => $data) {
+                $data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
 
                 if (empty($data["ptp"])){
                     switch (true) {
                         case empty($data["wtpd"]):
-                            //$data["tanggal_transaksi"] = $data->wtpj['tanggal_transaksi'];
+                            $data["tanggal_transaksi"] = $data->wtpj['tanggal_transaksi'];
                             $data["nominal"] = $data->wtpj['saldo'];
                             break;
 
                         case empty($data["wtpj"]):
-                            //$data["tanggal_transaksi"] = $data->wtpd['tanggal_transaksi'];
+                            $data["tanggal_transaksi"] = $data->wtpd['tanggal_transaksi'];
                             $data["nominal"] = $data->wtpd['saldo'];
                         break;
                 
@@ -206,10 +204,10 @@ Class Penerimaan
                         break;
                     }
                 }else{
-                    //$data["tanggal_transaksi"] = $data->ptp['tanggal_transaksi'];
+                    $data["tanggal_transaksi"] = $data->ptp['tanggal_transaksi'];
                     $data["nominal"] = $data->ptp['saldo'];
                 }
-            }
+            } */
 
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
@@ -221,7 +219,7 @@ Class Penerimaan
     {
         try 
         {
-            $dataWakif = DataWakif::select('nama_wakif','nik','nomor_aiw','alamat','telepon','jenis_wakaf','jangka_waktu_temporer','nominal','metode_pembayaran')
+            $dataWakif = DataWakif::select('tanggal','nama_wakif','nik','nomor_aiw','alamat','telepon','jenis_wakaf','jangka_waktu_temporer','nominal','metode_pembayaran')
             ->where('id',$id)->get();
             return Response::HttpResponse(200, $dataWakif, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
@@ -236,6 +234,7 @@ Class Penerimaan
             $this->admin = $request->user();
 
             $validator = Validator::make($request->all(), [
+                'tanggal' => 'required|date_format:Y-m-d',
                 'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
                 'nomor_aiw' => 'required|numeric',
@@ -246,7 +245,6 @@ Class Penerimaan
                 'nominal' => 'required|numeric',
                 'metode_pembayaran' => 'required|in:tunai,transfer',
                 //'keterangan' => 'required',
-                //'tanggal_transaksi' => 'required|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
@@ -258,6 +256,7 @@ Class Penerimaan
 
             $dataWakif=DataWakif::find($id);
             
+            $dataWakif->tanggal = $request->tanggal;
             $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
             $dataWakif->nomor_aiw = $request->nomor_aiw;
@@ -282,11 +281,12 @@ Class Penerimaan
 
             switch ($jenisWakaf) {
                 case "permanen":
-                    $newPTP = new PenerimaanTunaiPermanen();
-                    $newPTP->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newPTP = PenerimaanTunaiPermanen::where('data_wakif_id',$dataWakif->id)->first('id');
+                    $newPTP->tanggal_transaksi = $request->tanggal;
                     $newPTP->keterangan = $request->keterangan;
                     $newPTP->saldo = $request->nominal;
-                    $newPTP->data_wakif_id = $dataWakif->id;
+                    $newPTP->type = 'pemasukan';
+                    //$newPTP->data_wakif_id = $dataWakif->id;
                     $newPTP = $newPTP->save();
 
                     if (!$newPTP) {
@@ -294,12 +294,12 @@ Class Penerimaan
                         return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                     }
 
-                    $newTunai = new KasTunai();
-                    $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newTunai = KasTunai::where('data_wakif_id',$dataWakif->id)->first('id');
+                    $newTunai->tanggal_transaksi = $request->tanggal;
                     $newTunai->keterangan = $request->keterangan;
                     $newTunai->saldo = $request->nominal;
                     $newTunai->type = 'pemasukan';
-                    $newTunai->data_wakif_id = $dataWakif->id;
+                    //$newTunai->data_wakif_id = $dataWakif->id;
                     $newTunai = $newTunai->save();
 
                     if (!$newTunai) {
@@ -311,12 +311,12 @@ Class Penerimaan
                 case "temporer":
                     if($jangkaWaktu <1)
                     {
-                        $newWTPD = new WakafTemporerJangkaPendek();
-                        $newWTPD->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
+                        $newWTPD->tanggal_transaksi = $request->tanggal;
                         $newWTPD->keterangan = $request->keterangan;
                         $newWTPD->saldo = $request->nominal;
                         $newWTPD->type = 'pemasukan';
-                        $newWTPD->data_wakif_id = $dataWakif->id;
+                        //$newWTPD->data_wakif_id = $dataWakif->id;
                         $newWTPD = $newWTPD->save();
 
                         if (!$newWTPD) {
@@ -324,12 +324,12 @@ Class Penerimaan
                             return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                         }
                     }else{
-                        $newWTPJ = new WakafTemporerJangkaPanjang();
-                        $newWTPJ->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
+                        $newWTPJ->tanggal_transaksi = $request->tanggal;
                         $newWTPJ->keterangan = $request->keterangan;
                         $newWTPJ->saldo = $request->nominal;
                         $newWTPJ->type = 'pemasukan';
-                        $newWTPJ->data_wakif_id = $dataWakif->id;
+                        //$newWTPJ->data_wakif_id = $dataWakif->id;
                         $newWTPJ = $newWTPJ->save();
 
                         if (!$newWTPJ) {
@@ -337,12 +337,12 @@ Class Penerimaan
                             return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                         }
 
-                        $newTunai = new KasTunai();
-                        $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newTunai = KasTunai::where('data_wakif_id',$dataWakif->id)->first('id');
+                        $newTunai->tanggal_transaksi = $request->tanggal;
                         $newTunai->keterangan = $request->keterangan;
                         $newTunai->saldo = $request->nominal;
                         $newTunai->type = 'pemasukan';
-                        $newTunai->data_wakif_id = $dataWakif->id;
+                        //$newTunai->data_wakif_id = $dataWakif->id;
                         $newTunai = $newTunai->save();
     
                         if (!$newTunai) {
@@ -351,7 +351,6 @@ Class Penerimaan
                         }
 
                     }
-                    
 
                     break;
                 default:
