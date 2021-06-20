@@ -9,7 +9,7 @@ use App\Models\ModelPengelolaanLain\AkunMesindanKendaraan;
 use App\Models\ModelPengelolaanLain\AkunGedungdanBangunandanBangunandanBangunan;
 use App\Models\ModelPengelolaanLain\AkunTanah;
 use App\Models\ModelPengelolaanLain\AkunPeralatandanPerlengkapanKantor;
-use App\Models\ModelPengelolaanLain\AkunAsetLainLain;
+use App\Models\ModelPengelolaanLain\AkunlainnyaLain;
 
 use App\Models\User;
 use App\Utils\Response;
@@ -39,8 +39,8 @@ Class DataAsetTetapController
 
             $validator = Validator::make($request->all(), [
                 'nama_aset' => 'required|string|max:255',
-                //'kelompok' => 'required|in:persediaan,kendaraan,gedung,tanah,peralatan,asetlain',
-                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,asetlain',
+                //'kelompok' => 'required|in:persediaan,kendaraan,gedung,tanah,peralatan,lainnya',
+                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,lainnya',
                 'tanggal_beli' => 'required|date_format:Y-m-d',
                 'harga_perolehan' => 'required|numeric',
                 'nilai_bersih' => 'required|numeric',
@@ -165,16 +165,16 @@ Class DataAsetTetapController
 
            break;  
 
-            case "asetlain":
-                $newAsetLain = new AkunAsetLainLain();
-                $newAsetLain->tanggal_transaksi = $request->tanggal_transaksi;
-                $newAsetLain->keterangan = $request->keterangan;
-                $newAsetLain->saldo = $dataAsetTetap->harga_perolehan;
-                $newAsetLain->type = 'pemasukan';
-                $newAsetLain->data_aset_tetap_id = $dataAsetTetap->id;
-                $newAsetLain = $newAsetLain->save();
+            case "lainnya":
+                $newlainnya = new AkunlainnyaLain();
+                $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
+                $newlainnya->keterangan = $request->keterangan;
+                $newlainnya->saldo = $dataAsetTetap->harga_perolehan;
+                $newlainnya->type = 'pemasukan';
+                $newlainnya->data_aset_tetap_id = $dataAsetTetap->id;
+                $newlainnya = $newlainnya->save();
 
-                if (!$newAsetLain) {
+                if (!$newlainnya) {
                     DB::rollBack();
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
@@ -232,7 +232,7 @@ Class DataAsetTetapController
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
             
-            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunAsetLainLain")->paginate($request->limit);
+            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunlainnyaLain")->paginate($request->limit);
             foreach ($datas as $d_key => $data) {
                 
                 //$data["tanggal_transaksi"] = null;
@@ -253,9 +253,9 @@ Class DataAsetTetapController
                             //$data["tanggal_transaksi"] = $data->AkunPeralatandanPerlengkapanKantor['tanggal_transaksi'];
                             $data["nominal"] = $data->AkunPeralatandanPerlengkapanKantor['saldo'];
                         break;
-                        case empty($data["AkunAsetLainLain"]):
-                            //$data["tanggal_transaksi"] = $data->AkunAsetLainLain['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunAsetLainLain['saldo'];
+                        case empty($data["AkunlainnyaLain"]):
+                            //$data["tanggal_transaksi"] = $data->AkunlainnyaLain['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunlainnyaLain['saldo'];
                         break;
                 
                         default:
@@ -295,7 +295,7 @@ Class DataAsetTetapController
 
             $validator = Validator::make($request->all(), [
                 'nama_aset' => 'required|string|max:255',
-                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,asetlain',
+                'kelompok' => 'required|in:kendaraan,gedung,tanah,peralatan,lainnya',
                 'tanggal_beli' => 'required|date_format:Y-m-d',
                 'harga_perolehan' => 'required|numeric',
                 'nilai_bersih' => 'required|numeric',
@@ -419,16 +419,16 @@ Class DataAsetTetapController
 
            break;   
 
-            case "asetlain":
-                $newAsetLain = new AkunAsetLainLain();
-                $newAsetLain->tanggal_transaksi = $request->tanggal_transaksi;
-                $newAsetLain->keterangan = $request->keterangan;
-                $newAsetLain->saldo = $dataAsetTetap->harga_perolehan;
-                $newAsetLain->type = 'pemasukan';
-                $newAsetLain->data_aset_tetap_id = $dataAsetTetap->id;
-                $newAsetLain = $newAsetLain->save();
+            case "lainnya":
+                $newlainnya = new AkunlainnyaLain();
+                $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
+                $newlainnya->keterangan = $request->keterangan;
+                $newlainnya->saldo = $dataAsetTetap->harga_perolehan;
+                $newlainnya->type = 'pemasukan';
+                $newlainnya->data_aset_tetap_id = $dataAsetTetap->id;
+                $newlainnya = $newlainnya->save();
 
-                if (!$newAsetLain) {
+                if (!$newlainnya) {
                     DB::rollBack();
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
@@ -468,7 +468,7 @@ Class DataAsetTetapController
     }
 
     public function DropdownKelompok(Request $request){
-        $kelompok=['kendaraan'=>'Kendaraan','gedung'=>'Gedung','tanah'=>'Tanah','peralatan'=>'Peralatan dan Perlengkapan Kantor','asetlain'=>'Aset Lain Lain'];
+        $kelompok=['kendaraan'=>'Kendaraan','gedung'=>'Gedung','tanah'=>'Tanah','peralatan'=>'Peralatan dan Perlengkapan Kantor','lainnya'=>'Aset Lain Lain'];
 
         return Response::HttpResponse(200, $kelompok, "Success", true);
     }
