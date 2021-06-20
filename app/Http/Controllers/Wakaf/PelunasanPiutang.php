@@ -56,8 +56,7 @@ Class PelunasanPiutang
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->first('periode_akhir');
-            $pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
-            dd($pelunasanPenyaluran);
+            //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             if($nikPelunasanQuery == null)
             {
