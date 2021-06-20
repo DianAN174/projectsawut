@@ -52,10 +52,12 @@ Class PelunasanPiutang
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
             $pelunasan = new Pelunasan();
+            //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
-            $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
-
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->sum('nominal_peminjaman');
+            $periodeAkhir = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->first('periode_akhir');
+            $pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
+            dd($pelunasanPenyaluran);
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             if($nikPelunasanQuery == null)
             {
@@ -81,7 +83,8 @@ Class PelunasanPiutang
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
             if($pelunasan->kekurangan == 0)
             {
-                $pelunasan->pelunasan = '1';
+                $pelunasan->pelunasan = 1;
+
             }
             $pelunasan->created_by = $this->admin->name;
             $pelunasan->modified_by = $this->admin->name;
@@ -119,7 +122,18 @@ Class PelunasanPiutang
 
             //$datas = Pelunasan::all()->paginate($request->limit);
             $datas = Pelunasan::paginate($request->limit);
-            return Response::HttpResponse(200, $datas, "Index", false);
+            foreach ($datas as $d_key => $data) {
+                //$data["pelunasan"] = null;
+                
+                if ($data["pelunasan"] == 0 || null){
+                    $data["pelunasan"] = (string) 'Belum Lunas';
+
+                }else{
+                    $data["pelunasan"] = (string) 'Lunas';
+                }
+            }
+                return Response::HttpResponse(200, $datas, "Index", false);
+            
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -161,9 +175,10 @@ Class PelunasanPiutang
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
             $pelunasan = Pelunasan::find($id);
+        
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
-            $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->sum('nominal_peminjaman');
+            $periodeAkhir = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->first('periode_akhir');
 
             $idQuery = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->count('id');
             if($idQuery == 0)
@@ -187,6 +202,7 @@ Class PelunasanPiutang
             if($pelunasan->kekurangan == 0)
             {
                 $pelunasan->pelunasan = '1';
+
             }
             $pelunasan->created_by = $this->admin->name;
             $pelunasan->modified_by = $this->admin->name;
