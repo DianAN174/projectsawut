@@ -57,7 +57,7 @@ Class Penerimaan
 
             $dataWakif = new DataWakif();
 
-            $dataWakif->tanggal = $request->tanggal_transaksi;
+            $dataWakif->tanggal_transaksi = $request->tanggal_transaksi;
             $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
             $dataWakif->nomor_aiw = $request->nomor_aiw;
@@ -256,7 +256,7 @@ Class Penerimaan
 
             $dataWakif=DataWakif::find($id);
             
-            $dataWakif->tanggal = $request->tanggal_transaksi;
+            $dataWakif->tanggal_transaksi = $request->tanggal_transaksi;
             $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
             $dataWakif->nomor_aiw = $request->nomor_aiw;
