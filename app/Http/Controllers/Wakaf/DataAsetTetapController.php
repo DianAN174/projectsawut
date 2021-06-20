@@ -9,7 +9,7 @@ use App\Models\ModelPengelolaanLain\AkunMesindanKendaraan;
 use App\Models\ModelPengelolaanLain\AkunGedungdanBangunandanBangunandanBangunan;
 use App\Models\ModelPengelolaanLain\AkunTanah;
 use App\Models\ModelPengelolaanLain\AkunPeralatandanPerlengkapanKantor;
-use App\Models\ModelPengelolaanLain\AkunlainnyaLain;
+use App\Models\ModelPengelolaanLain\AkunAsetLainLain;
 
 use App\Models\User;
 use App\Utils\Response;
@@ -166,7 +166,7 @@ Class DataAsetTetapController
            break;  
 
             case "lainnya":
-                $newlainnya = new AkunlainnyaLain();
+                $newlainnya = new AkunAsetLainLain();
                 $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
                 $newlainnya->keterangan = $request->keterangan;
                 $newlainnya->saldo = $dataAsetTetap->harga_perolehan;
@@ -232,10 +232,22 @@ Class DataAsetTetapController
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
             
-            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunlainnyaLain")->paginate($request->limit);
+            $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunAsetLainLain")->paginate($request->limit);
             foreach ($datas as $d_key => $data) {
                 
-                //$data["tanggal_transaksi"] = null;
+                if ($data["kelompok"] == 'kendaraan'){
+                    $data["kelompok"] = (string) 'Mesin dan Kendaraan';
+                }elseif ($data["jenis_usaha"] == 'gedung'){
+                    $data["jenis_usaha"] = (string) 'Gedung dan Bangunan';
+                }elseif ($data["jenis_usaha"] == 'tanah'){
+                    $data["jenis_usaha"] = (string) 'Tanah';
+                }elseif ($data["jenis_usaha"] == 'peralatan'){
+                    $data["jenis_usaha"] = (string) 'Peralatan dan Perlengkapan Kantor';
+                }elseif ($data["jenis_usaha"] == 'lainnya'){
+                    $data["jenis_usaha"] = (string) 'Aset Lainnya';
+                }
+                
+                /* //$data["tanggal_transaksi"] = null;
                 $data["nominal"] = null;
 
                 if (empty($data["AkunMesindanKendaraan"])){
@@ -253,9 +265,9 @@ Class DataAsetTetapController
                             //$data["tanggal_transaksi"] = $data->AkunPeralatandanPerlengkapanKantor['tanggal_transaksi'];
                             $data["nominal"] = $data->AkunPeralatandanPerlengkapanKantor['saldo'];
                         break;
-                        case empty($data["AkunlainnyaLain"]):
-                            //$data["tanggal_transaksi"] = $data->AkunlainnyaLain['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunlainnyaLain['saldo'];
+                        case empty($data["AkunAsetLainLain"]):
+                            //$data["tanggal_transaksi"] = $data->AkunAsetLainLain['tanggal_transaksi'];
+                            $data["nominal"] = $data->AkunAsetLainLain['saldo'];
                         break;
                 
                         default:
@@ -265,7 +277,7 @@ Class DataAsetTetapController
                 }else{
                     //$data["tanggal_transaksi"] = $data->AkunMesindanKendaraan['tanggal_transaksi'];
                     $data["nominal"] = $data->AkunMesindanKendaraan['saldo'];
-                }
+                } */
             }
 
             return Response::HttpResponse(200, $datas, "Index", false);
@@ -420,7 +432,7 @@ Class DataAsetTetapController
            break;   
 
             case "lainnya":
-                $newlainnya = new AkunlainnyaLain();
+                $newlainnya = new AkunAsetLainLain();
                 $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
                 $newlainnya->keterangan = $request->keterangan;
                 $newlainnya->saldo = $dataAsetTetap->harga_perolehan;

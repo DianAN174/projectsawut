@@ -152,84 +152,6 @@ Class PenyaluranManfaat
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
-            $sumberBiaya = $penyaluranBiaya->sumber_biaya;
-            $jenisPiutang = $penyaluranBiaya->jenis_piutang;
-
-            switch ($sumberBiaya) {
-                case "bagihasil":
-                        $newBagiHasil = new KasTabBagiHasil();
-                        $newBagiHasil->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                        $newBagiHasil->keterangan = $penyaluranBiaya->keterangan;
-                        $newBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
-                        $newBagiHasil->type = 'pengeluaran';
-                        $newBagiHasil->penyaluran_id = $penyaluranBiaya->id;
-                        $newBagiHasil = $newBagiHasil->save();
-        
-                        if (!$newBagiHasil) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data ", true);
-                        }
-        
-                        break;
-                    case "nonbagihasil":
-                        $newNonBagiHasil = new KasTabNonBagiHasil();
-                        $newNonBagiHasil->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                        $newNonBagiHasil->keterangan = $penyaluranBiaya->keterangan;
-                        $newNonBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
-                        $newNonBagiHasil->type = 'pengeluaran';
-                        $newNonBagiHasil->penyaluran_id = $penyaluranBiaya->id;
-                        $newNonBagiHasil = $newNonBagiHasil->save();
-        
-                        if (!$newNonBagiHasil) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data ", true);
-                        }
-        
-                        break;
-        
-                    default:
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-
-            //pjp=piutang jangka pendek, pja=piutang jangka panjang
-            switch ($jenisPiutang) {
-                case "pjp":
-                    $newPjp = new PiutangJangkaPendek();
-                    $newPjp->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                    $newPjp->keterangan = $penyaluranBiaya->keterangan;
-                    $newPjp->saldo = $penyaluranBiaya->nominal_peminjaman;
-                    $newPjp->type = 'pemasukan';
-                    $newPjp->penyaluran_id = $penyaluranBiaya->id;
-                    $newPjp = $newPjp->save();
-
-                    if (!$newPjp) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                    break;
-                case "pja":
-                    $newPja = new PiutangJangkaPanjang();
-                    $newPja->tanggal_transaksi = $penyaluranBiaya->approved_at;
-                    $newPja->keterangan = $penyaluranBiaya->keterangan;
-                    $newPja->saldo = $penyaluranBiaya->nominal_peminjaman;
-                    $newPja->type = 'pengeluaran';
-                    $newPja->penyaluran_id = $penyaluranBiaya->id;
-                    $newPja = $newPja->save();
-
-                    if (!$newPja) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                    break;
-
-                default:
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-            }
-
             DB::commit();
 
             return Response::HttpResponse(200, $newPenyaluranBiaya, "Success", false);
@@ -470,8 +392,8 @@ Class PenyaluranManfaat
 
             if($approval==0)
             {
-                $penyaluranBiaya->approval = '1';
-                $penyaluranBiaya->status_persetujuan = 'approved';
+                $penyaluranBiaya->approval = 1;
+                //$penyaluranBiaya->status_persetujuan = 'approved';
                 
                 $penyaluranBiaya->approved_at = \Carbon\Carbon::now();
                 $penyaluranBiaya->approved_by = $this->admin->name;
@@ -485,6 +407,83 @@ Class PenyaluranManfaat
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
 
+            $sumberBiaya = $penyaluranBiaya->sumber_biaya;
+            $jenisPiutang = $penyaluranBiaya->jenis_piutang;
+
+            switch ($sumberBiaya) {
+                case "bagihasil":
+                        $newBagiHasil = new KasTabBagiHasil();
+                        $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newBagiHasil->keterangan = $penyaluranBiaya->keterangan;
+                        $newBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
+                        $newBagiHasil->type = 'pengeluaran';
+                        $newBagiHasil->penyaluran_id = $penyaluranBiaya->id;
+                        $newBagiHasil = $newBagiHasil->save();
+        
+                        if (!$newBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+                    case "nonbagihasil":
+                        $newNonBagiHasil = new KasTabNonBagiHasil();
+                        $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newNonBagiHasil->keterangan = $penyaluranBiaya->keterangan;
+                        $newNonBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
+                        $newNonBagiHasil->type = 'pengeluaran';
+                        $newNonBagiHasil->penyaluran_id = $penyaluranBiaya->id;
+                        $newNonBagiHasil = $newNonBagiHasil->save();
+        
+                        if (!$newNonBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+        
+                    default:
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+
+            //pjp=piutang jangka pendek, pja=piutang jangka panjang
+            switch ($jenisPiutang) {
+                case "pjp":
+                    $newPjp = new PiutangJangkaPendek();
+                    $newPjp->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newPjp->keterangan = $penyaluranBiaya->keterangan;
+                    $newPjp->saldo = $penyaluranBiaya->nominal_peminjaman;
+                    $newPjp->type = 'pemasukan';
+                    $newPjp->penyaluran_id = $penyaluranBiaya->id;
+                    $newPjp = $newPjp->save();
+
+                    if (!$newPjp) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                    break;
+                case "pja":
+                    $newPja = new PiutangJangkaPanjang();
+                    $newPja->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newPja->keterangan = $penyaluranBiaya->keterangan;
+                    $newPja->saldo = $penyaluranBiaya->nominal_peminjaman;
+                    $newPja->type = 'pengeluaran';
+                    $newPja->penyaluran_id = $penyaluranBiaya->id;
+                    $newPja = $newPja->save();
+
+                    if (!$newPja) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                    break;
+
+                default:
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data ", true);
+            }
             DB::commit();
 
             return Response::HttpResponse(200, $newPenyaluranBiaya, "Success", false);
@@ -547,7 +546,46 @@ Class PenyaluranManfaat
             //foreach ($datas as $d_key => $data) {
             //    $data["nominal"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['saldo'] : $data->PiutangJangkaPendek['saldo'];
                 //$data["tanggal_transaksi"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['tanggal_transaksi'] : $data->PiutangJangkaPendek['tanggal_transaksi'];
-            //}
+            //}perdagangan,fashion,otomotif,kerajinan,it,lainnya
+
+            foreach ($datas as $d_key => $data) {
+                //$data["pelunasan"] = null;
+                
+                if ($data["jenis_usaha"] == 'perdagangan'){
+                    $data["jenis_usaha"] = (string) 'Perdagangan';
+                }elseif ($data["jenis_usaha"] == 'fashion'){
+                    $data["jenis_usaha"] = (string) 'Fashion';
+                }elseif ($data["jenis_usaha"] == 'otomotif'){
+                    $data["jenis_usaha"] = (string) 'Otomotif';
+                }elseif ($data["jenis_usaha"] == 'kerajinan'){
+                    $data["jenis_usaha"] = (string) 'Kerajinan';
+                }elseif ($data["jenis_usaha"] == 'it'){
+                    $data["jenis_usaha"] = (string) 'IT';
+                }elseif ($data["jenis_usaha"] == 'lainnya'){
+                    $data["jenis_usaha"] = (string) 'Usaha Lainnya';
+                }
+
+                /* if ($data["kelayakan"] == 0 || null){
+                    $data["kelayakan"] = (string) 'Tidak Layak';
+
+                }else{
+                    $data["kelayakan"] = (string) 'Layak';
+                }
+
+                if ($data["approval"] == 0 || null){
+                    $data["approval"] = (string) 'Checking';
+
+                }else{
+                    $data["approval"] = (string) 'Approved';
+                }
+
+                if ($data["penyaluran"] == 0 || null){
+                    $data["penyaluran"] = (string) 'Belum Disalurkan';
+
+                }else{
+                    $data["penyaluran"] = (string) 'Disalurkan';
+                } */
+            }
 
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
@@ -559,7 +597,7 @@ Class PenyaluranManfaat
     {
         try 
         {
-            $penyaluranBiaya = Penyaluran::select('nama_penerima','nik','alamat','no_telepon','jenis_usaha','deskripsi_usaha','sumber_biaya','jenis_piutang','nominal_peminjaman','periode_peminjaman','periode_awal','periode_akhir')
+            $penyaluranBiaya = Penyaluran::select('nama_penerima','nik','alamat','telepon','jenis_usaha','deskripsi_usaha','sumber_biaya','jenis_piutang','nominal_peminjaman','periode_peminjaman','periode_awal','periode_akhir')
             ->where('id',$id)->get();
             
             return Response::HttpResponse(200, $penyaluranBiaya, "Info User yang akan diedit berhasil ditampilkan", false);
@@ -598,22 +636,22 @@ Class PenyaluranManfaat
             DB::beginTransaction();
 
             $penyaluranBiaya = Penyaluran::find($id);
-            //dd($penyaluranBiaya, $id);
+            //dd($request->nama_penerima);
             
-            $penyaluranTemp->nama_penerima = $request->nama_penerima;
-            $penyaluranTemp->nik = $request->nik;
-            $penyaluranTemp->alamat = $request->alamat;
-            $penyaluranTemp->telepon = $request->telepon;
-            $penyaluranTemp->jenis_usaha = $request->jenis_usaha;
-            $penyaluranTemp->deskripsi_usaha = $request->deskripsi_usaha;
-            $penyaluranTemp->nominal_peminjaman = $request->nominal_peminjaman;
-            $penyaluranTemp->sumber_biaya = $request->sumber_biaya;
-            $penyaluranTemp->jenis_piutang = $request->jenis_piutang;
-            $penyaluranTemp->periode_peminjaman = $request->periode_peminjaman;
-            $penyaluranTemp->periode_awal = $request->periode_awal;
-            $penyaluranTemp->periode_akhir = $request->periode_akhir;
-            $penyaluranTemp->created_by = $this->admin->name;
-            $penyaluranTemp->modified_by = $this->admin->name;
+            $penyaluranBiaya->nama_penerima = $request->nama_penerima;
+            $penyaluranBiaya->nik = $request->nik;
+            $penyaluranBiaya->alamat = $request->alamat;
+            $penyaluranBiaya->telepon = $request->telepon;
+            $penyaluranBiaya->jenis_usaha = $request->jenis_usaha;
+            $penyaluranBiaya->deskripsi_usaha = $request->deskripsi_usaha;
+            $penyaluranBiaya->nominal_peminjaman = $request->nominal_peminjaman;
+            $penyaluranBiaya->sumber_biaya = $request->sumber_biaya;
+            $penyaluranBiaya->jenis_piutang = $request->jenis_piutang;
+            $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
+            $penyaluranBiaya->periode_awal = $request->periode_awal;
+            $penyaluranBiaya->periode_akhir = $request->periode_akhir;
+            $penyaluranBiaya->created_by = $this->admin->name;
+            $penyaluranBiaya->modified_by = $this->admin->name;
 
             $newPenyaluran = $penyaluranBiaya->save();
 
@@ -622,6 +660,87 @@ Class PenyaluranManfaat
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
+            if($penyaluranBiaya->approval == 1)
+            {
+                $sumberBiaya = $penyaluranBiaya->sumber_biaya;
+                $jenisPiutang = $penyaluranBiaya->jenis_piutang;
+
+                switch ($sumberBiaya) {
+                    case "bagihasil":
+                            $newBagiHasil = KasTabBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                            $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
+                            $newBagiHasil->keterangan = $request->keterangan;
+                            $newBagiHasil->saldo = $request->nominal_peminjaman;
+                            $newBagiHasil->type = 'pengeluaran';
+                            $newBagiHasil->penyaluran_id = $request->id;
+                            $newBagiHasil = $newBagiHasil->save();
+            
+                            if (!$newBagiHasil) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data ", true);
+                            }
+            
+                            break;
+                        case "nonbagihasil":
+                            $newNonBagiHasil = KasTabNonBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                            $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
+                            $newNonBagiHasil->keterangan = $request->keterangan;
+                            $newNonBagiHasil->saldo = $request->nominal_peminjaman;
+                            $newNonBagiHasil->type = 'pengeluaran';
+                            $newNonBagiHasil->penyaluran_id = $request->id;
+                            $newNonBagiHasil = $newNonBagiHasil->save();
+            
+                            if (!$newNonBagiHasil) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data ", true);
+                            }
+            
+                            break;
+            
+                        default:
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                //pjp=piutang jangka pendek, pja=piutang jangka panjang
+                switch ($jenisPiutang) {
+                    case "pjp":
+                        $newPjp = PiutangJangkaPendek::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newPjp->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newPjp->keterangan = $request->keterangan;
+                        $newPjp->saldo = $request->nominal_peminjaman;
+                        $newPjp->type = 'pemasukan';
+                        $newPjp->penyaluran_id = $request->id;
+                        $newPjp = $newPjp->save();
+
+                        if (!$newPjp) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+
+                        break;
+                    case "pja":
+                        $newPja = PiutangJangkaPanjang::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newPja->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newPja->keterangan = $request->keterangan;
+                        $newPja->saldo = $request->nominal_peminjaman;
+                        $newPja->type = 'pengeluaran';
+                        $newPja->penyaluran_id = $request->id;
+                        $newPja = $newPja->save();
+
+                        if (!$newPja) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+
+                        break;
+
+                    default:
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+            }
+            
             DB::commit();
 
             return Response::HttpResponse(200, $newPenyaluran, "Success", false);
