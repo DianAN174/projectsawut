@@ -54,8 +54,8 @@ Class PelunasanPiutang
             $pelunasan = new Pelunasan();
             //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->sum('nominal_peminjaman');
-            $periodeAkhir = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->first('periode_akhir');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
+            $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             if($nikPelunasanQuery == null)
@@ -176,8 +176,8 @@ Class PelunasanPiutang
             $pelunasan = Pelunasan::find($id);
         
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->sum('nominal_peminjaman');
-            $periodeAkhir = Penyaluran::where('nik',$request->nik)->where('pelunasan','0')->first('periode_akhir');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
+            $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
 
             $idQuery = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->count('id');
             if($idQuery == 0)
