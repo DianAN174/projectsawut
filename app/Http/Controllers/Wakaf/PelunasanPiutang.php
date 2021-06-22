@@ -65,10 +65,14 @@ Class PelunasanPiutang
                 {
                     return Response::HttpResponse(400, null, "NIK not found", true);
                 }
+                $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
                 $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
+                $pelunasan->kekurangan = $kekuranganCicilan;
             }else
             {
+                $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
                 $kekuranganCicilan =  $jumlahPinjaman - (Pelunasan::where('nik',$request->nik)->sum('jumlah_cicilan') + $request->jumlah_cicilan);
+                $pelunasan->kekurangan = $kekuranganCicilan;
             }
 
             
@@ -76,8 +80,8 @@ Class PelunasanPiutang
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
-            $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
-            $pelunasan->kekurangan = $kekuranganCicilan;
+            
+            
             
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
             if($pelunasan->kekurangan == 0)
