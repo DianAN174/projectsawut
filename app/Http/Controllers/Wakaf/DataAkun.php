@@ -112,7 +112,7 @@ Class DataAkun
             //$user = User::find($id);
             $user = $request->user()->id;
             $request['password'] = Hash::make($request['password']);
-            $user->name = $request->nama_pengguna;
+            $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
             $user->created_by = $this->admin->name;

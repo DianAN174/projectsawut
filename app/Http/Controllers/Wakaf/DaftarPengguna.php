@@ -135,7 +135,7 @@ Class DaftarPengguna
         try 
         {
             $user = User::join("roles","users.role_id","=","roles.id")
-            ->select(DB::raw("users.nama_pengguna, users.email"), "roles.nama_peran as nama_peran")      
+            ->select(DB::raw("users.nama_pengguna, users.email, users.role_id"), "roles.nama_peran as nama_peran")      
             ->where('users.id',$id)                  
             ->get();
             
