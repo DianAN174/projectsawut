@@ -34,7 +34,7 @@ Class DaftarPengguna
                 'nama_pengguna' => 'required',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
-                'peran' => 'required|in:akuntan,nazhir,bendahara',
+                'role_id' => 'required|in:akuntan,nazhir,bendahara',
             ]);
 
             if ($validator->fails()) {
@@ -48,7 +48,7 @@ Class DaftarPengguna
 
             $user = new User();
 
-            $user->name = $request->nama_pengguna;
+            $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
             $user->created_by = $this->admin->name;
@@ -118,7 +118,7 @@ Class DaftarPengguna
             }
 
             $results = User::join("roles","users.role_id","=","roles.id")
-            ->select(DB::raw("users.*"), "roles.name as nama_peran")                        
+            ->select(DB::raw("users.*"), "roles.nama_peran as nama_peran")                        
             ->get();
 
             //$results = User::select('name','email','password')->roles->name;
@@ -135,7 +135,7 @@ Class DaftarPengguna
         try 
         {
             $user = User::join("roles","users.role_id","=","roles.id")
-            ->select(DB::raw("users.name, users.email"), "roles.name as nama_peran")      
+            ->select(DB::raw("users.nama_pengguna, users.email"), "roles.nama_peran as nama_peran")      
             ->where('users.id',$id)                  
             ->get();
             
@@ -156,7 +156,7 @@ Class DaftarPengguna
                 'nama_pengguna' => 'required',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
-                'peran' => 'required|in:akuntan,nazhir,bendahara',
+                'role_id' => 'required|in:akuntan,nazhir,bendahara',
             ]);
 
             if ($validator->fails()) {
@@ -170,7 +170,7 @@ Class DaftarPengguna
             
             $request['password'] = Hash::make($request['password']);
 
-            $user->name = $request->nama_pengguna;
+            $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
             $user->created_by = $this->admin->name;
