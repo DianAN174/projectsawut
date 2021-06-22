@@ -146,18 +146,9 @@ Class PelunasanPiutang
     {
         try 
         {
-            $datas = Pelunasan::select('tanggal_cicilan','nama_peminjam','nik','jumlah_cicilan','kekurangan','tanggal_jatuh_tempo','pelunasan')
+            $datas = Pelunasan::select('tanggal_cicilan','nama_peminjam','nik','jumlah_cicilan','kekurangan','tanggal_jatuh_tempo')
             ->where('id',$id)->get();
-            foreach ($datas as $d_key => $data) {
-                //$data["pelunasan"] = null;
-                
-                if ($data["pelunasan"] == 0 || null){
-                    $data["pelunasan"] = (string) 'Belum Lunas';
-
-                }else{
-                    $data["pelunasan"] = (string) 'Lunas';
-                }
-            }
+            
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
