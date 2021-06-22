@@ -89,8 +89,8 @@ Class PelunasanPiutang
                 $pelunasan->pelunasan = 1;
 
             }
-            $pelunasan->created_by = $this->admin->name;
-            $pelunasan->modified_by = $this->admin->name;
+            $pelunasan->created_by = $this->admin->nama_pengguna;
+            $pelunasan->modified_by = $this->admin->nama_pengguna;
             
             
             $newPelunasan = $pelunasan->save();
@@ -249,8 +249,8 @@ Class PelunasanPiutang
                 $pelunasan->pelunasan = '1';
 
             }
-            $pelunasan->created_by = $this->admin->name;
-            $pelunasan->modified_by = $this->admin->name;
+            $pelunasan->created_by = $this->admin->nama_pengguna;
+            $pelunasan->modified_by = $this->admin->nama_pengguna;
 
             $newPelunasan = $pelunasan->save();
 
@@ -274,7 +274,7 @@ Class PelunasanPiutang
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             

@@ -67,8 +67,8 @@ Class Penerimaan
             $dataWakif->jangka_waktu_temporer = $request->jangka_waktu_temporer;
             $dataWakif->nominal = $request->nominal;
             $dataWakif->metode_pembayaran = $request->metode_pembayaran;
-            $dataWakif->created_by = $this->admin->name;
-            $dataWakif->modified_by = $this->admin->name;
+            $dataWakif->created_by = $this->admin->nama_pengguna;
+            $dataWakif->modified_by = $this->admin->nama_pengguna;
 
             $newDataWakif = $dataWakif->save();
 
@@ -256,6 +256,155 @@ Class Penerimaan
 
             $dataWakif=DataWakif::find($id);
             
+            //data sblm diedit
+            $jenisWakaf = $dataWakif->jenis_wakaf;
+            $jangkaWaktu = $dataWakif->jangka_waktu_temporer;
+
+            //untuk mengetahui apakah user mengupdate jenis wakaf atau tidak
+            
+                switch ($request->jenis_wakaf) {
+                    case "permanen":
+                    if($jenisWakaf == $request->jenis_wakaf)
+                    {
+                        $newPTP = PenerimaanTunaiPermanen::where('data_wakif_id',$dataWakif->id)->first('id');
+                        $newPTP->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newPTP = new PenerimaanTunaiPermanen();
+                        $newPTP->created_by = $this->admin->nama_pengguna;
+                    }
+
+                        $newPTP->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newPTP->keterangan = $request->keterangan;
+                        $newPTP->saldo = $request->nominal;
+                        $newPTP->type = 'pemasukan';
+                        $newPTP->data_wakif_id = $dataWakif->id;
+                        $newPTP = $newPTP->save();
+                        
+    
+                        if (!$newPTP) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+                        //buat fungsi delete di bawah
+
+                    case "temporer":
+                        if(($jangkaWaktu <1) && ($request->jangka_waktu_temporer <1) && ($jenisWakaf == $request->jenis_wakaf))
+                        {
+                            $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
+                            $newWTPD->modified_by = $this->admin->nama_pengguna;
+                            
+                        }
+                        else{
+                            $newWTPD = new WakafTemporerJangkaPendek();
+                            $newWTPD->created_by = $this->admin->nama_pengguna;
+                        }
+                            
+                            $newWTPD->tanggal_transaksi = $request->tanggal_transaksi;
+                            $newWTPD->keterangan = $request->keterangan;
+                            $newWTPD->saldo = $request->nominal;
+                            $newWTPD->type = 'pemasukan';
+                            $newWTPD->data_wakif_id = $dataWakif->id;
+                            $newWTPD = $newWTPD->save();
+    
+                            if (!$newWTPD) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+
+                        if(($jangkaWaktu >1) && ($request->jangka_waktu_temporer >1) && ($jenisWakaf == $request->jenis_wakaf))
+                        {
+                            $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
+                            $newWTPJ->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{    
+                            $newWTPJ = new WakafTemporerJangkaPanjang();
+                            $newWTPJ->created_by = $this->admin->nama_pengguna;
+                        }
+                            $newWTPJ->tanggal_transaksi = $request->tanggal_transaksi;
+                            $newWTPJ->keterangan = $request->keterangan;
+                            $newWTPJ->saldo = $request->nominal;
+                            $newWTPJ->type = 'pemasukan';
+                            $newWTPJ->data_wakif_id = $dataWakif->id;
+                            $newWTPJ = $newWTPJ->save();
+    
+                            if (!$newWTPJ) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+    
+    
+                        break;
+                    default:
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                }
+
+                //delete transaksi yg diedit / pindah akun
+                if($jenisWakaf !== $request->jenis_wakaf)
+                {
+                    switch ($jenisWakaf) {
+                    case "permanen":
+                        $newPTP = PenerimaanTunaiPermanen::where('data_wakif_id',$dataWakif->id)->first('id');
+                        $newPTP->deleted_at = \Carbon\Carbon::now();
+                        $newPTP->deleted_by = $this->admin->nama_pengguna;
+                        $newPTP = $newPTP->save();
+                        
+                        if (!$newPTP) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case "temporer":
+                            if(!($jangkaWaktu <1) && ($request->jangka_waktu_temporer <1))
+                            {
+                                $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
+                                $newWTPD->deleted_at = \Carbon\Carbon::now();
+                                $newWTPD->deleted_by = $this->admin->nama_pengguna;
+                                $newWTPD = $newWTPD->save();
+                            }
+        
+                                if (!$newWTPD) {
+                                    DB::rollBack();
+                                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                                }
+    
+                            if(!($jangkaWaktu >1) && ($request->jangka_waktu_temporer >1))
+                            {
+                                $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
+                                $newWTPJ->deleted_at = \Carbon\Carbon::now();
+                                $newWTPJ->deleted_by = $this->admin->nama_pengguna;
+                                $newWTPJ = $newWTPJ->save();
+                            }
+        
+                                if (!$newWTPJ) {
+                                    DB::rollBack();
+                                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                                }
+        
+        
+                            break;
+                        default:
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                }
+                //
+                $newTunai = KasTunai::where('data_wakif_id',$dataWakif->id)->first('id');
+                $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
+                $newTunai->keterangan = $request->keterangan;
+                $newTunai->saldo = $request->nominal;
+                $newTunai->type = 'pemasukan';
+                //$newTunai->data_wakif_id = $dataWakif->id;
+                $newTunai = $newTunai->save();
+
+                if (!$newTunai) {
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                }
+            
             $dataWakif->tanggal_transaksi = $request->tanggal_transaksi;
             $dataWakif->nama_wakif = $request->nama_wakif;
             $dataWakif->nik = $request->nik;
@@ -266,96 +415,13 @@ Class Penerimaan
             $dataWakif->jangka_waktu_temporer = $request->jangka_waktu_temporer;
             $dataWakif->nominal = $request->nominal;
             $dataWakif->metode_pembayaran = $request->metode_pembayaran;
-            $dataWakif->created_by = $this->admin->name;
-            $dataWakif->modified_by = $this->admin->name;
-
+            $dataWakif->created_by = $this->admin->nama_pengguna;
+            $dataWakif->modified_by = $this->admin->nama_pengguna;
             $newDataWakif = $dataWakif->save();
             
             if (!$newDataWakif) {
                 DB::rollBack();
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
-
-            $jenisWakaf = $dataWakif->jenis_wakaf;
-            $jangkaWaktu = $dataWakif->jangka_waktu_temporer;
-
-            switch ($jenisWakaf) {
-                case "permanen":
-                    $newPTP = PenerimaanTunaiPermanen::where('data_wakif_id',$dataWakif->id)->first('id');
-                    $newPTP->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newPTP->keterangan = $request->keterangan;
-                    $newPTP->saldo = $request->nominal;
-                    $newPTP->type = 'pemasukan';
-                    //$newPTP->data_wakif_id = $dataWakif->id;
-                    $newPTP = $newPTP->save();
-
-                    if (!$newPTP) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-                    }
-
-                    $newTunai = KasTunai::where('data_wakif_id',$dataWakif->id)->first('id');
-                    $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newTunai->keterangan = $request->keterangan;
-                    $newTunai->saldo = $request->nominal;
-                    $newTunai->type = 'pemasukan';
-                    //$newTunai->data_wakif_id = $dataWakif->id;
-                    $newTunai = $newTunai->save();
-
-                    if (!$newTunai) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-                    }
-
-                    break;
-                case "temporer":
-                    if($jangkaWaktu <1)
-                    {
-                        $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
-                        $newWTPD->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newWTPD->keterangan = $request->keterangan;
-                        $newWTPD->saldo = $request->nominal;
-                        $newWTPD->type = 'pemasukan';
-                        //$newWTPD->data_wakif_id = $dataWakif->id;
-                        $newWTPD = $newWTPD->save();
-
-                        if (!$newWTPD) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-                        }
-                    }else{
-                        $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
-                        $newWTPJ->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newWTPJ->keterangan = $request->keterangan;
-                        $newWTPJ->saldo = $request->nominal;
-                        $newWTPJ->type = 'pemasukan';
-                        //$newWTPJ->data_wakif_id = $dataWakif->id;
-                        $newWTPJ = $newWTPJ->save();
-
-                        if (!$newWTPJ) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-                        }
-
-                        $newTunai = KasTunai::where('data_wakif_id',$dataWakif->id)->first('id');
-                        $newTunai->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newTunai->keterangan = $request->keterangan;
-                        $newTunai->saldo = $request->nominal;
-                        $newTunai->type = 'pemasukan';
-                        //$newTunai->data_wakif_id = $dataWakif->id;
-                        $newTunai = $newTunai->save();
-    
-                        if (!$newTunai) {
-                            DB::rollBack();
-                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-                        }
-
-                    }
-
-                    break;
-                default:
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
             DB::commit();
@@ -372,7 +438,7 @@ Class Penerimaan
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             
@@ -404,7 +470,20 @@ Class Penerimaan
             return Response::HttpResponse(422, $response, "Invalid Data", false);
         }
 
-        $datas = DataWakif::where($inputs["search_type"],"like","%".$inputs["value"]."%")->paginate(10);
+        $datas = DataWakif::where($inputs["search_type"],"like","%".$inputs["value"]."%")->paginate(10); 
+        
+        /* $inputs =  $request->all();
+        $validator = Validator::make($inputs, [
+            'value' => 'min:1',
+        ]);
+
+        if ($validator->fails()) {
+            $response = ['errors' => $validator->errors()->all()];
+            return Response::HttpResponse(422, $response, "Invalid Data", false);
+        }
+
+        $datas = DataWakif::where('nama_wakif',"like","%".$inputs["value"]."%")->paginate(10);  */
+        
         return Response::HttpResponse(200, $datas, "OK", false);
     }
 }

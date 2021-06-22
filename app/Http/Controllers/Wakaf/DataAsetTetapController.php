@@ -87,8 +87,8 @@ Class DataAsetTetapController
             $dataAsetTetap->nilai_buku = $request->nilai_buku;
             $dataAsetTetap->beban_per_bulan = $request->beban_per_bulan;
             $dataAsetTetap->nilai_penyusutan = $request->nilai_penyusutan;
-            $dataAsetTetap->created_by = $this->admin->name;
-            $dataAsetTetap->modified_by = $this->admin->name;
+            $dataAsetTetap->created_by = $this->admin->nama_pengguna;
+            $dataAsetTetap->modified_by = $this->admin->nama_pengguna;
 
             $newDataAsetTetap = $dataAsetTetap->save();
 
@@ -290,9 +290,27 @@ Class DataAsetTetapController
     {
         try 
         {
-            $dataAsetTetap = DataAsetTetap::find($id)
-            ->makeHidden(['created_at','updated_at','deleted_at','created_by','modified_by','deleted_by']);
-            return Response::HttpResponse(200, $dataAsetTetap, "Info User yang akan diedit berhasil ditampilkan", false);
+            $datas = DataAsetTetap::find($id);
+            
+            $datas = DataAsetTetap::select('nama_aset','kelompok','tanggal_beli','harga_perolehan','nilai_bersih','nilai_residu','umur_ekonomis','lokasi',
+            'nomor','departemen','akumulasi_beban','beban_per_tahun_ini','terhitung_tanggal','nilai_buku','beban_per_bulan','nilai_penyusutan')
+            ->where('id',$id)->get();
+            /* foreach ($datas as $d_key => $data) {
+                
+                if ($data["kelompok"] == 'kendaraan'){
+                    $data["kelompok"] = (string) 'Mesin dan Kendaraan';
+                }elseif ($data["jenis_usaha"] == 'gedung'){
+                    $data["jenis_usaha"] = (string) 'Gedung dan Bangunan';
+                }elseif ($data["jenis_usaha"] == 'tanah'){
+                    $data["jenis_usaha"] = (string) 'Tanah';
+                }elseif ($data["jenis_usaha"] == 'peralatan'){
+                    $data["jenis_usaha"] = (string) 'Peralatan dan Perlengkapan Kantor';
+                }elseif ($data["jenis_usaha"] == 'lainnya'){
+                    $data["jenis_usaha"] = (string) 'Aset Lainnya';
+                }
+            } */
+            //->makeHidden(['created_at','updated_at','deleted_at','created_by','modified_by','deleted_by']);
+            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -354,8 +372,8 @@ Class DataAsetTetapController
             $dataAsetTetap->nilai_buku = $request->nilai_buku;
             $dataAsetTetap->beban_per_bulan = $request->beban_per_bulan;
             $dataAsetTetap->nilai_penyusutan = $request->nilai_penyusutan;
-            $dataAsetTetap->created_by = $this->admin->name;
-            $dataAsetTetap->modified_by = $this->admin->name;
+            $dataAsetTetap->created_by = $this->admin->nama_pengguna;
+            $dataAsetTetap->modified_by = $this->admin->nama_pengguna;
 
             $newDataAsetTetap = $dataAsetTetap->save();
 
@@ -466,7 +484,7 @@ Class DataAsetTetapController
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             

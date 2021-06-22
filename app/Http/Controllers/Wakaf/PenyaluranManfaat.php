@@ -76,8 +76,8 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
             $penyaluranBiaya->periode_awal = $request->periode_awal;
             $penyaluranBiaya->periode_akhir = $request->periode_akhir;
-            $penyaluranBiaya->created_by = $this->admin->name;
-            $penyaluranBiaya->modified_by = $this->admin->name; 
+            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
+            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna; 
 
             $newPenyaluranBiaya = $penyaluranBiaya->save();
 
@@ -142,8 +142,8 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_awal = $penyaluranTemp->periode_awal;
             $penyaluranBiaya->periode_akhir = $penyaluranTemp->periode_akhir;
             $penyaluranBiaya->kelayakan = $penyaluranTemp->kelayakan;
-            $penyaluranBiaya->created_by = $this->admin->name;
-            $penyaluranBiaya->modified_by = $this->admin->name; 
+            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
+            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna; 
 
             $newPenyaluranBiaya = $penyaluranBiaya->save();
 
@@ -206,8 +206,8 @@ Class PenyaluranManfaat
             $penyaluranTemp->periode_peminjaman = $request->periode_peminjaman;
             $penyaluranTemp->periode_awal = $request->periode_awal;
             $penyaluranTemp->periode_akhir = $request->periode_akhir;
-            $penyaluranTemp->created_by = $this->admin->name;
-            $penyaluranTemp->modified_by = $this->admin->name; 
+            $penyaluranTemp->created_by = $this->admin->nama_pengguna;
+            $penyaluranTemp->modified_by = $this->admin->nama_pengguna; 
 
             $newPenyaluranTemp = $penyaluranTemp->save();
 
@@ -264,8 +264,8 @@ Class PenyaluranManfaat
                     'penyaluran_temp_id' => $penyaluranTemp,
                     'question_id' => $i,
                     'answer_id' => $answers[$i-1],
-                    'created_by' => $this->admin->name,  
-                    'modified_by' => $this->admin->name
+                    'created_by' => $this->admin->nama_pengguna,  
+                    'modified_by' => $this->admin->nama_pengguna
                 ];
             }
 
@@ -278,8 +278,8 @@ Class PenyaluranManfaat
                 $kelayakanFirst->question_id = $i;
                 $kelayakanFirst->answer_id = $request->answer;
                 
-                $kelayakanFirst->created_by = $this->admin->name;
-                $kelayakanFirst->modified_by = $this->admin->name;}
+                $kelayakanFirst->created_by = $this->admin->nama_pengguna;
+                $kelayakanFirst->modified_by = $this->admin->nama_pengguna;}
             
                 
                 $newKelayakanFirst = $kelayakanFirst->save(); */
@@ -331,8 +331,8 @@ Class PenyaluranManfaat
                     'penyaluran_temp_id' => $penyaluranTemp,
                     'question_id' => ($i+11),
                     'answer_id' => $answers[$i-1],
-                    'created_by' => $this->admin->name,  
-                    'modified_by' => $this->admin->name
+                    'created_by' => $this->admin->nama_pengguna,  
+                    'modified_by' => $this->admin->nama_pengguna
                 ];
             }
 
@@ -396,7 +396,7 @@ Class PenyaluranManfaat
                 //$penyaluranBiaya->status_persetujuan = 'approved';
                 
                 $penyaluranBiaya->approved_at = \Carbon\Carbon::now();
-                $penyaluranBiaya->approved_by = $this->admin->name;
+                $penyaluranBiaya->approved_by = $this->admin->nama_pengguna;
                 
             }
 
@@ -650,8 +650,8 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
             $penyaluranBiaya->periode_awal = $request->periode_awal;
             $penyaluranBiaya->periode_akhir = $request->periode_akhir;
-            $penyaluranBiaya->created_by = $this->admin->name;
-            $penyaluranBiaya->modified_by = $this->admin->name;
+            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
+            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna;
 
             $newPenyaluran = $penyaluranBiaya->save();
 
@@ -757,7 +757,7 @@ Class PenyaluranManfaat
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             

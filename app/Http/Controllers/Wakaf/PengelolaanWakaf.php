@@ -51,8 +51,8 @@ class PengelolaanWakaf
         $pengelolaan->akun_asal = $request->akun_asal;
         $pengelolaan->akun_tujuan = $request->akun_tujuan;
         $pengelolaan->saldo = $request->saldo;
-        $pengelolaan->created_by = $this->admin->name;
-        $pengelolaan->modified_by = $this->admin->name;
+        $pengelolaan->created_by = $this->admin->nama_pengguna;
+        $pengelolaan->modified_by = $this->admin->nama_pengguna;
 
         $newPengelolaan = $pengelolaan->save();
 

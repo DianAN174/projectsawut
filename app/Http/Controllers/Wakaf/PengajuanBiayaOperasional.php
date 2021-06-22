@@ -59,8 +59,9 @@ Class PengajuanBiayaOperasional
             $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
             $pengajuanBiaya->nominal = $request->nominal;
             $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
-            $pengajuanBiaya->created_by = $this->admin->name;
-            $pengajuanBiaya->modified_by = $this->admin->name;
+
+            $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
+            $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
 
             $newPengajuanBiaya = $pengajuanBiaya->save();
 
@@ -165,9 +166,41 @@ Class PengajuanBiayaOperasional
     {
         try 
         {
-            $pengajuanBiaya = PengajuanBiaya::select('nama_pengaju','kategori_biaya','keterangan_biaya','nominal','sumber_biaya')
+            $datas = PengajuanBiaya::select('nama_pengaju','kategori_biaya','keterangan_biaya','nominal','sumber_biaya')
             ->where('id',$id)->get();
-            return Response::HttpResponse(200, $pengajuanBiaya, "Info User yang akan diedit berhasil ditampilkan", false);
+            //$datas = PengajuanBiaya::find($id);
+            /* foreach ($datas as $d_key => $data) {
+                if ($data["kategori_biaya"] == 'atk'){
+                    $data["kategori_biaya"] = (string) 'Beban ATK';
+                }elseif ($data["kategori_biaya"] == 'rapat'){
+                    $data["kategori_biaya"] = (string) 'Beban Rapat';
+                }elseif ($data["kategori_biaya"] == 'penyaluran'){
+                    $data["kategori_biaya"] = (string) 'Beban Penyaluran Manfaat Wakaf';
+                }elseif ($data["kategori_biaya"] == 'administrasi'){
+                    $data["kategori_biaya"] = (string) 'Beban Administrasi Bank';
+                }elseif ($data["kategori_biaya"] == 'pajak'){
+                    $data["kategori_biaya"] = (string) 'Beban Pajak';
+
+                }elseif ($data["kategori_biaya"] == 'insentif'){
+                    $data["kategori_biaya"] = (string) 'Insentif Nazhir';
+                }elseif ($data["kategori_biaya"] == 'tunjanganKesehatan'){
+                    $data["kategori_biaya"] = (string) 'Tunjangan Kesehatan';
+
+                }elseif ($data["kategori_biaya"] == 'ekonomiUmat'){
+                    $data["kategori_biaya"] = (string) 'Ekonomi Umat';
+                }elseif ($data["kategori_biaya"] == 'kesejahteraan'){
+                    $data["kategori_biaya"] = (string) 'Kesejahteraan Umat';
+                }elseif ($data["kategori_biaya"] == 'ibadah'){
+                    $data["kategori_biaya"] = (string) 'Kegiatan Ibadah';
+                }elseif ($data["kategori_biaya"] == 'pendidikan'){
+                    $data["kategori_biaya"] = (string) 'Kegiatan Pendidikan';
+                }elseif ($data["kategori_biaya"] == 'kesehatan'){
+                    $data["kategori_biaya"] = (string) 'Kegiatan Kesehatan';
+                }elseif ($data["kategori_biaya"] == 'bantuan'){
+                    $data["kategori_biaya"] = (string) 'Kegiatan Bantuan';
+                }
+            } */
+            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -204,8 +237,8 @@ Class PengajuanBiayaOperasional
             $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
             $pengajuanBiaya->nominal = $request->nominal;
             $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
-            $pengajuanBiaya->created_by = $this->admin->name;
-            $pengajuanBiaya->modified_by = $this->admin->name;
+            $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
+            $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
 
             $newPengajuanBiaya = $pengajuanBiaya->save();
 
@@ -352,7 +385,7 @@ Class PengajuanBiayaOperasional
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             
@@ -378,11 +411,11 @@ Class PengajuanBiayaOperasional
 
             if($approval==0)
             {
-                $pengajuanBiaya->approval = '1';
+                $pengajuanBiaya->approval = 1;
                 //$pengajuanBiaya->status_persetujuan = 'approved';
                 
                 $pengajuanBiaya->approved_at = \Carbon\Carbon::now();
-                $pengajuanBiaya->approved_by = $this->admin->name;
+                $pengajuanBiaya->approved_by = $this->admin->nama_pengguna;
                 
             }
 
@@ -534,9 +567,9 @@ Class PengajuanBiayaOperasional
             
             DB::beginTransaction();
 
-            if($pencairan=='0')
+            if($pencairan==0)
             {
-                $pengajuanBiaya->pencairan = '1';
+                $pengajuanBiaya->pencairan = 1;
                 
             }
 

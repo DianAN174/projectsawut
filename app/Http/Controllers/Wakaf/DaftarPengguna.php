@@ -51,8 +51,8 @@ Class DaftarPengguna
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
-            $user->created_by = $this->admin->name;
-            $user->modified_by = $this->admin->name;
+            $user->created_by = $this->admin->nama_pengguna;
+            $user->modified_by = $this->admin->nama_pengguna;
 
             $newUser = $user->save();
 
@@ -203,8 +203,8 @@ Class DaftarPengguna
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
-            $user->created_by = $this->admin->name;
-            $user->modified_by = $this->admin->name;
+            $user->created_by = $this->admin->nama_pengguna;
+            $user->modified_by = $this->admin->nama_pengguna;
 
             $newUser = $user->save();
 
@@ -261,7 +261,7 @@ Class DaftarPengguna
 
             $this->admin = $request->user();
 
-            $currData->deleted_by = $this->admin->name;
+            $currData->deleted_by = $this->admin->nama_pengguna;
 
             $currData->save();
             
@@ -313,7 +313,7 @@ Class DaftarPengguna
                 $user->status = 'terdaftar';
                 
                 /* $user->approved_at = \Carbon\Carbon::now();
-                $user->approved_by = $this->admin->name; */
+                $user->approved_by = $this->admin->nama_pengguna; */
                 
             }
 

@@ -29,12 +29,28 @@ Class DataAkun
     {
         try 
         {
-            $dataUser = $request->user();
+            $datas = $request->user();
             /* $user = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.name, users.email, users.password"), "roles.name as nama_peran")  
             ->where("users.id",$id)            
             ->get();*/
-            return Response::HttpResponse(200, $dataUser, "Info User yang akan diedit berhasil ditampilkan", false); 
+
+            foreach ($datas as $d_key => $data) {
+                
+                if ($data["role_id"] == '1'){
+                    $data["role_id"] = (string) 'Admin';
+                }
+                elseif ($data["role_id"] == '2'){
+                    $data["role_id"] = (string) 'Akuntan';
+                }elseif ($data["role_id"] == '3'){
+                    $data["role_id"] = (string) 'Nazhir';
+                }
+                elseif ($data["role_id"] == '4'){
+                    $data["role_id"] = (string) 'Bendahara';
+                }
+            }
+
+            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false); 
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -59,7 +75,7 @@ Class DataAkun
         $user = User::find($id);
 
         $user->avatar = $filename;
-        $user->modified_by = $this->admin->name;
+        $user->modified_by = $this->admin->nama_pengguna;
 
         $newUser = $user->save();
 
@@ -82,8 +98,22 @@ Class DataAkun
             ->select(DB::raw("users.name, users.email, users.password"), "roles.name as nama_peran")      
             ->where('users.id',$id)                  
             ->get(); */
-            $dataUser = $request->user();
-            return Response::HttpResponse(200, $user, "Info User yang akan diedit berhasil ditampilkan", false);
+            $datas = $request->user();
+            foreach ($datas as $d_key => $data) {
+                
+                if ($data["role_id"] == '1'){
+                    $data["role_id"] = (string) 'Admin';
+                }
+                elseif ($data["role_id"] == '2'){
+                    $data["role_id"] = (string) 'Akuntan';
+                }elseif ($data["role_id"] == '3'){
+                    $data["role_id"] = (string) 'Nazhir';
+                }
+                elseif ($data["role_id"] == '4'){
+                    $data["role_id"] = (string) 'Bendahara';
+                }
+            }
+            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -115,8 +145,8 @@ Class DataAkun
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
-            $user->created_by = $this->admin->name;
-            $user->modified_by = $this->admin->name;
+            $user->created_by = $this->admin->nama_pengguna;
+            $user->modified_by = $this->admin->nama_pengguna;
 
             $newUser = $user->save();
 
