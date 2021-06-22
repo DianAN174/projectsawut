@@ -117,14 +117,29 @@ Class DaftarPengguna
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
-            $results = User::join("roles","users.role_id","=","roles.id")
+            $datas = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.*"), "roles.nama_peran as nama_peran")                        
             ->get();
+
+            foreach ($datas as $d_key => $data) {
+                
+                if ($data["role_id"] == '1'){
+                    $data["role_id"] = (string) 'Admin';
+                }
+                elseif ($data["role_id"] == '2'){
+                    $data["role_id"] = (string) 'Akuntan';
+                }elseif ($data["role_id"] == '3'){
+                    $data["role_id"] = (string) 'Nazhir';
+                }
+                elseif ($data["role_id"] == '4'){
+                    $data["role_id"] = (string) 'Bendahara';
+                }
+            }
 
             //$results = User::select('name','email','password')->roles->name;
             
 
-            return Response::HttpResponse(200, $results, "Index", false);
+            return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
@@ -134,12 +149,27 @@ Class DaftarPengguna
     {
         try 
         {
-            $user = User::join("roles","users.role_id","=","roles.id")
+            $datas = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.nama_pengguna, users.email, users.role_id"), "roles.nama_peran as nama_peran")      
             ->where('users.id',$id)                  
             ->get();
             
-            return Response::HttpResponse(200, $user, "Info User yang akan diedit berhasil ditampilkan", false);
+            foreach ($datas as $d_key => $data) {
+                
+                if ($data["role_id"] == '1'){
+                    $data["role_id"] = (string) 'Admin';
+                }
+                elseif ($data["role_id"] == '2'){
+                    $data["role_id"] = (string) 'Akuntan';
+                }elseif ($data["role_id"] == '3'){
+                    $data["role_id"] = (string) 'Nazhir';
+                }
+                elseif ($data["role_id"] == '4'){
+                    $data["role_id"] = (string) 'Bendahara';
+                }
+            }
+
+            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
