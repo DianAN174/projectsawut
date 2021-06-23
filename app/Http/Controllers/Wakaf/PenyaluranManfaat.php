@@ -142,6 +142,8 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_awal = $penyaluranTemp->periode_awal;
             $penyaluranBiaya->periode_akhir = $penyaluranTemp->periode_akhir;
             $penyaluranBiaya->kelayakan = $penyaluranTemp->kelayakan;
+            $penyaluranBiaya->penyaluran = $penyaluranTemp->penyaluran;
+            $penyaluranBiaya->approval = $penyaluranTemp->approval;
             $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
             $penyaluranBiaya->modified_by = $this->admin->nama_pengguna; 
 
@@ -206,6 +208,8 @@ Class PenyaluranManfaat
             $penyaluranTemp->periode_peminjaman = $request->periode_peminjaman;
             $penyaluranTemp->periode_awal = $request->periode_awal;
             $penyaluranTemp->periode_akhir = $request->periode_akhir;
+            $penyaluranTemp->penyaluran = 0;
+            $penyaluranTemp->approval = 0;
             $penyaluranTemp->created_by = $this->admin->nama_pengguna;
             $penyaluranTemp->modified_by = $this->admin->nama_pengguna; 
 
