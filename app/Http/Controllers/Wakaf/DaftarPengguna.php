@@ -61,7 +61,7 @@ Class DaftarPengguna
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
-            $userRole = $request->peran;
+            $userRole = $request->role_id;
             switch ($userRole) {
                 case "akuntan":
                     $user->role_id = '2';
@@ -213,7 +213,7 @@ Class DaftarPengguna
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
-            $userRole = $request->peran;
+            $userRole = $request->role_id;
             switch ($userRole) {
                 case "akuntan":
                     $user->role_id = '2';
