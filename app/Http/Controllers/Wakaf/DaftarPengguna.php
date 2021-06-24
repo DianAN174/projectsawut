@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 use Mockery\Exception;
 
@@ -184,7 +185,7 @@ Class DaftarPengguna
 
             $validator = Validator::make($request->all(), [
                 'nama_pengguna' => 'required',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => ['required',Rule::unique('users','email')->ignore($id)],
                 'password' => 'required|string|min:6',
                 'role_id' => 'required|in:akuntan,nazhir,bendahara',
             ]);
