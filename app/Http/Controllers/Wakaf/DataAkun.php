@@ -125,10 +125,10 @@ Class DataAkun
         try {
 
             $this->admin = $request->user();
-
+            $user = $request->user();
             $validator = Validator::make($request->all(), [
                 'nama_pengguna' => 'required',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'password' => 'required|string|min:6',
             ]);
 
@@ -140,7 +140,7 @@ Class DataAkun
             DB::beginTransaction();
 
             //$user = User::find($id);
-            $user = $request->user()->id;
+            //$saveUser = $user->id;
             $request['password'] = Hash::make($request['password']);
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
