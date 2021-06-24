@@ -124,7 +124,7 @@ Class DataAkun
             $user = $request->user();
             $validator = Validator::make($request->all(), [
                 'nama_pengguna' => 'required',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+                'email' => 'required|string|email|max:255|unique:users,email' . $user->id,
                 'password' => 'required|string|min:6',
             ]);
 
