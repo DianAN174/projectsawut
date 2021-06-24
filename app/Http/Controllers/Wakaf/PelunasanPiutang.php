@@ -246,7 +246,7 @@ Class PelunasanPiutang
             $pelunasan->tanggal_jatuh_tempo = $periodeAkhir->periode_akhir;
             if($pelunasan->kekurangan == 0)
             {
-                $pelunasan->pelunasan = '1';
+                $pelunasan->pelunasan = 1;
 
             }
             $pelunasan->created_by = $this->admin->nama_pengguna;

@@ -364,10 +364,10 @@ Class PenyaluranManfaat
                 if($skor_akhir>50)
                 {
     
-                    $penyaluranBiaya->kelayakan = '1';
+                    $penyaluranBiaya->kelayakan = 1;
                 }
                 else{
-                    $penyaluranBiaya->kelayakan = '0';
+                    $penyaluranBiaya->kelayakan = 0;
                 }
     
                 $newPenyaluranBiaya = $penyaluranBiaya->save();
@@ -511,7 +511,7 @@ Class PenyaluranManfaat
 
             if($penyaluran==0)
             {
-                $penyaluranBiaya->penyaluran = '1';
+                $penyaluranBiaya->penyaluran = 1;
                 
             }
             $newPenyaluranBiaya = $penyaluranBiaya->save();
@@ -832,10 +832,10 @@ Class PenyaluranManfaat
                 if($skor_akhir>50)
                 {
     
-                    $penyaluranBiaya->kelayakan = '1';
+                    $penyaluranBiaya->kelayakan = 1;
                 }
                 else{
-                    $penyaluranBiaya->kelayakan = '0';
+                    $penyaluranBiaya->kelayakan = 0;
                 }
     
                 $newPenyaluranBiaya = $penyaluranBiaya->save();

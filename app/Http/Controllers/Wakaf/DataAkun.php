@@ -35,20 +35,18 @@ Class DataAkun
             ->where("users.id",$id)            
             ->get();*/
 
-            foreach ($datas as $d_key => $data) {
-                
-                if ($data["role_id"] == 1){
-                    $data["role_id"] = (string) 'Admin';
+            if ($request->user()->role_id == 1){
+                    $request->user()->role_id = (string) 'Admin';
                 }
-                elseif ($data["role_id"] == 2){
-                    $data["role_id"] = (string) 'Akuntan';
-                }elseif ($data["role_id"] == 3){
-                    $data["role_id"] = (string) 'Nazhir';
+                elseif ($request->user()->role_id == 2){
+                    $request->user()->role_id = (string) 'Akuntan';
+                }elseif ($request->user()->role_id == 3){
+                    $request->user()->role_id = (string) 'Nazhir';
                 }
-                elseif ($data["role_id"] == 4){
-                    $data["role_id"] = (string) 'Bendahara';
+                elseif ($request->user()->role_id == 4){
+                    $request->user()->role_id = (string) 'Bendahara';
                 }
-            }
+            
 
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false); 
         } catch (Exception $e) {
@@ -99,20 +97,18 @@ Class DataAkun
             ->where('users.id',$id)                  
             ->get(); */
             $datas = $request->user();
-            foreach ($datas as $d_key => $data) {
-                
-                if ($data["role_id"] == 1){
-                    $data["role_id"] = (string) 'Admin';
+            if ($request->user()->role_id == 1){
+                    $request->user()->role_id = (string) 'Admin';
                 }
-                elseif ($data["role_id"] == 2){
-                    $data["role_id"] = (string) 'Akuntan';
-                }elseif ($data["role_id"] == 3){
-                    $data["role_id"] = (string) 'Nazhir';
+                elseif ($request->user()->role_id == 2){
+                    $request->user()->role_id = (string) 'Akuntan';
+                }elseif ($request->user()->role_id == 3){
+                    $request->user()->role_id = (string) 'Nazhir';
                 }
-                elseif ($data["role_id"] == 4){
-                    $data["role_id"] = (string) 'Bendahara';
+                elseif ($request->user()->role_id == 4){
+                    $request->user()->role_id = (string) 'Bendahara';
                 }
-            }
+            
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
