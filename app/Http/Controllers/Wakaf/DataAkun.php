@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\Rule;
 use Mockery\Exception;
 
 
@@ -124,7 +124,8 @@ Class DataAkun
             $user = $request->user();
             $validator = Validator::make($request->all(), [
                 'nama_pengguna' => 'required',
-                'email' => 'required|string|email|max:255|unique:users,email' . $user->id,
+                //'email' => 'required|string|email|max:255|unique:users,email' . $user->id,
+                'email' => ['required',Rule::unique('users','email')->ignore($user->id)],
                 'password' => 'required|string|min:6',
             ]);
 
