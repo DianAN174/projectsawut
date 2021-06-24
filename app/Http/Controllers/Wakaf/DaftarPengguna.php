@@ -123,15 +123,15 @@ Class DaftarPengguna
 
             foreach ($datas as $d_key => $data) {
                 
-                if ($data["role_id"] == '1'){
+                if ($data["role_id"] == 1){
                     $data["role_id"] = (string) 'Admin';
                 }
-                elseif ($data["role_id"] == '2'){
+                elseif ($data["role_id"] == 2){
                     $data["role_id"] = (string) 'Akuntan';
-                }elseif ($data["role_id"] == '3'){
+                }elseif ($data["role_id"] == 3){
                     $data["role_id"] = (string) 'Nazhir';
                 }
-                elseif ($data["role_id"] == '4'){
+                elseif ($data["role_id"] == 4){
                     $data["role_id"] = (string) 'Bendahara';
                 }
             }
@@ -156,15 +156,15 @@ Class DaftarPengguna
             
             foreach ($datas as $d_key => $data) {
                 
-                if ($data["role_id"] == '1'){
+                if ($data["role_id"] == 1){
                     $data["role_id"] = (string) 'Admin';
                 }
-                elseif ($data["role_id"] == '2'){
+                elseif ($data["role_id"] == 2){
                     $data["role_id"] = (string) 'Akuntan';
-                }elseif ($data["role_id"] == '3'){
+                }elseif ($data["role_id"] == 3){
                     $data["role_id"] = (string) 'Nazhir';
                 }
-                elseif ($data["role_id"] == '4'){
+                elseif ($data["role_id"] == 4){
                     $data["role_id"] = (string) 'Bendahara';
                 }
             }
