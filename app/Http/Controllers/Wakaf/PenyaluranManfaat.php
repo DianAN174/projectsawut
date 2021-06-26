@@ -61,9 +61,9 @@ Class PenyaluranManfaat
                 'answer_5' => 'required',
                 'answer_6' => 'required',
                 'answer_7' => 'required',
-                'answer_8' => 'required',
-                'answer_9' => 'required',
-                'answer_10' => 'required',
+                'answer_8' => 'nullable',
+                'answer_9' => 'nullable',
+                'answer_10' => 'nullable',
                 'answer_11' => 'required',
 
                 'answer_12' => 'required',
@@ -78,8 +78,17 @@ Class PenyaluranManfaat
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", true);
             }
-
-            //$penyaluranTemp = $request->session()->get('penyaluran_temp');
+            
+            if($request->answer_8==null)
+                {
+                    $request->answer_8 = 0;
+                }
+            if($request->answer_9==null){
+                $request->answer_9=0;
+            }
+            if($request->answer_10==null){
+                $request->answer_10=0;
+            }
 
             DB::beginTransaction();
 
