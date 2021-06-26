@@ -53,6 +53,25 @@ Class PenyaluranManfaat
                 'periode_peminjaman' => 'required|numeric',
                 'periode_awal' => 'required|date_format:Y-m-d',
                 'periode_akhir' => 'required|date_format:Y-m-d',
+
+                'answer_1' => 'required',
+                'answer_2' => 'required',
+                'answer_3' => 'required',
+                'answer_4' => 'required',
+                'answer_5' => 'required',
+                'answer_6' => 'required',
+                'answer_7' => 'required',
+                'answer_8' => 'required',
+                'answer_9' => 'required',
+                'answer_10' => 'required',
+                'answer_11' => 'required',
+
+                'answer_12' => 'required',
+                'answer_13' => 'required',
+                'answer_14' => 'required',
+                'answer_15' => 'required',
+                'answer_16' => 'required',
+                'answer_17' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -60,35 +79,78 @@ Class PenyaluranManfaat
                 return Response::HttpResponse(422, $response, "Invalid Data", true);
             }
 
+            //$penyaluranTemp = $request->session()->get('penyaluran_temp');
+
             DB::beginTransaction();
 
-            $penyaluranBiaya = new Penyaluran();
+            $penyaluran = new Penyaluran();
+            $penyaluran->nama_penerima = $request->nama_penerima;
+            $penyaluran->nik = $request->nik;
+            $penyaluran->alamat = $request->alamat;
+            $penyaluran->telepon = $request->telepon;
+            $penyaluran->jenis_usaha = $request->jenis_usaha;
+            $penyaluran->deskripsi_usaha = $request->deskripsi_usaha;
+            $penyaluran->nominal_peminjaman = $request->nominal_peminjaman;
+            $penyaluran->sumber_biaya = $request->sumber_biaya;
+            $penyaluran->jenis_piutang = $request->jenis_piutang;
+            $penyaluran->periode_peminjaman = $request->periode_peminjaman;
+            $penyaluran->periode_awal = $request->periode_awal;
+            $penyaluran->periode_akhir = $request->periode_akhir;
+            $penyaluran->penyaluran = 0;
+            $penyaluran->approval = 0;
+            $penyaluran->created_by = $this->admin->nama_pengguna;
+            $penyaluran->modified_by = $this->admin->nama_pengguna; 
 
-            $penyaluranBiaya->nama_penerima = $request->nama;
-            $penyaluranBiaya->nik = $request->nik;
-            $penyaluranBiaya->alamat = $request->alamat;
-            $penyaluranBiaya->no_telepon = $request->phone;
-            $penyaluranBiaya->jenis_usaha = $request->jenis_usaha;
-            $penyaluranBiaya->deskripsi_usaha = $request->deskripsi_usaha;
-            $penyaluranBiaya->nominal_peminjaman = $request->nominal;
-            $penyaluranBiaya->sumber_biaya = $request->sumber_biaya;
-            $penyaluranBiaya->jenis_piutang = $request->jenis_piutang;
-            $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
-            $penyaluranBiaya->periode_awal = $request->periode_awal;
-            $penyaluranBiaya->periode_akhir = $request->periode_akhir;
-            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
-            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna; 
+            $newPenyaluran = $penyaluran->save();
 
-            $newPenyaluranBiaya = $penyaluranBiaya->save();
-
-            if (!$newPenyaluranBiaya) {
+            /*if (!$newPenyaluran) {
                 DB::rollBack();
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+            } */
+
+            //credit assessment
+            $answers = [$request->answer_1,$request->answer_2,$request->answer_3,$request->answer_4,
+            $request->answer_5,$request->answer_6,$request->answer_7,$request->answer_8,$request->answer_9,
+            $request->answer_10,$request->answer_11,$request->answer_12,$request->answer_13,
+            $request->answer_14,$request->answer_15,$request->answer_16,$request->answer_17];
+            for ($i=1; $i<=17; $i++) {
+                $answers_array[] = [
+                    'penyaluran_id' => $penyaluran->id,
+                    'question_id' => $i,
+                    'answer_id' => $answers[$i-1],
+                    'created_by' => $this->admin->nama_pengguna,  
+                    'modified_by' => $this->admin->nama_pengguna
+                ];
             }
+
+        $newKelayakan = TempTable::insert($answers_array); 
+        
+        $skor = TempTable::join("answers","temp_table.answer_id","=","answers.id")
+            ->where('temp_table.penyaluran_id',$penyaluran->id)   
+            ->sum('answers.score');
+            //dd($skor);
+                $skor_max = 47;
+                $skor_akhir=($skor/$skor_max)*100;
+
+                if($skor_akhir>50)
+                {
+    
+                    $penyaluran->kelayakan = 1;
+                }
+                else{
+                    $penyaluran->kelayakan = 0;
+                }
+    
+                $newPenyaluran = $penyaluran->save();
+    
+                    if (!$newPenyaluran) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data", true);
+                    }
 
             DB::commit();
 
-            return Response::HttpResponse(200, $newPenyaluranBiaya, "Success", false);
+            return Response::HttpResponse(200, $newPenyaluran, "Success", false);
 
         }catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
@@ -153,6 +215,48 @@ Class PenyaluranManfaat
                 DB::rollBack();
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
+
+            //credit assessment
+            $answers = [$request->answer_1,$request->answer_2,$request->answer_3,$request->answer_4,
+            $request->answer_5,$request->answer_6,$request->answer_7,$request->answer_8,$request->answer_9,
+            $request->answer_10,$request->answer_11,$request->answer_12,$request->answer_13,
+            $request->answer_14,$request->answer_15,$request->answer_16,$request->answer_17];
+            for ($i=1; $i<=17; $i++) {
+                $answers_array[] = [
+                    //'penyaluran_temp_id' => $penyaluranTemp,
+                    'question_id' => $i,
+                    'answer_id' => $answers[$i-1],
+                    'created_by' => $this->admin->nama_pengguna,  
+                    'modified_by' => $this->admin->nama_pengguna
+                ];
+            }
+
+        $newKelayakan = TempTable::insert($answers_array); 
+        $skor = TempTable::join("answers","temp_table.answer_id","=","answers.id")
+            ->where('temp_table',$id)   
+            ->sum('answers.score');
+            //dd($skor);
+                $skor_max = 47;
+                $skor_akhir=($skor/$skor_max)*100;
+
+                $penyaluranBiaya = PenyaluranTemp::find($id);
+                //dd($penyaluranBiaya);
+    
+                if($skor_akhir>50)
+                {
+    
+                    $penyaluranBiaya->kelayakan = 1;
+                }
+                else{
+                    $penyaluranBiaya->kelayakan = 0;
+                }
+    
+                $newPenyaluranBiaya = $penyaluranBiaya->save();
+    
+                    if (!$newPenyaluranBiaya) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data", true);
+                    }
 
             DB::commit();
 

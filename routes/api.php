@@ -45,7 +45,7 @@ Route::middleware(['auth:api','json.response'])->group(function () {
 
     //fitur penyaluran manfaat
     Route::get('/wakaf/penyaluran', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Index');
-    //Route::post('/wakaf/penyaluran/create/', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Create');
+    Route::post('/wakaf/penyaluran/create', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@Create');
     Route::post('/wakaf/penyaluran/input-1', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@ModalCreate');
     Route::post('/wakaf/penyaluran/input-2/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@ModalKelayakanFirst');
     Route::post('/wakaf/penyaluran/input-3/{id}', 'App\Http\Controllers\Wakaf\PenyaluranManfaat@ModalKelayakanSecond');
@@ -119,4 +119,6 @@ Route::middleware(['auth:api','json.response'])->group(function () {
     Route::get('/wakaf/search-daftar-pengguna', 'App\Http\Controllers\Wakaf\DaftarPengguna@Search');
     Route::put('/wakaf/daftar-pengguna/status/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Status');
 
+    //fitur laporan keuangan
+    //Route::get('/wakaf/laporanposisi', 'App\Http\Controllers\Wakaf\LaporanPosisiKeuangan@Download');
 });
