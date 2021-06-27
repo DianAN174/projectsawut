@@ -64,7 +64,7 @@ Class PenyaluranManfaat
                 'answer_8' => 'nullable',
                 'answer_9' => 'nullable',
                 'answer_10' => 'nullable',
-                'answer_11' => 'required',
+                'answer_11' => 'nullable',
 
                 'answer_12' => 'required',
                 'answer_13' => 'required',
@@ -87,6 +87,9 @@ Class PenyaluranManfaat
                 $request->answer_9=0;
             }
             if($request->answer_10==null){
+                $request->answer_10=0;
+            }
+            if($request->answer_11==null){
                 $request->answer_10=0;
             }
 
