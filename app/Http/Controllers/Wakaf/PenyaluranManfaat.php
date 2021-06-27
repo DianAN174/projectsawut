@@ -90,7 +90,7 @@ Class PenyaluranManfaat
                 $request->answer_10=0;
             }
             if($request->answer_11==null){
-                $request->answer_10=0;
+                $request->answer_11=0;
             }
 
             DB::beginTransaction();
