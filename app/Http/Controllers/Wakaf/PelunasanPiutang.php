@@ -52,11 +52,9 @@ Class PelunasanPiutang
             DB::beginTransaction();
             //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
             $pelunasan = new Pelunasan();
-            //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
-            //$pelunasanPenyaluran = Penyaluran::where('nik',$request->nik)->where('pelunasan','0');
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             if($nikPelunasanQuery == null)
             {
@@ -87,6 +85,10 @@ Class PelunasanPiutang
             if($pelunasan->kekurangan == 0)
             {
                 $pelunasan->pelunasan = 1;
+                //jika sudah lunas, isi flag pelunasan di tabel penyaluran dengan 1
+                $penyaluran = Penyaluran::where('nik',$request->nik)->first('id');
+                $penyaluran->pelunasan = 1;
+                $penyaluran = $penyaluran->save();
 
             }
             $pelunasan->created_by = $this->admin->nama_pengguna;
@@ -181,7 +183,7 @@ Class PelunasanPiutang
             $pelunasan = Pelunasan::find($id);
         
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->sum('nominal_peminjaman');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
 
             $getIdPelunasanLess = Pelunasan::where('nik',$request->nik)->where('id','<',$id)->pluck('id')->toArray();
@@ -198,15 +200,9 @@ Class PelunasanPiutang
 
                 if(!empty($getIdPelunasanGreater))
                 {
-                    /* $kekuranganCicilan =  $jumlahPinjaman - (Pelunasan::where('id','<',$id)->where('nik',$request->nik)->sum('jumlah_cicilan') + $request->jumlah_cicilan);
-                
-                    $pelunasan->kekurangan = $kekuranganCicilan; */
-
                     for ($i=0; $i<sizeof($getIdPelunasanGreater); $i++) {
                     $newPelunasan = Pelunasan::where('id',$getIdPelunasanGreater[$i])->first('id');
-                    //$newPelunasan->jumlah_cicilan = $request->jumlah_cicilan;
                     $jumlahCicilanNew = Pelunasan::where('id',$getIdPelunasanGreater[$i])->first('jumlah_cicilan');
-                    //dd($jumlahCicilanNew);
                     $newPelunasan->kekurangan = $jumlahPinjaman - (Pelunasan::where('id','<',$id)->where('nik',$request->nik)->sum('jumlah_cicilan') + $request->jumlah_cicilan + $jumlahCicilanNew->jumlah_cicilan);
                     $newPelunasan = $newPelunasan->save();
                     }
@@ -227,18 +223,6 @@ Class PelunasanPiutang
                
             }
 
-            /* $idQuery = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->count('id');
-            if($idQuery == 0)
-            {
-                $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
-                $pelunasan->kekurangan = $kekuranganCicilan;
-            }else
-            {
-                $sumKekurangan = Pelunasan::where('nik',$request->nik)->where('id','<>',$id)->sum('kekurangan');
-                $kekuranganCicilan =  $sumKekurangan - $request->jumlah_cicilan;
-                
-                $pelunasan->kekurangan = $kekuranganCicilan;
-            } */
             $pelunasan->tanggal_cicilan = $request->tanggal_cicilan;
             $pelunasan->nik = $request->nik;
             $pelunasan->nama_peminjam = $namaPeminjam->nama_penerima;
@@ -247,6 +231,10 @@ Class PelunasanPiutang
             if($pelunasan->kekurangan == 0)
             {
                 $pelunasan->pelunasan = 1;
+                //jika sudah lunas, isi flag pelunasan di tabel penyaluran dengan 1
+                $penyaluran = Penyaluran::where('nik',$request->nik)->first('id');
+                $penyaluran->pelunasan = 1;
+                $penyaluran = $penyaluran->save();
 
             }
             $pelunasan->created_by = $this->admin->nama_pengguna;

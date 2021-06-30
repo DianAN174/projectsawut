@@ -42,11 +42,16 @@ Class PengajuanBiayaOperasional
                 'keterangan_biaya' => 'required|string|max:255',
                 'nominal' => 'required|numeric',
                 'sumber_biaya' => 'required|in:tunai,bagihasil,nonbagihasil',
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
+            }
+
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
             }
 
             DB::beginTransaction();
@@ -215,11 +220,12 @@ Class PengajuanBiayaOperasional
             $validator = Validator::make($request->all(), [
                 'nama_pengaju' => 'required|string|max:255',
                 //'kategori_biaya' => 'required|in:bebanpengelolaan,bagiannazhir,pentasyarufan',
-                'kategori_biaya' => 'required',
+                'kategori_biaya' => 'required|string',
                 //'jenis_biaya' => 'required',
                 'keterangan_biaya' => 'required|string|max:255',
                 'nominal' => 'required|numeric',
                 'sumber_biaya' => 'required|in:tunai,bagihasil,nonbagihasil',
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
@@ -227,44 +233,55 @@ Class PengajuanBiayaOperasional
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
+            }
+
             DB::beginTransaction();
 
             $pengajuanBiaya = PengajuanBiaya::find($id);
 
-            $pengajuanBiaya->nama_pengaju = $request->nama_pengaju;
-            $pengajuanBiaya->kategori_biaya = $request->kategori_biaya;
-            //$pengajuanBiaya->jenis_biaya = $request->jenis_biaya;
-            $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
-            $pengajuanBiaya->nominal = $request->nominal;
-            $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
-            $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
-            $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
-
-            $newPengajuanBiaya = $pengajuanBiaya->save();
-
-            if (!$newPengajuanBiaya) {
-                DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data", true);
-            }
-
             if($pengajuanBiaya->approval == 1)
             {
                 $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
-                if($kategoriBiaya == 'atk' || 'pemasaran' || 'rapat' || 'penyaluran' || 'administrasi' || 'pajak')
+                //case untuk kategori_biaya yg sudah diinput
+                if($kategoriBiaya == 'atk' || $kategoriBiaya == 'pemasaran' || $kategoriBiaya == 'rapat' || $kategoriBiaya == 'penyaluran' || $kategoriBiaya == 'administrasi' || $kategoriBiaya == 'pajak')
+                {
+                    $kategoriBiayaCase = 1;
+                }
+                elseif($kategoriBiaya == 'insentif' || $kategoriBiaya == 'tunjanganKesehatan'){
+                    $kategoriBiayaCase = 2;
+                }
+                elseif($kategoriBiaya == 'ekonomiUmat' || $kategoriBiaya =='kesejahteraan' || $kategoriBiaya =='ibadah' || $kategoriBiaya =='pendidikan' || $kategoriBiaya =='kesehatan' || $kategoriBiaya =='bantuan'){
+                    $kategoriBiayaCase = 3;
+                }
+                
+                $newKategori = $request->kategori_biaya;
+                //case untuk nilai kategori_biaya yang baru
+                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
                 {
                     $kategoriCase = 1;
                 }
-                elseif($kategoriBiaya == 'insentif' || 'tunjanganKesehatan'){
+                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
                     $kategoriCase = 2;
                 }
-                elseif($kategoriBiaya == 'ekonomiUmat' || 'kesejahteraan' || 'ibadah' || 'pendidikan' || 'kesehatan' || 'bantuan'){
+                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
                     $kategoriCase = 3;
                 }
 
                 $sumberBiaya = $pengajuanBiaya->sumber_biaya;
             
-                switch ($sumberBiaya) {
+                switch ($request->sumber_biaya) {
                     case "tunai":
+                    if($sumberBiaya == $request->sumber_biaya)
+                    {
+                        $newKasTunai = KasTunai::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                        $newKasTunai->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newKasTunai = new KasTunai();
+                        $newKasTunai->created_by = $this->admin->nama_pengguna;
+                    }
                     $newKasTunai = KasTunai::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
                     $newKasTunai->tanggal_transaksi = $request->tanggal_transaksi;
                     $newKasTunai->keterangan = $request->keterangan;
@@ -281,7 +298,15 @@ Class PengajuanBiayaOperasional
                     break;
 
                     case "bagihasil":
+                        if($sumberBiaya == $request->sumber_biaya)
+                        {
                             $newBagiHasil = KasTabBagiHasil::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newBagiHasil->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newBagiHasil = new KasTabBagiHasil();
+                            $newBagiHasil->created_by = $this->admin->nama_pengguna;
+                        }
                             $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
                             $newBagiHasil->keterangan = $request->keterangan;
                             $newBagiHasil->saldo = $request->nominal;
@@ -296,7 +321,15 @@ Class PengajuanBiayaOperasional
             
                             break;
                         case "nonbagihasil":
-                            $newNonBagiHasil = KasTabNonBagiHasil::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            if($sumberBiaya == $request->sumber_biaya)
+                            {
+                                $newNonBagiHasil = KasTabNonBagiHasil::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                                $newNonBagiHasil->modified_by = $this->admin->nama_pengguna;
+                            }
+                            else{
+                                $newNonBagiHasil = new KasTabNonBagiHasil();
+                                $newNonBagiHasil->created_by = $this->admin->nama_pengguna;
+                            }
                             $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
                             $newNonBagiHasil->keterangan = $request->keterangan;
                             $newNonBagiHasil->saldo = $request->nominal;
@@ -317,8 +350,16 @@ Class PengajuanBiayaOperasional
                     }
                 
                 switch ($kategoriCase) {
-                    case "1":
-                        $newBPP = BebanPengelolaandanPengembangan::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                    case 1:
+                        if($kategoriBiayaCase == $kategoriCase)
+                        {
+                            $newBPP = BebanPengelolaandanPengembangan::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newBPP->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newBPP = new BebanPengelolaandanPengembangan();
+                            $newBPP->created_by = $this->admin->nama_pengguna;
+                        }
                         $newBPP->tanggal_transaksi = $request->tanggal_transaksi;
                         $newBPP->keterangan = $request->keterangan;
                         $newBPP->saldo = $request->nominal;
@@ -332,8 +373,16 @@ Class PengajuanBiayaOperasional
                         }
 
                         break;
-                    case "2":
-                        $newBagianNazhir = BagianNazhir::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                    case 2:
+                        if($kategoriBiayaCase == $kategoriCase)
+                        {
+                            $newBagianNazhir = BagianNazhir::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newBagianNazhir->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newBagianNazhir = new BagianNazhir();
+                            $newBagianNazhir->created_by = $this->admin->nama_pengguna;
+                        }
                         $newBagianNazhir->tanggal_transaksi = $request->tanggal_transaksi;
                         $newBagianNazhir->keterangan = $request->keterangan;
                         $newBagianNazhir->saldo = $request->nominal;
@@ -348,8 +397,16 @@ Class PengajuanBiayaOperasional
 
                     break;
 
-                    case "3":
-                        $newPentasyarufan = PentasyarufanManfaat::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                    case 3:
+                        if($kategoriBiayaCase == $kategoriCase)
+                        {
+                            $newPentasyarufan = PentasyarufanManfaat::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newPentasyarufan->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newPentasyarufan = new PentasyarufanManfaat();
+                            $newPentasyarufan->created_by = $this->admin->nama_pengguna;
+                        }
                         $newPentasyarufan->tanggal_transaksi = $request->tanggal_transaksi;
                         $newPentasyarufan->keterangan = $request->keterangan;
                         $newPentasyarufan->saldo = $request->nominal;                        
@@ -369,7 +426,105 @@ Class PengajuanBiayaOperasional
                         return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
 
+                //delete transaksi yg diedit / pindah akun
+                if($sumberBiaya !== $request->sumber_biaya)
+                {
+                    switch ($sumberBiaya) {
+                        case "tunai":
+                        $newKasTunai = KasTunai::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                        $newKasTunai->deleted_at = \Carbon\Carbon::now();
+                        $newKasTunai->deleted_by = $this->admin->nama_pengguna;
+                        $newKasTunai = $newKasTunai->save();
+                        
+                        if (!$newKasTunai) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case "bagihasil":
+                            $newBagiHasil = KasTabBagiHasil::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newBagiHasil->deleted_at = \Carbon\Carbon::now();
+                            $newBagiHasil->deleted_by = $this->admin->nama_pengguna;
+                            $newBagiHasil = $newBagiHasil->save();
+                            
+                            if (!$newBagiHasil) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+                            break;
+                        
+                        case "nonbagihasil":
+                            $newNonBagiHasil = KasTabNonBagiHasil::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newNonBagiHasil->deleted_at = \Carbon\Carbon::now();
+                            $newNonBagiHasil->deleted_by = $this->admin->nama_pengguna;
+                            $newNonBagiHasil = $newNonBagiHasil->save();
+                            
+                            if (!$newNonBagiHasil) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+                            break;
+                    }
+                }
+
+                if($kategoriBiayaCase !== $kategoriCase)
+                {
+                        switch ($kategoriBiayaCase) {
+                        case 1:
+                        $newBPP = BebanPengelolaandanPengembangan::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                        $newBPP->deleted_at = \Carbon\Carbon::now();
+                        $newBPP->deleted_by = $this->admin->nama_pengguna;
+                        $newBPP = $newBPP->save();
+                        
+                        if (!$newBPP) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case 2:
+                            $newBagianNazhir = BagianNazhir::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newBagianNazhir->deleted_at = \Carbon\Carbon::now();
+                            $newBagianNazhir->deleted_by = $this->admin->nama_pengguna;
+                            $newBagianNazhir = $newBagianNazhir->save();
+                            
+                            if (!$newBagianNazhir) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+                            break;
+
+                        case 3:
+                            $newPentasyarufan = PentasyarufanManfaat::where('pengajuan_biaya_id',$pengajuanBiaya->id)->first('id');
+                            $newPentasyarufan->deleted_at = \Carbon\Carbon::now();
+                            $newPentasyarufan->deleted_by = $this->admin->nama_pengguna;
+                            $newPentasyarufan = $newPentasyarufan->save();
+                            
+                            if (!$newPentasyarufan) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+                            break;
+                    }
+                }
+        }
+
+            $pengajuanBiaya->nama_pengaju = $request->nama_pengaju;
+            $pengajuanBiaya->kategori_biaya = $request->kategori_biaya;
+            $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
+            $pengajuanBiaya->nominal = $request->nominal;
+            $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
+            $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
+            $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
+    
+            $newPengajuanBiaya = $pengajuanBiaya->save();
+    
+            if (!$newPengajuanBiaya) {
+                DB::rollBack();
+                return Response::HttpResponse(400, null, "Failed to create data", true);
             }
+
             DB::commit();
 
             return Response::HttpResponse(200, $newPengajuanBiaya, "Success", false);
@@ -426,17 +581,19 @@ Class PengajuanBiayaOperasional
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
 
-            $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
-            if($kategoriBiaya == 'atk' || 'pemasaran' || 'rapat' || 'penyaluran' || 'administrasi' || 'pajak')
+            $newKategori = $request->kategori_biaya;
+                //case untuk nilai kategori_biaya yang baru
+                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
                 {
                     $kategoriCase = 1;
                 }
-                elseif($kategoriBiaya == 'insentif' || 'tunjanganKesehatan'){
+                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
                     $kategoriCase = 2;
                 }
-                elseif($kategoriBiaya == 'ekonomiUmat' || 'kesejahteraan' || 'ibadah' || 'pendidikan' || 'kesehatan' || 'bantuan'){
+                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
                     $kategoriCase = 3;
                 }
+
             $sumberBiaya = $pengajuanBiaya->sumber_biaya;
         
             switch ($sumberBiaya) {
@@ -493,7 +650,7 @@ Class PengajuanBiayaOperasional
                 }
             
             switch ($kategoriCase) {
-                case "1":
+                case 1:
                     $newBPP = new BebanPengelolaandanPengembangan();
                     $newBPP->tanggal_transaksi = $request->tanggal_transaksi;
                     $newBPP->keterangan = $request->keterangan;
@@ -508,7 +665,7 @@ Class PengajuanBiayaOperasional
                     }
 
                     break;
-                case "2":
+                case 2:
                     $newBagianNazhir = new BagianNazhir();
                     $newBagianNazhir->tanggal_transaksi = $request->tanggal_transaksi;
                     $newBagianNazhir->keterangan = $request->keterangan;
@@ -524,7 +681,7 @@ Class PengajuanBiayaOperasional
 
                 break;
 
-                case "3":
+                case 3:
                     $newPentasyarufan = new PentasyarufanManfaat();
                     $newPentasyarufan->tanggal_transaksi = $request->tanggal_transaksi;
                     $newPentasyarufan->keterangan = $request->keterangan;

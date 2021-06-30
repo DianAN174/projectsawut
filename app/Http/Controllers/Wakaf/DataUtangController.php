@@ -37,13 +37,17 @@ Class DataUtangController
                 'nominal' => 'required|numeric',
                 'keterangan_utang' => 'required|string|max:255',
 
-                /* 'keterangan' => 'required|string|max:255',
-                'tanggal_transaksi' => 'required|date_format:Y-m-d', */
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d', 
+                /* 'keterangan' => 'required|string|max:255', */
             ]);
 
             if ($validator->fails()) {
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
+            }
+
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
             }
 
             DB::beginTransaction();
@@ -84,8 +88,8 @@ Class DataUtangController
     
                     case "jangkapanjang":
                         $newUtangJangkaPanjang = new UtangJangkaPanjang();
-                        //$newUtangJangkaPanjang->tanggal_transaksi = $request->tanggal_transaksi;
-                        //$newUtangJangkaPanjang->keterangan = $request->keterangan;
+                        $newUtangJangkaPanjang->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newUtangJangkaPanjang->keterangan = $request->keterangan;
                         $newUtangJangkaPanjang->saldo = $request->nominal;
                         $newUtangJangkaPanjang->type = 'pemasukan';
                         $newUtangJangkaPanjang->data_utang_id = $dataUtang->id;
@@ -180,8 +184,9 @@ Class DataUtangController
                 'kategori_utang' => 'required|in:biaya,jangkapanjang',
                 'nominal' => 'required|numeric',
                 'keterangan_utang' => 'required|string|max:255',
-                /* 'keterangan' => 'required|string|max:255',
-                'tanggal_transaksi' => 'required|date_format:Y-m-d', */
+
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d', 
+                /* 'keterangan' => 'required|string|max:255',  */
             ]);
 
             if ($validator->fails()) {
@@ -189,28 +194,27 @@ Class DataUtangController
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
+            }
+
             DB::beginTransaction();
 
             $dataUtang = DataUtang::find($id);
-
-            $dataUtang->kategori_utang = $request->kategori_utang;
-            $dataUtang->nominal = $request->nominal;
-            $dataUtang->keterangan_utang = $request->keterangan_utang;
-            $dataUtang->created_by = $this->admin->nama_pengguna;
-            $dataUtang->modified_by = $this->admin->nama_pengguna;
-
-            $newDataUtang = $dataUtang->save();
-
-            if (!$newDataUtang) {
-                DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
-
+            //kategori_utang sebelum diedit
             $kategoriUtang = $dataUtang->kategori_utang;
 
-                switch ($kategoriUtang) {
+                switch ($request->kategori_utang) {
                     case "biaya":
-                        $newUtangBiaya = new UtangBiaya();
+                        if($kategoriUtang == $request->kategori_utang)
+                        {
+                            $newUtangBiaya = UtangBiaya::where('data_utang_id',$dataUtang->id)->first('id');
+                            $newUtangBiaya->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newUtangBiaya = new UtangBiaya();
+                            $newUtangBiaya->created_by = $this->admin->nama_pengguna;
+                        }
                         $newUtangBiaya->tanggal_transaksi = $request->tanggal_transaksi;
                         $newUtangBiaya->keterangan = $request->keterangan;
                         $newUtangBiaya->saldo = $request->nominal;
@@ -226,9 +230,17 @@ Class DataUtangController
                         break;
     
                     case "jangkapanjang":
-                        $newUtangJangkaPanjang = new UtangJangkaPanjang();
-                        //$newUtangJangkaPanjang->tanggal_transaksi = $request->tanggal_transaksi;
-                        //$newUtangJangkaPanjang->keterangan = $request->keterangan;
+                        if($kategoriUtang == $request->kategori_utang)
+                        {
+                            $newUtangJangkaPanjang = UtangJangkaPanjang::where('data_utang_id',$dataUtang->id)->first('id');
+                            $newUtangJangkaPanjang->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newUtangJangkaPanjang = new UtangJangkaPanjang();
+                            $newUtangJangkaPanjang->created_by = $this->admin->nama_pengguna;
+                        }
+                        $newUtangJangkaPanjang->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newUtangJangkaPanjang->keterangan = $request->keterangan;
                         $newUtangJangkaPanjang->saldo = $request->nominal;
                         $newUtangJangkaPanjang->type = 'pemasukan';
                         $newUtangJangkaPanjang->data_utang_id = $dataUtang->id;
@@ -244,6 +256,48 @@ Class DataUtangController
                         DB::rollBack();
                         return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                 }
+
+                //delete transaksi yg diedit / pindah akun
+                if($kategoriUtang !== $request->kategori_utang){
+                    switch ($kategoriUtang) {
+                        case "biaya":
+                        $newUtangBiaya = UtangBiaya::where('data_utang_id',$dataUtang->id)->first('id');
+                        $newUtangBiaya->deleted_at = \Carbon\Carbon::now();
+                        $newUtangBiaya->deleted_by = $this->admin->nama_pengguna;
+                        $newUtangBiaya = $newUtangBiaya->save();
+                        
+                        if (!$newUtangBiaya) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case "jangkapanjang":
+                            $newUtangJangkaPanjang = UtangJangkaPanjang::where('data_utang_id',$dataUtang->id)->first('id');
+                            $newUtangJangkaPanjang->deleted_at = \Carbon\Carbon::now();
+                            $newUtangJangkaPanjang->deleted_by = $this->admin->nama_pengguna;
+                            $newUtangJangkaPanjang = $newUtangJangkaPanjang->save();
+                            
+                            if (!$newUtangJangkaPanjang) {
+                                DB::rollBack();
+                                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                            }
+                            break;
+                    }
+                }
+
+            $dataUtang->kategori_utang = $request->kategori_utang;
+            $dataUtang->nominal = $request->nominal;
+            $dataUtang->keterangan_utang = $request->keterangan_utang;
+            $dataUtang->created_by = $this->admin->nama_pengguna;
+            $dataUtang->modified_by = $this->admin->nama_pengguna;
+
+            $newDataUtang = $dataUtang->save();
+
+            if (!$newDataUtang) {
+                DB::rollBack();
+                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+            }
 
             DB::commit();
 

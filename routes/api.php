@@ -120,5 +120,12 @@ Route::middleware(['auth:api','json.response'])->group(function () {
     Route::put('/wakaf/daftar-pengguna/status/{id}', 'App\Http\Controllers\Wakaf\DaftarPengguna@Status');
 
     //fitur laporan keuangan
-    //Route::get('/wakaf/laporanposisi', 'App\Http\Controllers\Wakaf\LaporanPosisiKeuangan@Download');
+    Route::get('/wakaf/laporan/posisikeuangan/generate', 'App\Http\Controllers\Wakaf\LaporanPosisiKeuangan@Generate');
+    Route::get('/wakaf/laporan/posisikeuangan/download', 'App\Http\Controllers\Wakaf\LaporanPosisiKeuangan@Download');
+    Route::get('/wakaf/laporan/rincianaset/generate', 'App\Http\Controllers\Wakaf\LaporanRincianAsetWakaf@Generate');
+    Route::get('/wakaf/laporan/rincianaset/download', 'App\Http\Controllers\Wakaf\LaporanRincianAsetWakaf@Download');
+    Route::get('/wakaf/laporan/aktivitas/generate', 'App\Http\Controllers\Wakaf\LaporanAktivitas@Generate');
+    Route::get('/wakaf/laporan/aktivitas/download', 'App\Http\Controllers\Wakaf\LaporanAktivitas@Download');
+    Route::get('/wakaf/laporan/aruskas/generate', 'App\Http\Controllers\Wakaf\LaporanArusKas@Generate');
+    Route::get('/wakaf/laporan/aruskas/download', 'App\Http\Controllers\Wakaf\LaporanArusKas@Download');
 });

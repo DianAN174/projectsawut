@@ -7,6 +7,7 @@ use App\Models\ModelPenyaluranManfaat\PiutangJangkaPanjang;
 use App\Models\ModelPenyaluranManfaat\Penyaluran;
 use App\Models\ModelPengelolaan\KasTabBagiHasil;
 use App\Models\ModelPengelolaan\KasTabNonbagiHasil;
+use App\Models\ModelPelunasan\Pelunasan;
 use App\Models\Kelayakan\PenyaluranTemp;
 use App\Models\Kelayakan\Questions;
 use App\Models\Kelayakan\Answers;
@@ -72,6 +73,8 @@ Class PenyaluranManfaat
                 'answer_15' => 'required',
                 'answer_16' => 'required',
                 'answer_17' => 'required',
+
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
@@ -79,10 +82,9 @@ Class PenyaluranManfaat
                 return Response::HttpResponse(422, $response, "Invalid Data", true);
             }
             
-            if($request->answer_8==null)
-                {
-                    $request->answer_8 = 0;
-                }
+            if($request->answer_8==null)        {
+                $request->answer_8 = 0;
+            }
             if($request->answer_9==null){
                 $request->answer_9=0;
             }
@@ -91,6 +93,9 @@ Class PenyaluranManfaat
             }
             if($request->answer_11==null){
                 $request->answer_11=0;
+            }
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
             }
 
             DB::beginTransaction();
@@ -746,6 +751,7 @@ Class PenyaluranManfaat
                 'periode_peminjaman' => 'required|numeric',
                 'periode_awal' => 'required|date_format:Y-m-d',
                 'periode_akhir' => 'required|date_format:Y-m-d',
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
             ]);
 
             if ($validator->fails()) {
@@ -753,56 +759,55 @@ Class PenyaluranManfaat
                 return Response::HttpResponse(422, $response, "Invalid Data", true);
             }
 
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
+            }
+
             DB::beginTransaction();
 
             $penyaluranBiaya = Penyaluran::find($id);
-            //dd($request->nama_penerima);
-            
-            $penyaluranBiaya->nama_penerima = $request->nama_penerima;
-            $penyaluranBiaya->nik = $request->nik;
-            $penyaluranBiaya->alamat = $request->alamat;
-            $penyaluranBiaya->telepon = $request->telepon;
-            $penyaluranBiaya->jenis_usaha = $request->jenis_usaha;
-            $penyaluranBiaya->deskripsi_usaha = $request->deskripsi_usaha;
-            $penyaluranBiaya->nominal_peminjaman = $request->nominal_peminjaman;
-            $penyaluranBiaya->sumber_biaya = $request->sumber_biaya;
-            $penyaluranBiaya->jenis_piutang = $request->jenis_piutang;
-            $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
-            $penyaluranBiaya->periode_awal = $request->periode_awal;
-            $penyaluranBiaya->periode_akhir = $request->periode_akhir;
-            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
-            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna;
-
-            $newPenyaluran = $penyaluranBiaya->save();
-
-            if (!$newPenyaluran) {
-                DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
 
             if($penyaluranBiaya->approval == 1)
             {
                 $sumberBiaya = $penyaluranBiaya->sumber_biaya;
                 $jenisPiutang = $penyaluranBiaya->jenis_piutang;
 
-                switch ($sumberBiaya) {
+                //cek apakah sumber biaya dari request sama dg sumber biaya sblm diedit
+                switch ($request->sumber_biaya) {
                     case "bagihasil":
+                        if($sumberBiaya == $request->sumber_biaya)
+                        {
                             $newBagiHasil = KasTabBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
-                            $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
-                            $newBagiHasil->keterangan = $request->keterangan;
-                            $newBagiHasil->saldo = $request->nominal_peminjaman;
-                            $newBagiHasil->type = 'pengeluaran';
-                            $newBagiHasil->penyaluran_id = $request->id;
-                            $newBagiHasil = $newBagiHasil->save();
+                            $newBagiHasil->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newBagiHasil = new KasTabBagiHasil();
+                            $newBagiHasil->created_by = $this->admin->nama_pengguna;
+                        }
+                        $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
+                        $newBagiHasil->keterangan = $request->keterangan;
+                        $newBagiHasil->saldo = $request->nominal_peminjaman;
+                        $newBagiHasil->type = 'pengeluaran';
+                        $newBagiHasil->penyaluran_id = $request->id;
+                        $newBagiHasil = $newBagiHasil->save();
             
-                            if (!$newBagiHasil) {
-                                DB::rollBack();
-                                return Response::HttpResponse(400, null, "Failed to create data ", true);
-                            }
-            
-                            break;
-                        case "nonbagihasil":
+                        if (!$newBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data ", true);
+                        }
+        
+                        break;
+    
+                    case "nonbagihasil":
+                        if($sumberBiaya == $request->sumber_biaya)
+                        {
                             $newNonBagiHasil = KasTabNonBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                            $newNonBagiHasil->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newNonBagiHasil = new KasTabNonBagiHasil();
+                            $newNonBagiHasil->created_by = $this->admin->nama_pengguna;
+                        }
                             $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
                             $newNonBagiHasil->keterangan = $request->keterangan;
                             $newNonBagiHasil->saldo = $request->nominal_peminjaman;
@@ -823,9 +828,17 @@ Class PenyaluranManfaat
                     }
 
                 //pjp=piutang jangka pendek, pja=piutang jangka panjang
-                switch ($jenisPiutang) {
+                switch ($request->jenis_piutang) {
                     case "pjp":
-                        $newPjp = PiutangJangkaPendek::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        if($jenisPiutang == $request->jenis_piutang)
+                        {
+                            $newPjp = PiutangJangkaPendek::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                            $newPjp->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newPjp = new PiutangJangkaPendek();
+                            $newPjp->created_by = $this->admin->nama_pengguna;
+                        }
                         $newPjp->tanggal_transaksi = $request->tanggal_transaksi;
                         $newPjp->keterangan = $request->keterangan;
                         $newPjp->saldo = $request->nominal_peminjaman;
@@ -840,7 +853,15 @@ Class PenyaluranManfaat
 
                         break;
                     case "pja":
-                        $newPja = PiutangJangkaPanjang::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        if($jenisPiutang == $request->jenis_piutang)
+                        {
+                            $newPja = PiutangJangkaPanjang::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                            $newPja->modified_by = $this->admin->nama_pengguna;
+                        }
+                        else{
+                            $newPja = new PiutangJangkaPanjang();
+                            $newPja->created_by = $this->admin->nama_pengguna;
+                        }
                         $newPja->tanggal_transaksi = $request->tanggal_transaksi;
                         $newPja->keterangan = $request->keterangan;
                         $newPja->saldo = $request->nominal_peminjaman;
@@ -859,6 +880,111 @@ Class PenyaluranManfaat
                         DB::rollBack();
                         return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
+
+                //delete transaksi yg diedit / pindah akun
+                if($sumberBiaya !== $request->sumber_biaya)
+                {
+                    switch ($sumberBiaya)
+                    {
+                        case "bagihasil":
+                        $newBagiHasil = KasTabBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newBagiHasil->deleted_at = \Carbon\Carbon::now();
+                        $newBagiHasil->deleted_by = $this->admin->nama_pengguna;
+                        $newBagiHasil = $newBagiHasil->save();
+                        
+                        if (!$newBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case "nonbagihasil":
+                        $newNonBagiHasil = KasTabNonBagiHasil::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newNonBagiHasil->deleted_at = \Carbon\Carbon::now();
+                        $newNonBagiHasil->deleted_by = $this->admin->nama_pengguna;
+                        $newNonBagiHasil = $newNonBagiHasil->save();
+                        
+                        if (!$newNonBagiHasil) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+                    }
+                }
+
+                if($jenisPiutang !== $request->jenis_piutang)
+                {
+                    switch ($jenisPiutang)
+                    {
+                        case "pjp":
+                        $newPjp = PiutangJangkaPendek::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newPja->deleted_at = \Carbon\Carbon::now();
+                        $newPjp->deleted_by = $this->admin->nama_pengguna;
+                        $newPjp = $newPjp->save();
+                        
+                        if (!$newPjp) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+
+                        case "pja":
+                        $newPja = PiutangJangkaPanjang::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
+                        $newPja->deleted_at = \Carbon\Carbon::now();
+                        $newPja->deleted_by = $this->admin->nama_pengguna;
+                        $newPja = $newPja->save();
+                        
+                        if (!$newPja) {
+                            DB::rollBack();
+                            return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                        }
+                        break;
+                    }
+                }                    
+            }
+
+            $nik = $penyaluranBiaya->nik;
+            $nominalPeminjaman = $penyaluranBiaya->nominal_peminjaman;
+            //jika nik diedit, maka nik yang ada di tabel Pelunasan juga diedit agar perhitungan otomatis tidak error
+            if ($penyaluranBiaya->nik !== $request->nik){
+                $newPelunasan = Pelunasan::where('nik',$penyaluranBiaya->nik)->first('id');
+                $newPelunasan->nik = $request->nik;
+                $newPelunasan = $newPelunasan->save();
+            }
+
+            //jika nominal diedit, maka kalkulasi di tabel Pelunasan kembali dihitung
+            if ($nominalPeminjaman !== $request->nominal_peminjaman){
+                $jumlahPinjaman = $request->nominal_peminjaman;
+                $getIdPelunasan = Pelunasan::where('nik',$request->nik)->pluck('id')->toArray();;
+                $newPelunasan = Pelunasan::where('nik',$request->nik)->first('id');
+                for ($i=0; $i<sizeof($getIdPelunasan); $i++) {
+                    $newPelunasan = Pelunasan::where('id',$getIdPelunasan[$i])->first('id');
+                    $jumlahCicilanNew = Pelunasan::where('id',$getIdPelunasan[$i])->first('jumlah_cicilan');
+                    $newPelunasan->kekurangan = $jumlahPinjaman - (Pelunasan::where('id','<',$getIdPelunasan[$i])->where('nik',$request->nik)->sum('jumlah_cicilan') +  $jumlahCicilanNew->jumlah_cicilan);
+                    $newPelunasan = $newPelunasan->save();
+                    }
+            }
+
+            $penyaluranBiaya->nama_penerima = $request->nama_penerima;
+            $penyaluranBiaya->nik = $request->nik;
+            $penyaluranBiaya->alamat = $request->alamat;
+            $penyaluranBiaya->telepon = $request->telepon;
+            $penyaluranBiaya->jenis_usaha = $request->jenis_usaha;
+            $penyaluranBiaya->deskripsi_usaha = $request->deskripsi_usaha;
+            $penyaluranBiaya->nominal_peminjaman = $request->nominal_peminjaman;
+            $penyaluranBiaya->sumber_biaya = $request->sumber_biaya;
+            $penyaluranBiaya->jenis_piutang = $request->jenis_piutang;
+            $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
+            $penyaluranBiaya->periode_awal = $request->periode_awal;
+            $penyaluranBiaya->periode_akhir = $request->periode_akhir;
+            $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
+            $penyaluranBiaya->modified_by = $this->admin->nama_pengguna;
+
+            $newPenyaluran = $penyaluranBiaya->save();
+
+            if (!$newPenyaluran) {
+                DB::rollBack();
+                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
             
             DB::commit();

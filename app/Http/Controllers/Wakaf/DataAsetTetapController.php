@@ -6,7 +6,7 @@ use App\Models\ModelPengelolaanLain\DataAsetTetap;
 use App\Models\ModelPengelolaanLain\DataUtang;
 //use App\Models\ModelPengelolaanLain\AkunPersediaan;
 use App\Models\ModelPengelolaanLain\AkunMesindanKendaraan;
-use App\Models\ModelPengelolaanLain\AkunGedungdanBangunandanBangunandanBangunan;
+use App\Models\ModelPengelolaanLain\AkunGedungdanBangunan;
 use App\Models\ModelPengelolaanLain\AkunTanah;
 use App\Models\ModelPengelolaanLain\AkunPeralatandanPerlengkapanKantor;
 use App\Models\ModelPengelolaanLain\AkunAsetLainLain;
@@ -58,13 +58,17 @@ Class DataAsetTetapController
                 'beban_per_bulan' => 'required|numeric',
                 'nilai_penyusutan' => 'required|numeric',
 
-                /* 'keterangan' => 'required|string|max:255',
-                'tanggal_transaksi' => 'required|date_format:Y-m-d', */
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
+                /* 'keterangan' => 'required|string|max:255', */
             ]);
 
             if ($validator->fails()) {
                 $response = ['errors' => $validator->errors()->all()];
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
+            }
+
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
             }
 
             DB::beginTransaction();
@@ -343,6 +347,8 @@ Class DataAsetTetapController
                 'beban_per_bulan' => 'required|numeric',
                 'nilai_penyusutan' => 'required|numeric',
 
+                'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
+
                 /* 'keterangan' => 'required|string|max:255',
                 'tanggal_transaksi' => 'required|date_format:Y-m-d', */
             ]);
@@ -352,9 +358,207 @@ Class DataAsetTetapController
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
+            if($request->tanggal_transaksi==null){
+                $request->tanggal_transaksi = \Carbon\Carbon::now();
+            }
+
             DB::beginTransaction();
 
             $dataAsetTetap = DataAsetTetap::find($id);
+            //data kelompok sebelum diedit
+            $kelompok = $dataAsetTetap->kelompok;
+
+            switch ($request->kelompok) {
+                case "kendaraan":
+                    if($kelompok == $request->kelompok)
+                    {
+                        $newKendaraan = AkunMesindanKendaraan::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                        $newKendaraan->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newKendaraan = new AkunMesindanKendaraan();
+                        $newKendaraan->created_by = $this->admin->nama_pengguna;
+                    }
+                    $newKendaraan->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newKendaraan->keterangan = $request->keterangan;
+                    $newKendaraan->saldo = $dataAsetTetap->harga_perolehan;
+                    $newKendaraan->type = 'pemasukan';
+                    $newKendaraan->data_aset_tetap_id = $dataAsetTetap->id;
+                    $newKendaraan = $newKendaraan->save();
+
+                    if (!$newKendaraan) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                    break;
+
+                case "gedung":
+                    if($kelompok == $request->kelompok)
+                    {
+                        $newGedung = AkunGedungdanBangunan::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                        $newGedung->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newGedung = new AkunGedungdanBangunan();
+                        $newGedung->created_by = $this->admin->nama_pengguna;
+                    }
+                    $newGedung->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newGedung->keterangan = $request->keterangan;
+                    $newGedung->saldo = $dataAsetTetap->harga_perolehan;
+                    $newGedung->type = 'pemasukan';
+                    $newGedung->data_aset_tetap_id = $dataAsetTetap->id;
+                    $newGedung = $newGedung->save();
+
+                    if (!$newGedung) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;
+
+                case "tanah":
+                    if($kelompok == $request->kelompok)
+                    {
+                        $newTanah = AkunTanah::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                        $newTanah->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newTanah = new AkunTanah();
+                        $newTanah->created_by = $this->admin->nama_pengguna;
+                    }
+                    $newTanah->tanggal_transaksi = $request->tanggal_transaksi;
+                    $newTanah->keterangan = $request->keterangan;
+                    $newTanah->saldo = $dataAsetTetap->harga_perolehan;
+                    $newTanah->type = 'pemasukan';
+                    $newTanah->data_aset_tetap_id = $dataAsetTetap->id;
+                    $newTanah = $newTanah->save();
+
+                    if (!$newTanah) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data ", true);
+                    }
+
+                break;    
+
+                case "peralatan":
+                if($kelompok == $request->kelompok)
+                    {
+                        $newPeralatan = AkunPeralatandanPerlengkapanKantor::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                        $newPeralatan->modified_by = $this->admin->nama_pengguna;
+                    }
+                    else{
+                        $newPeralatan = new AkunPeralatandanPerlengkapanKantor();
+                        $newPeralatan->created_by = $this->admin->nama_pengguna;
+                    }
+                $newPeralatan = new AkunPeralatandanPerlengkapanKantor();
+                $newPeralatan->tanggal_transaksi = $request->tanggal_transaksi;
+                $newPeralatan->keterangan = $request->keterangan;
+                $newPeralatan->saldo = $dataAsetTetap->harga_perolehan;
+                $newPeralatan->type = 'pemasukan';
+                $newPeralatan->data_aset_tetap_id = $dataAsetTetap->id;
+                $newPeralatan = $newPeralatan->save();
+
+                if (!$newPeralatan) {
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+
+                break;   
+
+                case "lainnya":
+                if($kelompok == $request->kelompok)
+                {
+                    $newlainnya = AkunAsetLainLain::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newlainnya->modified_by = $this->admin->nama_pengguna;
+                }
+                else{
+                    $newlainnya = new AkunAsetLainLain();
+                    $newlainnya->created_by = $this->admin->nama_pengguna;
+                }
+                $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
+                $newlainnya->keterangan = $request->keterangan;
+                $newlainnya->saldo = $dataAsetTetap->harga_perolehan;
+                $newlainnya->type = 'pemasukan';
+                $newlainnya->data_aset_tetap_id = $dataAsetTetap->id;
+                $newlainnya = $newlainnya->save();
+
+                if (!$newlainnya) {
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data ", true);
+                }
+
+            break;   
+                
+                default:
+                    DB::rollBack();
+                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+            }
+
+            //delete transaksi yg diedit / pindah akun
+            if($kelompok !== $request->kelompok)
+            {
+                switch ($kelompok) {
+                case "kendaraan":
+                    $newKendaraan = AkunMesindanKendaraan::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newKendaraan->deleted_at = \Carbon\Carbon::now();
+                    $newKendaraan->deleted_by = $this->admin->nama_pengguna;
+                    $newKendaraan = $newKendaraan->save();
+                        
+                    if (!$newKendaraan) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                    break;
+                case "gedung":
+                    $newGedung = AkunGedungdanBangunan::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newGedung->deleted_at = \Carbon\Carbon::now();
+                    $newGedung->deleted_by = $this->admin->nama_pengguna;
+                    $newGedung = $newGedung->save();
+                        
+                    if (!$newGedung) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                    break;
+
+                case "tanah":
+                    $newTanah = AkunTanah::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newTanah->deleted_at = \Carbon\Carbon::now();
+                    $newTanah->deleted_by = $this->admin->nama_pengguna;
+                    $newTanah = $newTanah->save();
+                        
+                    if (!$newTanah) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                    break;
+
+                case "peralatan":
+                    $newPeralatan = AkunPeralatandanPerlengkapanKantor::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newPeralatan->deleted_at = \Carbon\Carbon::now();
+                    $newPeralatan->deleted_by = $this->admin->nama_pengguna;
+                    $newPeralatan = $newPeralatan->save();
+                        
+                    if (!$newPeralatan) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                    break;
+                
+                case "lainnya":
+                    $newlainnya = AkunAsetLainLain::where('data_aset_tetap_id',$dataAsetTetap->id)->first('id');
+                    $newlainnya->deleted_at = \Carbon\Carbon::now();
+                    $newlainnya->deleted_by = $this->admin->nama_pengguna;
+                    $newlainnya = $newlainnya->save();
+                        
+                    if (!$newlainnya) {
+                        DB::rollBack();
+                        return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                    }
+                    break;
+                }
+            }
 
             $dataAsetTetap->nama_aset = $request->nama_aset;
             $dataAsetTetap->kelompok = $request->kelompok;
@@ -380,94 +584,6 @@ Class DataAsetTetapController
             if (!$newDataAsetTetap) {
                 DB::rollBack();
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
-
-            $kelompok = $dataAsetTetap->kelompok;
-
-            switch ($kelompok) {
-                case "kendaraan":
-                    $newKendaraan = new AkunMesindanKendaraan();
-                    $newKendaraan->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newKendaraan->keterangan = $request->keterangan;
-                    $newKendaraan->saldo = $dataAsetTetap->harga_perolehan;
-                    $newKendaraan->type = 'pemasukan';
-                    $newKendaraan->data_aset_tetap_id = $dataAsetTetap->id;
-                    $newKendaraan = $newKendaraan->save();
-
-                    if (!$newKendaraan) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                    break;
-
-                case "gedung":
-                    $newGedung = new AkunGedungdanBangunan();
-                    $newGedung->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newGedung->keterangan = $request->keterangan;
-                    $newGedung->saldo = $dataAsetTetap->harga_perolehan;
-                    $newGedung->type = 'pemasukan';
-                    $newGedung->data_aset_tetap_id = $dataAsetTetap->id;
-                    $newGedung = $newGedung->save();
-
-                    if (!$newGedung) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-                break;
-
-            case "tanah":
-                    $newTanah = new AkunTanah();
-                    $newTanah->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newTanah->keterangan = $request->keterangan;
-                    $newTanah->saldo = $dataAsetTetap->harga_perolehan;
-                    $newTanah->type = 'pemasukan';
-                    $newTanah->data_aset_tetap_id = $dataAsetTetap->id;
-                    $newTanah = $newTanah->save();
-
-                    if (!$newTanah) {
-                        DB::rollBack();
-                        return Response::HttpResponse(400, null, "Failed to create data ", true);
-                    }
-
-            break;    
-
-            case "peralatan":
-                $newPeralatan = new AkunPeralatandanPerlengkapanKantor();
-                $newPeralatan->tanggal_transaksi = $request->tanggal_transaksi;
-                $newPeralatan->keterangan = $request->keterangan;
-                $newPeralatan->saldo = $dataAsetTetap->harga_perolehan;
-                $newPeralatan->type = 'pemasukan';
-                $newPeralatan->data_aset_tetap_id = $dataAsetTetap->id;
-                $newPeralatan = $newPeralatan->save();
-
-                if (!$newPeralatan) {
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-
-           break;   
-
-            case "lainnya":
-                $newlainnya = new AkunAsetLainLain();
-                $newlainnya->tanggal_transaksi = $request->tanggal_transaksi;
-                $newlainnya->keterangan = $request->keterangan;
-                $newlainnya->saldo = $dataAsetTetap->harga_perolehan;
-                $newlainnya->type = 'pemasukan';
-                $newlainnya->data_aset_tetap_id = $dataAsetTetap->id;
-                $newlainnya = $newlainnya->save();
-
-                if (!$newlainnya) {
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data ", true);
-                }
-
-            break;   
-                
-                default:
-                    DB::rollBack();
-                    return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
             DB::commit();

@@ -35,13 +35,18 @@ class PengelolaanWakaf
             'akun_asal' => 'required|in:tunai,tabwakaf,tabbagihasil,tabnonbagihasil,deposito',
             'akun_tujuan' => 'required|in:tunai,tabwakaf,tabbagihasil,tabnonbagihasil,deposito',
             'saldo' => 'required|numeric',
+            'tanggal_transaksi' => 'nullable|date_format:Y-m-d',
             /* 'keterangan' => 'required|max:255',
-            'tanggal_transaksi' => 'required|date_format:Y-m-d', */
+             */
         ]);
 
         if ($validator->fails()) {
             $response = ['errors' => $validator->errors()->all()];
             return Response::HttpResponse(422, $response, "Invalid Data", false);
+        }
+
+        if($request->tanggal_transaksi==null){
+            $request->tanggal_transaksi = \Carbon\Carbon::now();
         }
 
         DB::beginTransaction();
