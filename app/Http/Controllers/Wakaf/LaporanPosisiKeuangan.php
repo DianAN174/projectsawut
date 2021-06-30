@@ -10,7 +10,7 @@ use App\Models\WakafTemporerJangkaPanjang;
 use App\Models\ModelPengelolaan\KasTunai;
 use App\Models\ModelPengelolaan\KasTabWakaf;
 use App\Models\ModelPengelolaan\KasTabBagiHasil;
-use App\Models\ModelPengelolaan\KasTabNonBagiHasil;
+use App\Models\ModelPengelolaan\KasTabNonbagiHasil;
 use App\Models\ModelPengelolaan\KasDepositoWakaf;
 
 use App\Models\ModelPenyaluranManfaat\PiutangJangkaPendek;
@@ -69,8 +69,8 @@ Class LaporanPosisiKeuangan
                 'kastabwakaf' => (string) $periode_ini[1],
                 'kastabbagihasil1' =>  (string) $periode_lalu[2],
                 'kastabbagihasil' =>  (string) $periode_ini[2],
-                'kastabnonbagihasil1' =>  (string) $periode_lalu[3],
-                'kastabnonbagihasil' =>  (string) $periode_ini[3],
+                'KasTabNonbagiHasil1' =>  (string) $periode_lalu[3],
+                'KasTabNonbagiHasil' =>  (string) $periode_ini[3],
                 'kasdeposito1' => (string) $periode_lalu[4],
                 'kasdeposito' => (string) $periode_ini[4],
                 'pjp1' => (string) $periode_lalu[5],
@@ -132,8 +132,8 @@ Class LaporanPosisiKeuangan
             'kastabwakaf' => (string) $periode_ini[1],
             'kastabbagihasil1' =>  (string) $periode_lalu[2],
             'kastabbagihasil' =>  (string) $periode_ini[2],
-            'kastabnonbagihasil1' =>  (string) $periode_lalu[3],
-            'kastabnonbagihasil' =>  (string) $periode_ini[3],
+            'KasTabNonbagiHasil1' =>  (string) $periode_lalu[3],
+            'KasTabNonbagiHasil' =>  (string) $periode_ini[3],
             'kasdeposito1' => (string) $periode_lalu[4],
             'kasdeposito' => (string) $periode_ini[4],
             'pjp1' => (string) $periode_lalu[5],
@@ -204,8 +204,8 @@ Class LaporanPosisiKeuangan
             $saldoTerakhir_ktbh=$sum_ktbh - $sumPengeluaran_ktbh;
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year)->where('type','=','pemasukan')->sum('saldo');
-            $sumPengeluaran_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year)->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year)->where('type','=','pemasukan')->sum('saldo');
+            $sumPengeluaran_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year)->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ktbnh = $sum_ktbnh - $sumPengeluaran_ktbnh;
 
             //kdw = kas deposito wakaf
@@ -353,8 +353,8 @@ Class LaporanPosisiKeuangan
             $saldoTerakhir_ktbh=$sum_ktbh - $sumPengeluaran_ktbh;
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year-1)->where('type','=','pemasukan')->sum('saldo');
-            $sumPengeluaran_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year-1)->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year-1)->where('type','=','pemasukan')->sum('saldo');
+            $sumPengeluaran_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year-1)->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ktbnh = $sum_ktbnh - $sumPengeluaran_ktbnh;
 
             //kdw = kas deposito wakaf

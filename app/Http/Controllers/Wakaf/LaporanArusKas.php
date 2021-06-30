@@ -14,7 +14,7 @@ use App\Models\ModelPengajuanBiaya\PentasyarufanManfaat;
 
 use App\Models\ModelPengelolaan\KasTunai;
 use App\Models\ModelPengelolaan\KasTabBagiHasil;
-use App\Models\ModelPengelolaan\KasTabNonBagiHasil;
+use App\Models\ModelPengelolaan\KasTabNonbagiHasil;
 use App\Models\ModelPengelolaan\KasDepositoWakaf;
 
 use App\Models\ModelPenyaluranManfaat\PiutangJangkaPendek;

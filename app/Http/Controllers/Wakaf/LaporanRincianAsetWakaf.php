@@ -15,7 +15,7 @@ use App\Models\ModelPengajuanBiaya\PentasyarufanManfaat;
 use App\Models\ModelPengelolaan\KasTunai;
 use App\Models\ModelPengelolaan\KasTabWakaf;
 use App\Models\ModelPengelolaan\KasTabBagiHasil;
-use App\Models\ModelPengelolaan\KasTabNonBagiHasil;
+use App\Models\ModelPengelolaan\KasTabNonbagiHasil;
 use App\Models\ModelPengelolaan\KasDepositoWakaf;
 
 use App\Models\ModelPenyaluranManfaat\PiutangJangkaPendek;
@@ -292,8 +292,8 @@ Class LaporanRincianAsetWakaf
             $saldoTerakhir_ktbh=$sum_ktbh - $sumPengeluaran_ktbh;
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year)->where('pengelolaan_id','!=','0')->where('type','=','pemasukan')->sum('saldo');
-            $sumPengeluaran_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year)->where('pengelolaan_id','!=','0')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year)->where('pengelolaan_id','!=','0')->where('type','=','pemasukan')->sum('saldo');
+            $sumPengeluaran_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year)->where('pengelolaan_id','!=','0')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ktbnh = $sum_ktbnh - $sumPengeluaran_ktbnh;
 
             //kdw = kas deposito wakaf
@@ -463,8 +463,8 @@ Class LaporanRincianAsetWakaf
             $saldoTerakhir_ktbh=$sum_ktbh - $sumPengeluaran_ktbh;
 
             //ktnbh=kas tabungan non bagi hasil
-            $sum_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year-1)->where('pengelolaan_id','!=','0')->where('type','=','pemasukan')->sum('saldo');
-            $sumPengeluaran_ktbnh = KasTabNonBagiHasil::whereYear('created_at', '=', $year-1)->where('pengelolaan_id','!=','0')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year-1)->where('pengelolaan_id','!=','0')->where('type','=','pemasukan')->sum('saldo');
+            $sumPengeluaran_ktbnh = KasTabNonbagiHasil::whereYear('created_at', '=', $year-1)->where('pengelolaan_id','!=','0')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ktbnh = $sum_ktbnh - $sumPengeluaran_ktbnh;
 
             //kdw = kas deposito wakaf
