@@ -673,7 +673,7 @@ Class PenyaluranManfaat
                 //$data["tanggal_transaksi"] = empty($data["PiutangJangkaPendek"]) ? $data->PiutangJangkaPanjang['tanggal_transaksi'] : $data->PiutangJangkaPendek['tanggal_transaksi'];
             //}perdagangan,fashion,otomotif,kerajinan,it,lainnya
 
-            foreach ($datas as $d_key => $data) {
+            /* foreach ($datas as $d_key => $data) {
                 //$data["pelunasan"] = null;
                 
                 if ($data["jenis_usaha"] == 'perdagangan'){
@@ -688,29 +688,9 @@ Class PenyaluranManfaat
                     $data["jenis_usaha"] = (string) 'IT';
                 }elseif ($data["jenis_usaha"] == 'lainnya'){
                     $data["jenis_usaha"] = (string) 'Usaha Lainnya';
-                }
+                } 
 
-                /* if ($data["kelayakan"] == 0 || null){
-                    $data["kelayakan"] = (string) 'Tidak Layak';
-
-                }else{
-                    $data["kelayakan"] = (string) 'Layak';
-                }
-
-                if ($data["approval"] == 0 || null){
-                    $data["approval"] = (string) 'Checking';
-
-                }else{
-                    $data["approval"] = (string) 'Approved';
-                }
-
-                if ($data["penyaluran"] == 0 || null){
-                    $data["penyaluran"] = (string) 'Belum Disalurkan';
-
-                }else{
-                    $data["penyaluran"] = (string) 'Disalurkan';
-                } */
-            }
+            }*/
 
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {

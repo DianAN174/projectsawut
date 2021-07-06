@@ -136,8 +136,6 @@ Class DataAkun
 
             DB::beginTransaction();
 
-            //$user = User::find($id);
-            //$saveUser = $user->id;
             $request['password'] = Hash::make($request['password']);
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
@@ -149,7 +147,7 @@ Class DataAkun
 
             if (!$newUser) {
                 DB::rollBack();
-                return Response::HttpResponse(400, null, "Failed to create data wakif", true);
+                return Response::HttpResponse(400, null, "Failed to create data", true);
             }
 
             DB::commit();
