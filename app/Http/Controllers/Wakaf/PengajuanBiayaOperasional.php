@@ -60,10 +60,10 @@ Class PengajuanBiayaOperasional
 
             $pengajuanBiaya->nama_pengaju = $request->nama_pengaju;
             $pengajuanBiaya->kategori_biaya = $request->kategori_biaya;
-            //$pengajuanBiaya->jenis_biaya = $request->jenis_biaya;
             $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
             $pengajuanBiaya->nominal = $request->nominal;
             $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
+            $pengajuanBiaya->tanggal_transaksi = $request->tanggal_transaksi;
 
             $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
             $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
@@ -537,6 +537,7 @@ Class PengajuanBiayaOperasional
             $pengajuanBiaya->keterangan_biaya = $request->keterangan_biaya;
             $pengajuanBiaya->nominal = $request->nominal;
             $pengajuanBiaya->sumber_biaya = $request->sumber_biaya;
+            $pengajuanBiaya->tanggal_transaksi = $request->tanggal_transaksi;
             $pengajuanBiaya->created_by = $this->admin->nama_pengguna;
             $pengajuanBiaya->modified_by = $this->admin->nama_pengguna;
     
@@ -633,8 +634,8 @@ Class PengajuanBiayaOperasional
             switch ($sumberBiaya) {
                 case "tunai":
                 $newKasTunai = new KasTunai();
-                $newKasTunai->tanggal_transaksi = $request->tanggal_transaksi;
-                $newKasTunai->keterangan = $request->keterangan;
+                $newKasTunai->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                //$newKasTunai->keterangan = $pengajuanBiaya->keterangan;
                 $newKasTunai->saldo = $pengajuanBiaya->nominal;
                 $newKasTunai->type = 'pengeluaran';
                 $newKasTunai->pengajuan_biaya_id = $pengajuanBiaya->id;
@@ -649,8 +650,8 @@ Class PengajuanBiayaOperasional
 
                 case "bagihasil":
                         $newBagiHasil = new KasTabBagiHasil();
-                        $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newBagiHasil->keterangan = $request->keterangan;
+                        $newBagiHasil->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                        //$newBagiHasil->keterangan = $pengajuanBiaya->keterangan;
                         $newBagiHasil->saldo = $pengajuanBiaya->nominal;
                         $newBagiHasil->type = 'pengeluaran';
                         $newBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
@@ -664,8 +665,8 @@ Class PengajuanBiayaOperasional
                         break;
                     case "nonbagihasil":
                         $newNonBagiHasil = new KasTabNonBagiHasil();
-                        $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newNonBagiHasil->keterangan = $request->keterangan;
+                        $newNonBagiHasil->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                        //$newNonBagiHasil->keterangan = $pengajuanBiaya->keterangan;
                         $newNonBagiHasil->saldo = $pengajuanBiaya->nominal;
                         $newNonBagiHasil->type = 'pengeluaran';
                         $newNonBagiHasil->pengajuan_biaya_id = $pengajuanBiaya->id;
@@ -686,8 +687,8 @@ Class PengajuanBiayaOperasional
             switch ($kategoriCase) {
                 case 1:
                     $newBPP = new BebanPengelolaandanPengembangan();
-                    $newBPP->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newBPP->keterangan = $request->keterangan;
+                    $newBPP->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                    //$newBPP->keterangan = $pengajuanBiaya->keterangan;
                     $newBPP->saldo = $pengajuanBiaya->nominal;
                     $newBPP->type = 'pemasukan';
                     $newBPP->pengajuan_biaya_id = $pengajuanBiaya->id;
@@ -701,8 +702,8 @@ Class PengajuanBiayaOperasional
                     break;
                 case 2:
                     $newBagianNazhir = new BagianNazhir();
-                    $newBagianNazhir->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newBagianNazhir->keterangan = $request->keterangan;
+                    $newBagianNazhir->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                    //$newBagianNazhir->keterangan = $pengajuanBiaya->keterangan;
                     $newBagianNazhir->saldo = $pengajuanBiaya->nominal;
                     $newBagianNazhir->type = 'pemasukan';
                     $newBagianNazhir->pengajuan_biaya_id = $pengajuanBiaya->id;
@@ -717,8 +718,8 @@ Class PengajuanBiayaOperasional
 
                 case 3:
                     $newPentasyarufan = new PentasyarufanManfaat();
-                    $newPentasyarufan->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newPentasyarufan->keterangan = $request->keterangan;
+                    $newPentasyarufan->tanggal_transaksi = $pengajuanBiaya->tanggal_transaksi;
+                    //$newPentasyarufan->keterangan = $pengajuanBiaya->keterangan;
                     $newPentasyarufan->saldo = $pengajuanBiaya->nominal;                        
                     $newPentasyarufan->type = 'pemasukan';
                     $newPentasyarufan->pengajuan_biaya_id = $pengajuanBiaya->id;

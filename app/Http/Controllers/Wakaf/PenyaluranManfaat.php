@@ -113,6 +113,7 @@ Class PenyaluranManfaat
             $penyaluran->periode_peminjaman = $request->periode_peminjaman;
             $penyaluran->periode_awal = $request->periode_awal;
             $penyaluran->periode_akhir = $request->periode_akhir;
+            $penyaluran->tanggal_transaksi = $request->tanggal_transaksi;
             $penyaluran->penyaluran = 0;
             $penyaluran->approval = 0;
             $penyaluran->created_by = $this->admin->nama_pengguna;
@@ -538,8 +539,8 @@ Class PenyaluranManfaat
             switch ($sumberBiaya) {
                 case "bagihasil":
                         $newBagiHasil = new KasTabBagiHasil();
-                        $newBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newBagiHasil->keterangan = $penyaluranBiaya->keterangan;
+                        $newBagiHasil->tanggal_transaksi = $penyaluranBiaya->tanggal_transaksi;
+                        //$newBagiHasil->keterangan = $penyaluranBiaya->keterangan;
                         $newBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
                         $newBagiHasil->type = 'pengeluaran';
                         $newBagiHasil->penyaluran_id = $penyaluranBiaya->id;
@@ -553,8 +554,8 @@ Class PenyaluranManfaat
                         break;
                     case "nonbagihasil":
                         $newNonBagiHasil = new KasTabNonBagiHasil();
-                        $newNonBagiHasil->tanggal_transaksi = $request->tanggal_transaksi;
-                        $newNonBagiHasil->keterangan = $penyaluranBiaya->keterangan;
+                        $newNonBagiHasil->tanggal_transaksi = $penyaluranBiaya->tanggal_transaksi;
+                        //$newNonBagiHasil->keterangan = $penyaluranBiaya->keterangan;
                         $newNonBagiHasil->saldo = $penyaluranBiaya->nominal_peminjaman;
                         $newNonBagiHasil->type = 'pengeluaran';
                         $newNonBagiHasil->penyaluran_id = $penyaluranBiaya->id;
@@ -576,8 +577,8 @@ Class PenyaluranManfaat
             switch ($jenisPiutang) {
                 case "pjp":
                     $newPjp = new PiutangJangkaPendek();
-                    $newPjp->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newPjp->keterangan = $penyaluranBiaya->keterangan;
+                    $newPjp->tanggal_transaksi = $penyaluranBiaya->tanggal_transaksi;
+                    //$newPjp->keterangan = $penyaluranBiaya->keterangan;
                     $newPjp->saldo = $penyaluranBiaya->nominal_peminjaman;
                     $newPjp->type = 'pemasukan';
                     $newPjp->penyaluran_id = $penyaluranBiaya->id;
@@ -591,8 +592,8 @@ Class PenyaluranManfaat
                     break;
                 case "pja":
                     $newPja = new PiutangJangkaPanjang();
-                    $newPja->tanggal_transaksi = $request->tanggal_transaksi;
-                    $newPja->keterangan = $penyaluranBiaya->keterangan;
+                    $newPja->tanggal_transaksi = $penyaluranBiaya->tanggal_transaksi;
+                    //$newPja->keterangan = $penyaluranBiaya->keterangan;
                     $newPja->saldo = $penyaluranBiaya->nominal_peminjaman;
                     $newPja->type = 'pengeluaran';
                     $newPja->penyaluran_id = $penyaluranBiaya->id;
@@ -957,6 +958,7 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_peminjaman = $request->periode_peminjaman;
             $penyaluranBiaya->periode_awal = $request->periode_awal;
             $penyaluranBiaya->periode_akhir = $request->periode_akhir;
+            $penyaluranBiaya->tanggal_transaksi = $request->tanggal_transaksi;
             $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
             $penyaluranBiaya->modified_by = $this->admin->nama_pengguna;
 
