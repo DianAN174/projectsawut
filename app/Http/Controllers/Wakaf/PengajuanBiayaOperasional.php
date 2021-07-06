@@ -603,7 +603,7 @@ Class PengajuanBiayaOperasional
                     return Response::HttpResponse(400, null, "Failed to create data ", true);
                 }
 
-            $newKategori = $request->kategori_biaya;
+            $newKategori = $pengajuanBiaya->kategori_biaya;
                 //case untuk nilai kategori_biaya yang baru
                 if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
                 {
@@ -615,7 +615,7 @@ Class PengajuanBiayaOperasional
                 elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
                     $kategoriCase = 3;
                 }
-                
+
                 if($newKategori == 'Beban ATK' || $newKategori == 'Beban Pemasaran' || $newKategori == 'Beban Rapat' || $newKategori == 'Beban Penyaluran Manfaat Wakaf' || $newKategori == 'Beban Administrasi Bank' || $newKategori == 'Beban Pajak')
                 {
                     $kategoriCase = 1;
