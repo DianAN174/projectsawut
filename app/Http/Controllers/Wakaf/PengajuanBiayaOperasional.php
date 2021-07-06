@@ -245,6 +245,17 @@ Class PengajuanBiayaOperasional
             {
                 $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
                 //case untuk kategori_biaya yg sudah diinput
+                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                {
+                    $kategoriCase = 1;
+                }
+                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
+                    $kategoriCase = 2;
+                }
+                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
+                    $kategoriCase = 3;
+                }
+                
                 if($kategoriBiaya == 'Beban Atk' || $kategoriBiaya == 'Beban Pemasaran' || $kategoriBiaya == 'Beban Rapat' || $kategoriBiaya == 'Beban Penyaluran Manfaat Wakaf' || $kategoriBiaya == 'Beban Administrasi Bank' || $kategoriBiaya == 'Beban Pajak')
                 {
                     $kategoriBiayaCase = 1;
@@ -258,6 +269,17 @@ Class PengajuanBiayaOperasional
                 
                 $newKategori = $request->kategori_biaya;
                 //case untuk nilai kategori_biaya yang baru
+                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                {
+                    $kategoriCase = 1;
+                }
+                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
+                    $kategoriCase = 2;
+                }
+                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
+                    $kategoriCase = 3;
+                }
+                
                 if($newKategori == 'Beban ATK' || $newKategori == 'Beban Pemasaran' || $newKategori == 'Beban Rapat' || $newKategori == 'Beban Penyaluran Manfaat Wakaf' || $newKategori == 'Beban Administrasi Bank' || $newKategori == 'Beban Pajak')
                 {
                     $kategoriCase = 1;
@@ -583,6 +605,17 @@ Class PengajuanBiayaOperasional
 
             $newKategori = $request->kategori_biaya;
                 //case untuk nilai kategori_biaya yang baru
+                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                {
+                    $kategoriCase = 1;
+                }
+                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
+                    $kategoriCase = 2;
+                }
+                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
+                    $kategoriCase = 3;
+                }
+                
                 if($newKategori == 'Beban ATK' || $newKategori == 'Beban Pemasaran' || $newKategori == 'Beban Rapat' || $newKategori == 'Beban Penyaluran Manfaat Wakaf' || $newKategori == 'Beban Administrasi Bank' || $newKategori == 'Beban Pajak')
                 {
                     $kategoriCase = 1;
@@ -593,6 +626,7 @@ Class PengajuanBiayaOperasional
                 elseif($newKategori == 'Ekonomi Umat' || $newKategori =='Kesejahteraan Umat' || $newKategori =='Kegiatan Ibadah' || $newKategori =='Kegiatan Pendidikan' || $newKategori =='Kegiatan Kesehatan' || $newKategori =='Kegiatan Bantuan'){
                     $kategoriCase = 3;
                 }
+                
 
             $sumberBiaya = $pengajuanBiaya->sumber_biaya;
         
