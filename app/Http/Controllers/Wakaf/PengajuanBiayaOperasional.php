@@ -100,7 +100,7 @@ Class PengajuanBiayaOperasional
             }
 
             $datas = PengajuanBiaya::with("KasTunai","KasTabBagiHasil","KasTabNonBagiHasil")->paginate($request->limit);
-            foreach ($datas as $d_key => $data) {
+            
                 if ($data["kategori_biaya"] == 'atk'){
                     $data["kategori_biaya"] = (string) 'Beban ATK';
                 }elseif ($data["kategori_biaya"] == 'rapat'){
@@ -160,7 +160,7 @@ Class PengajuanBiayaOperasional
                 }
             } */
         
-            }
+            
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
