@@ -35,7 +35,7 @@ Class DataAkun
             ->where("users.id",$id)            
             ->get();*/
 
-            if ($request->user()->role_id == 1){
+            /* if ($request->user()->role_id == 1){
                     $request->user()->role_id = (string) 'Admin';
                 }
                 elseif ($request->user()->role_id == 2){
@@ -45,7 +45,7 @@ Class DataAkun
                 }
                 elseif ($request->user()->role_id == 4){
                     $request->user()->role_id = (string) 'Bendahara';
-                }
+                } */
             
 
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false); 
@@ -97,7 +97,7 @@ Class DataAkun
             ->where('users.id',$id)                  
             ->get(); */
             $datas = $request->user();
-            if ($request->user()->role_id == 1){
+            /* if ($request->user()->role_id == 1){
                     $request->user()->role_id = (string) 'Admin';
                 }
                 elseif ($request->user()->role_id == 2){
@@ -107,7 +107,7 @@ Class DataAkun
                 }
                 elseif ($request->user()->role_id == 4){
                     $request->user()->role_id = (string) 'Bendahara';
-                }
+                } */
             
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {

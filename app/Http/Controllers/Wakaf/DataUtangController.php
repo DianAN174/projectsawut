@@ -130,7 +130,7 @@ Class DataUtangController
 
             $datas = DataUtang::with("UtangBiaya","UtangJangkaPanjang")->paginate($request->limit);
             //->makeHidden(['created_at','updated_at','deleted_at','created_by','modified_by','deleted_by']);
-            foreach ($datas as $d_key => $data) {
+            /* foreach ($datas as $d_key => $data) {
                 if ($data["kategori_utang"] == 'biaya'){
                     $data["kategori_utang"] = (string)'Utang Biaya';
 
@@ -138,7 +138,7 @@ Class DataUtangController
                     
                     $data["kategori_utang"] = (string)'Utang Jangka Panjang';
                 }
-            }
+            } */
 
             /* foreach ($datas as $d_key => $data) {
                 $data["nominal"] = empty($data["UtangBiaya"]) ? $data->UtangJangkaPanjang['saldo'] : $data->UtangBiaya['saldo'];

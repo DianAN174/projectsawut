@@ -50,11 +50,12 @@ Class PelunasanPiutang
             
             
             DB::beginTransaction();
-            //find id dengan nik yang sama, ambil data jumlah piutang dari tabel piutang dan periode akhir
+            
             $pelunasan = new Pelunasan();
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
+            
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             if($nikPelunasanQuery == null)
             {
@@ -63,6 +64,7 @@ Class PelunasanPiutang
                 {
                     return Response::HttpResponse(400, null, "NIK not found", true);
                 }
+                
                 $pelunasan->jumlah_cicilan = $request->jumlah_cicilan;
                 $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
                 $pelunasan->kekurangan = $kekuranganCicilan;

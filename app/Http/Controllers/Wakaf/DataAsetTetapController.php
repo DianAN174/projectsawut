@@ -237,7 +237,7 @@ Class DataAsetTetapController
             }
             
             $datas = DataAsetTetap::with("AkunMesindanKendaraan","AkunGedungdanBangunan","AkunTanah","AkunPeralatandanPerlengkapanKantor","AkunAsetLainLain")->paginate($request->limit);
-            foreach ($datas as $d_key => $data) {
+            /* foreach ($datas as $d_key => $data) {
                 
                 if ($data["kelompok"] == 'kendaraan'){
                     $data["kelompok"] = (string) 'Mesin dan Kendaraan';
@@ -251,38 +251,7 @@ Class DataAsetTetapController
                     $data["jenis_usaha"] = (string) 'Aset Lainnya';
                 }
                 
-                /* //$data["tanggal_transaksi"] = null;
-                $data["nominal"] = null;
-
-                if (empty($data["AkunMesindanKendaraan"])){
-                    switch (true) {
-                        case empty($data["AkunGedungdanBangunan"]):
-                            //$data["tanggal_transaksi"] = $data->AkunGedungdanBangunan['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunGedungdanBangunan['saldo'];
-                            break;
-
-                        case empty($data["AkunTanah"]):
-                            //$data["tanggal_transaksi"] = $data->AkunTanah['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunTanah['saldo'];
-                        break;
-                        case empty($data["AkunPeralatandanPerlengkapanKantor"]):
-                            //$data["tanggal_transaksi"] = $data->AkunPeralatandanPerlengkapanKantor['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunPeralatandanPerlengkapanKantor['saldo'];
-                        break;
-                        case empty($data["AkunAsetLainLain"]):
-                            //$data["tanggal_transaksi"] = $data->AkunAsetLainLain['tanggal_transaksi'];
-                            $data["nominal"] = $data->AkunAsetLainLain['saldo'];
-                        break;
-                
-                        default:
-                            
-                        break;
-                    }
-                }else{
-                    //$data["tanggal_transaksi"] = $data->AkunMesindanKendaraan['tanggal_transaksi'];
-                    $data["nominal"] = $data->AkunMesindanKendaraan['saldo'];
-                } */
-            }
+            } */
 
             return Response::HttpResponse(200, $datas, "Index", false);
         } catch (Exception $e) {

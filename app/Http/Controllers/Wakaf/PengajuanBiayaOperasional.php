@@ -245,27 +245,27 @@ Class PengajuanBiayaOperasional
             {
                 $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
                 //case untuk kategori_biaya yg sudah diinput
-                if($kategoriBiaya == 'atk' || $kategoriBiaya == 'pemasaran' || $kategoriBiaya == 'rapat' || $kategoriBiaya == 'penyaluran' || $kategoriBiaya == 'administrasi' || $kategoriBiaya == 'pajak')
+                if($kategoriBiaya == 'Beban Atk' || $kategoriBiaya == 'Beban Pemasaran' || $kategoriBiaya == 'Beban Rapat' || $kategoriBiaya == 'Beban Penyaluran Manfaat Wakaf' || $kategoriBiaya == 'Beban Administrasi Bank' || $kategoriBiaya == 'Beban Pajak')
                 {
                     $kategoriBiayaCase = 1;
                 }
-                elseif($kategoriBiaya == 'insentif' || $kategoriBiaya == 'tunjanganKesehatan'){
+                elseif($kategoriBiaya == 'Insentif Nazhir' || $kategoriBiaya == 'Tunjangan Kesehatan'){
                     $kategoriBiayaCase = 2;
                 }
-                elseif($kategoriBiaya == 'ekonomiUmat' || $kategoriBiaya =='kesejahteraan' || $kategoriBiaya =='ibadah' || $kategoriBiaya =='pendidikan' || $kategoriBiaya =='kesehatan' || $kategoriBiaya =='bantuan'){
+                elseif($kategoriBiaya == 'Ekonomi Umat' || $kategoriBiaya =='Kesejahteraan Umat' || $kategoriBiaya =='Kegiatan Ibadah' || $kategoriBiaya =='Kegiatan Pendidikan' || $kategoriBiaya =='Kegiatan Kesehatan' || $kategoriBiaya =='Kegiatan Bantuan'){
                     $kategoriBiayaCase = 3;
                 }
                 
                 $newKategori = $request->kategori_biaya;
                 //case untuk nilai kategori_biaya yang baru
-                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                if($newKategori == 'Beban ATK' || $newKategori == 'Beban Pemasaran' || $newKategori == 'Beban Rapat' || $newKategori == 'Beban Penyaluran Manfaat Wakaf' || $newKategori == 'Beban Administrasi Bank' || $newKategori == 'Beban Pajak')
                 {
                     $kategoriCase = 1;
                 }
-                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
+                elseif($newKategori == 'Insentif Nazhir' || $newKategori == 'Tunjangan Kesehatan'){
                     $kategoriCase = 2;
                 }
-                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
+                elseif($newKategori == 'Ekonomi Umat' || $newKategori =='Kesejahteraan Umat' || $newKategori =='Kegiatan Ibadah' || $newKategori =='Kegiatan Pendidikan' || $newKategori =='Kegiatan Kesehatan' || $newKategori =='Kegiatan Bantuan'){
                     $kategoriCase = 3;
                 }
 
@@ -583,14 +583,14 @@ Class PengajuanBiayaOperasional
 
             $newKategori = $request->kategori_biaya;
                 //case untuk nilai kategori_biaya yang baru
-                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                if($newKategori == 'Beban ATK' || $newKategori == 'Beban Pemasaran' || $newKategori == 'Beban Rapat' || $newKategori == 'Beban Penyaluran Manfaat Wakaf' || $newKategori == 'Beban Administrasi Bank' || $newKategori == 'Beban Pajak')
                 {
                     $kategoriCase = 1;
                 }
-                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
+                elseif($newKategori == 'Insentif Nazhir' || $newKategori == 'Tunjangan Kesehatan'){
                     $kategoriCase = 2;
                 }
-                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
+                elseif($newKategori == 'Ekonomi Umat' || $newKategori =='Kesejahteraan Umat' || $newKategori =='Kegiatan Ibadah' || $newKategori =='Kegiatan Pendidikan' || $newKategori =='Kegiatan Kesehatan' || $newKategori =='Kegiatan Bantuan'){
                     $kategoriCase = 3;
                 }
 

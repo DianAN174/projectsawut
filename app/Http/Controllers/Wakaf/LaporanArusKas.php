@@ -203,11 +203,11 @@ Class LaporanArusKas
         //AKTIVITAS OPERASI
         //Penerimaan Wakaf Uang Tunai Permanen
         $sum_permanen = PenerimaanTunaiPermanen::whereYear('created_at', '=', $year)->where('type','=','pemasukan')->sum('saldo');
-            $sumPengeluaran_permanen  = PenerimaanTunaiPermanen::whereYear('created_at', '=', $year)->where('type','=','pengeluaran')->sum('saldo');
-            $saldoTerakhir_permanen = $sum_permanen - $sumPengeluaran_permanen;
+        $sumPengeluaran_permanen  = PenerimaanTunaiPermanen::whereYear('created_at', '=', $year)->where('type','=','pengeluaran')->sum('saldo');
+        $saldoTerakhir_permanen = $sum_permanen - $sumPengeluaran_permanen;
 
         //Penerimaan Wakaf Uang Tunai Temporer Jangka Pendek
-        
+
         $sum_wtjp = WakafTemporerJangkaPendek::whereYear('created_at', '=', $year)->where('type','=','pemasukan')->sum('saldo');
         $sumPengeluaran_wtjp  = WakafTemporerJangkaPendek::whereYear('created_at', '=', $year)->where('type','=','pengeluaran')->sum('saldo');
         $saldoTerakhir_wtjp = $sum_wtjp - $sumPengeluaran_wtjp;
@@ -243,28 +243,28 @@ Class LaporanArusKas
         $saldoTerakhir_bnp = $sum_bnp - $sumPengeluaran_bnp;
 
         //Beban ATK
-        $sum_atk = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','atk')->sum('nominal');
-        //    $sumPengeluaran_atk  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','atk')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_atk = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban ATK')->sum('nominal');
+        //    $sumPengeluaran_atk  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban ATK')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_atk = $sum_atk;
         //Beban Pemasaran
-        $sum_pemasaran = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pemasaran')->sum('nominal');
-        //    $sumPengeluaran_pemasaran  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pemasaran')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_pemasaran = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Pemasaran')->sum('nominal');
+        //    $sumPengeluaran_pemasaran  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Pemasaran')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_pemasaran = $sum_pemasaran;
         //Beban Rapat
-        $sum_rapat = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','rapat')->sum('nominal');
-        //    $sumPengeluaran_rapat  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','rapat')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_rapat = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Rapat')->sum('nominal');
+        //    $sumPengeluaran_rapat  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Rapat')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_rapat = $sum_rapat;
         //Beban Penyaluran Manfaat Wakaf
-        $sum_penyaluran = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','penyaluran')->sum('nominal');
-        //    $sumPengeluaran_penyaluran  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','penyaluran')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_penyaluran = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Penyaluran Manfaat Wakaf')->sum('nominal');
+        //    $sumPengeluaran_penyaluran  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Penyaluran Manfaat Wakaf')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_penyaluran = $sum_penyaluran;
         //Beban Administrasi Bank
-        $sum_administrasi = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','administrasi')->sum('nominal');
-        //    $sumPengeluaran_administrasi  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','administrasi')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_administrasi = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Administrasi Bank')->sum('nominal');
+        //    $sumPengeluaran_administrasi  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Administrasi Bank')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_administrasi = $sum_administrasi;
         //Beban Pajak
-        $sum_pajak = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pajak')->sum('nominal');
-        //    $sumPengeluaran_pajak  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pajak')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_pajak = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Pajak')->sum('nominal');
+        //    $sumPengeluaran_pajak  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Beban Pajak')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_pajak = $sum_pajak;
         //Utang Biaya
         $biaya = UtangBiaya::whereYear('created_at', '=', $year)->where('type','=','pemasukan')->sum('saldo');
@@ -395,28 +395,28 @@ Class LaporanArusKas
         $saldoTerakhir_bnp = $sum_bnp - $sumPengeluaran_bnp;
 
         //Beban ATK
-        $sum_atk = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','atk')->sum('nominal');
-        //    $sumPengeluaran_atk  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','atk')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_atk = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban ATK')->sum('nominal');
+        //    $sumPengeluaran_atk  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban ATK')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_atk = $sum_atk;
         //Beban Pemasaran
-        $sum_pemasaran = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pemasaran')->sum('nominal');
-        //    $sumPengeluaran_pemasaran  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pemasaran')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_pemasaran = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Pemasaran')->sum('nominal');
+        //    $sumPengeluaran_pemasaran  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Pemasaran')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_pemasaran = $sum_pemasaran;
         //Beban Rapat
-        $sum_rapat = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','rapat')->sum('nominal');
-        //    $sumPengeluaran_rapat  = PengajuanBiaya::whereYear('created_at', 'year-1)->where('kategori_biaya','=','rapat')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_rapat = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Rapat')->sum('nominal');
+        //    $sumPengeluaran_rapat  = PengajuanBiaya::whereYear('created_at', 'year-1)->where('kategori_biaya','=','Beban Rapat')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_rapat = $sum_rapat;
         //Beban Penyaluran Manfaat Wakaf
-        $sum_penyaluran = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','penyaluran')->sum('nominal');
-        //    $sumPengeluaran_penyaluran  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','penyaluran')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_penyaluran = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Penyaluran Manfaat Wakaf')->sum('nominal');
+        //    $sumPengeluaran_penyaluran  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Penyaluran Manfaat Wakaf')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_penyaluran = $sum_penyaluran;
         //Beban Administrasi Bank
-        $sum_administrasi = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','administrasi')->sum('nominal');
-        //    $sumPengeluaran_administrasi  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','administrasi')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_administrasi = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Administrasi Bank')->sum('nominal');
+        //    $sumPengeluaran_administrasi  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Administrasi Bank')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_administrasi = $sum_administrasi;
         //Beban Pajak
-        $sum_pajak = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pajak')->sum('nominal');
-        //    $sumPengeluaran_pajak  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pajak')->where('type','=','pengeluaran')->sum('nominal');
+        $sum_pajak = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Pajak')->sum('nominal');
+        //    $sumPengeluaran_pajak  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Beban Pajak')->where('type','=','pengeluaran')->sum('nominal');
             $saldoTerakhir_pajak = $sum_pajak;
         //Utang Biaya
         $biaya = UtangBiaya::whereYear('created_at', '=', $year-1)->where('type','=','pemasukan')->sum('saldo');

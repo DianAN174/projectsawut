@@ -261,34 +261,34 @@ Class LaporanAktivitas
 
             //HIBAH PRODUKTIF
             //kegiatan ekonomi umat
-            $sum_ekonomiUmat = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','ekonomiUmat')->sum('nominal');
-            //$sumPengeluaran_ekonomiUmat  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','ekonomiUmat')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ekonomiUmat = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Ekonomi Umat')->sum('nominal');
+            //$sumPengeluaran_ekonomiUmat  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Ekonomi Umat')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ekonomiUmat = $sum_ekonomiUmat;
             //kegiatan kesejahteraan umat lain
-            $sum_kesejahteraan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','kesejahteraan')->sum('nominal');
-            //$sumPengeluaran_kesejahteraan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','kesejahteraan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_kesejahteraan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kesejahteraan Umat')->sum('nominal');
+            //$sumPengeluaran_kesejahteraan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kesejahteraan Umat')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_kesejahteraan = $sum_kesejahteraan;
         
             //HIBAH KONSUMTIF
             //Kegiatan ibadah
-            $sum_ibadah = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','ibadah')->sum('nominal');
-            //$sumPengeluaran_ibadah  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','ibadah')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ibadah = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Ibadah')->sum('nominal');
+            //$sumPengeluaran_ibadah  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Ibadah')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ibadah = $sum_ibadah;
 
 
             //kegiatan pendidikan
-            $sum_pendidikan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pendidikan')->sum('nominal');
-            //$sumPengeluaran_pendidikan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','pendidikan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_pendidikan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Pendidikan')->sum('nominal');
+            //$sumPengeluaran_pendidikan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Pendidikan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_pendidikan = $sum_pendidikan;
 
             //Kegiatan kesehatan
-            $sum_kesehatan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','kesehatan')->sum('nominal');
-            //$sumPengeluaran_kesehatan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','kesehatan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_kesehatan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Kesehatan')->sum('nominal');
+            //$sumPengeluaran_kesehatan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Kesehatan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_kesehatan = $sum_kesehatan;
 
             //kegiatan bantuan
-            $sum_bantuan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','bantuan')->sum('nominal');
-            //$sumPengeluaran_bantuan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','bantuan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_bantuan = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Bantuan')->sum('nominal');
+            //$sumPengeluaran_bantuan  = PengajuanBiaya::whereYear('created_at', '=', $year)->where('kategori_biaya','=','Kegiatan Bantuan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_bantuan = $sum_bantuan;
 
             //TOTAL PENTASYARUFAN
@@ -398,34 +398,34 @@ Class LaporanAktivitas
 
             //HIBAH PRODUKTIF
             //kegiatan ekonomi umat
-            $sum_ekonomiUmat = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','ekonomiUmat')->sum('nominal');
-            //$sumPengeluaran_ekonomiUmat  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','ekonomiUmat')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ekonomiUmat = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Ekonomi Umat')->sum('nominal');
+            //$sumPengeluaran_ekonomiUmat  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Ekonomi Umat')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ekonomiUmat = $sum_ekonomiUmat;
             //kegiatan kesejahteraan umat lain
-            $sum_kesejahteraan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','kesejahteraan')->sum('nominal');
-            //$sumPengeluaran_kesejahteraan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','kesejahteraan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_kesejahteraan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kesejahteraan Umat')->sum('nominal');
+            //$sumPengeluaran_kesejahteraan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kesejahteraan Umat')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_kesejahteraan = $sum_kesejahteraan;
         
             //HIBAH KONSUMTIF
             //Kegiatan ibadah
-            $sum_ibadah = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','ibadah')->sum('nominal');
-            //$sumPengeluaran_ibadah  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','ibadah')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_ibadah = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Ibadah')->sum('nominal');
+            //$sumPengeluaran_ibadah  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Ibadah')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_ibadah = $sum_ibadah;
 
 
             //kegiatan pendidikan
-            $sum_pendidikan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pendidikan')->sum('nominal');
-            //$sumPengeluaran_pendidikan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','pendidikan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_pendidikan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Pendidikan')->sum('nominal');
+            //$sumPengeluaran_pendidikan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Pendidikan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_pendidikan = $sum_pendidikan;
 
             //Kegiatan kesehatan
-            $sum_kesehatan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','kesehatan')->sum('nominal');
-            //$sumPengeluaran_kesehatan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','kesehatan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_kesehatan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Kesehatan')->sum('nominal');
+            //$sumPengeluaran_kesehatan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Kesehatan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_kesehatan = $sum_kesehatan;
 
             //kegiatan bantuan
-            $sum_bantuan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','bantuan')->sum('nominal');
-            //$sumPengeluaran_bantuan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','bantuan')->where('type','=','pengeluaran')->sum('saldo');
+            $sum_bantuan = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Bantuan')->sum('nominal');
+            //$sumPengeluaran_bantuan  = PengajuanBiaya::whereYear('created_at', '=', $year-1)->where('kategori_biaya','=','Kegiatan Bantuan')->where('type','=','pengeluaran')->sum('saldo');
             $saldoTerakhir_bantuan = $sum_bantuan;
 
             //TOTAL PENTASYARUFAN
