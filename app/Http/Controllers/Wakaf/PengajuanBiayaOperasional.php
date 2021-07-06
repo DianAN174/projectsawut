@@ -245,15 +245,15 @@ Class PengajuanBiayaOperasional
             {
                 $kategoriBiaya = $pengajuanBiaya->kategori_biaya;
                 //case untuk kategori_biaya yg sudah diinput
-                if($newKategori == 'atk' || $newKategori =='pemasaran' || $newKategori =='rapat' || $newKategori =='penyaluran' || $newKategori =='administrasi' || $newKategori =='pajak')
+                if($kategoriBiaya == 'atk' || $kategoriBiaya =='pemasaran' || $kategoriBiaya =='rapat' || $kategoriBiaya =='penyaluran' || $kategoriBiaya =='administrasi' || $kategoriBiaya =='pajak')
                 {
-                    $kategoriCase = 1;
+                    $kategoriBiayaCase = 1;
                 }
-                elseif($newKategori == 'insentif' || $newKategori =='tunjanganKesehatan'){
-                    $kategoriCase = 2;
+                elseif($kategoriBiaya == 'insentif' || $kategoriBiaya =='tunjanganKesehatan'){
+                    $kategoriBiayaCase = 2;
                 }
-                elseif($newKategori == 'ekonomiUmat' || $newKategori =='kesejahteraan' || $newKategori =='ibadah' || $newKategori =='pendidikan' || $newKategori =='kesehatan' || $newKategori =='bantuan'){
-                    $kategoriCase = 3;
+                elseif($kategoriBiaya == 'ekonomiUmat' || $kategoriBiaya =='kesejahteraan' || $kategoriBiaya =='ibadah' || $kategoriBiaya =='pendidikan' || $kategoriBiaya =='kesehatan' || $kategoriBiaya =='bantuan'){
+                    $kategoriBiayaCase = 3;
                 }
                 
                 if($kategoriBiaya == 'Beban Atk' || $kategoriBiaya == 'Beban Pemasaran' || $kategoriBiaya == 'Beban Rapat' || $kategoriBiaya == 'Beban Penyaluran Manfaat Wakaf' || $kategoriBiaya == 'Beban Administrasi Bank' || $kategoriBiaya == 'Beban Pajak')
