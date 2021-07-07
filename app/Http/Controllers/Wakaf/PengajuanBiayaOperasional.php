@@ -256,7 +256,7 @@ Class PengajuanBiayaOperasional
                     $kategoriBiayaCase = 3;
                 }
                 
-                if($kategoriBiaya == 'Beban Atk' || $kategoriBiaya == 'Beban Pemasaran' || $kategoriBiaya == 'Beban Rapat' || $kategoriBiaya == 'Beban Penyaluran Manfaat Wakaf' || $kategoriBiaya == 'Beban Administrasi Bank' || $kategoriBiaya == 'Beban Pajak')
+                if($kategoriBiaya == 'Beban ATK' || $kategoriBiaya == 'Beban Pemasaran' || $kategoriBiaya == 'Beban Rapat' || $kategoriBiaya == 'Beban Penyaluran Manfaat Wakaf' || $kategoriBiaya == 'Beban Administrasi Bank' || $kategoriBiaya == 'Beban Pajak')
                 {
                     $kategoriBiayaCase = 1;
                 }

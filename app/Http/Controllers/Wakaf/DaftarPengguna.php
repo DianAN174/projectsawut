@@ -118,7 +118,9 @@ Class DaftarPengguna
                 return Response::HttpResponse(422, $response, "Invalid Data", false);
             }
 
-            $datas = User::join("roles","users.role_id","=","roles.id")
+            $datas = User::paginate($request->limit);
+
+            /* $datas = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.*"), "roles.nama_peran as nama_peran")                        
             ->get();
 
@@ -135,7 +137,7 @@ Class DaftarPengguna
                 elseif ($data["role_id"] == 4){
                     $data["role_id"] = (string) 'Bendahara';
                 }
-            }
+            } */
 
             //$results = User::select('name','email','password')->roles->name;
             

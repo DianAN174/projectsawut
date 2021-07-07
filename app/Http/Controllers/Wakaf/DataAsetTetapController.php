@@ -82,6 +82,7 @@ Class DataAsetTetapController
             $dataAsetTetap->nilai_residu = $request->nilai_residu;
             $dataAsetTetap->nilai_bersih = $request->nilai_bersih;
             $dataAsetTetap->harga_perolehan = $request->harga_perolehan;
+            $dataAsetTetap->umur_ekonomis = $request->umur_ekonomis;
             $dataAsetTetap->lokasi = $request->lokasi;
             $dataAsetTetap->nomor = $request->nomor;
             $dataAsetTetap->departemen = $request->departemen;
@@ -536,6 +537,7 @@ Class DataAsetTetapController
             $dataAsetTetap->nilai_residu = $request->nilai_residu;
             $dataAsetTetap->nilai_bersih = $request->nilai_bersih;
             $dataAsetTetap->harga_perolehan = $request->harga_perolehan;
+            $dataAsetTetap->umur_ekonomis = $request->umur_ekonomis;
             $dataAsetTetap->lokasi = $request->lokasi;
             $dataAsetTetap->nomor = $request->nomor;
             $dataAsetTetap->departemen = $request->departemen;
