@@ -35,7 +35,7 @@ Class DaftarPengguna
                 'nama_pengguna' => 'required',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
-                'role_id' => 'required|in:akuntan,nazhir,bendahara',
+                'role_id' => 'required|in:1,2,3,4',
             ]);
 
             if ($validator->fails()) {
@@ -189,7 +189,7 @@ Class DaftarPengguna
                 'nama_pengguna' => 'required',
                 'email' => ['required',Rule::unique('users','email')->ignore($id)],
                 'password' => 'required|string|min:6',
-                'role_id' => 'required|in:akuntan,nazhir,bendahara',
+                'role_id' => 'required|in:1,2,3,4',
             ]);
 
             if ($validator->fails()) {
