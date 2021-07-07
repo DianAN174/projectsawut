@@ -29,7 +29,7 @@ Class DataAkun
     {
         try 
         {
-            $datas = $request->user();
+            $datas = [$request->user()->toArray()];
             /* $user = User::join("roles","users.role_id","=","roles.id")
             ->select(DB::raw("users.name, users.email, users.password"), "roles.name as nama_peran")  
             ->where("users.id",$id)            
@@ -46,9 +46,9 @@ Class DataAkun
                 elseif ($request->user()->role_id == 4){
                     $request->user()->role_id = (string) 'Bendahara';
                 } */
-            
 
-            return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false); 
+                return $datas;
+            //return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false); 
         } catch (Exception $e) {
             return Response::HttpResponse(500, ['errors' => $e->getTraceAsString()], "Internal Server Errorr", true);
         }
