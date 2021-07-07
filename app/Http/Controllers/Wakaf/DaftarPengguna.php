@@ -62,7 +62,7 @@ Class DaftarPengguna
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
-            $userRole = $request->role_id;
+            /* $userRole = $request->role_id;
             switch ($userRole) {
                 case "akuntan":
                     $user->role_id = '2';
@@ -94,7 +94,7 @@ Class DaftarPengguna
                 default:
                     DB::rollBack();
                     return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
+            } */
 
             DB::commit();
 
@@ -157,7 +157,7 @@ Class DaftarPengguna
             ->where('users.id',$id)                  
             ->get();
             
-            foreach ($datas as $d_key => $data) {
+            /* foreach ($datas as $d_key => $data) {
                 
                 if ($data["role_id"] == 1){
                     $data["role_id"] = (string) 'Admin';
@@ -170,7 +170,7 @@ Class DaftarPengguna
                 elseif ($data["role_id"] == 4){
                     $data["role_id"] = (string) 'Bendahara';
                 }
-            }
+            } */
 
             return Response::HttpResponse(200, $datas, "Info User yang akan diedit berhasil ditampilkan", false);
         } catch (Exception $e) {
@@ -216,7 +216,7 @@ Class DaftarPengguna
                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
             }
 
-            $userRole = $request->role_id;
+            /* $userRole = $request->role_id;
             switch ($userRole) {
                 case "akuntan":
                     $user->role_id = '2';
@@ -248,8 +248,7 @@ Class DaftarPengguna
                 default:
                     DB::rollBack();
                     return Response::HttpResponse(400, null, "Failed to create data wakif", true);
-            }
-
+            } */
             DB::commit();
 
             return Response::HttpResponse(200, $newUser, "Success", false);
