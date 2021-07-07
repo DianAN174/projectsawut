@@ -52,6 +52,7 @@ Class DaftarPengguna
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
+            $user->role_id = $request->role_id;
             $user->created_by = $this->admin->nama_pengguna;
             $user->modified_by = $this->admin->nama_pengguna;
 
@@ -206,6 +207,7 @@ Class DaftarPengguna
             $user->nama_pengguna = $request->nama_pengguna;
             $user->email = $request->email;
             $user->password = $request->password;
+            $user->role_id = $request->role_id;
             $user->created_by = $this->admin->nama_pengguna;
             $user->modified_by = $this->admin->nama_pengguna;
 
