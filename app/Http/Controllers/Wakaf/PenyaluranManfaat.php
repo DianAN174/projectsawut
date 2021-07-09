@@ -899,7 +899,7 @@ Class PenyaluranManfaat
                     {
                         case "pjp":
                         $newPjp = PiutangJangkaPendek::where('penyaluran_id',$penyaluranBiaya->id)->first('id');
-                        $newPja->deleted_at = \Carbon\Carbon::now();
+                        $newPjp->deleted_at = \Carbon\Carbon::now();
                         $newPjp->deleted_by = $this->admin->nama_pengguna;
                         $newPjp = $newPjp->save();
                         
@@ -936,12 +936,12 @@ Class PenyaluranManfaat
             //jika nominal diedit, maka kalkulasi di tabel Pelunasan kembali dihitung
             if ($nominalPeminjaman !== $request->nominal_peminjaman){
                 $jumlahPinjaman = $request->nominal_peminjaman;
-                $getIdPelunasan = Pelunasan::where('nik',$request->nik)->pluck('id')->toArray();;
-                $newPelunasan = Pelunasan::where('nik',$request->nik)->first('id');
+                $getIdPelunasan = Pelunasan::where('nik','like',$request->nik)->pluck('id')->toArray();;
+                $newPelunasan = Pelunasan::where('nik','like',$request->nik)->first('id');
                 for ($i=0; $i<sizeof($getIdPelunasan); $i++) {
                     $newPelunasan = Pelunasan::where('id',$getIdPelunasan[$i])->first('id');
                     $jumlahCicilanNew = Pelunasan::where('id',$getIdPelunasan[$i])->first('jumlah_cicilan');
-                    $newPelunasan->kekurangan = $jumlahPinjaman - (Pelunasan::where('id','<',$getIdPelunasan[$i])->where('nik',$request->nik)->sum('jumlah_cicilan') +  $jumlahCicilanNew->jumlah_cicilan);
+                    $newPelunasan->kekurangan = $jumlahPinjaman - (Pelunasan::where('id','<',$getIdPelunasan[$i])->where('nik','like',$request->nik)->sum('jumlah_cicilan') +  $jumlahCicilanNew->jumlah_cicilan);
                     $newPelunasan = $newPelunasan->save();
                     }
             }

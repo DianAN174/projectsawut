@@ -38,7 +38,7 @@ Class Penerimaan
                 'tanggal_transaksi' => 'required|date_format:Y-m-d',
                 'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
-                'nomor_aiw' => 'required|numeric',
+                'nomor_aiw' => 'required|numeric|unique',
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric',
                 'jenis_wakaf' => 'required|in:temporer,permanen',
@@ -110,7 +110,7 @@ Class Penerimaan
 
                     break;
                 case "temporer":
-                    if($jangkaWaktu <1)
+                    if($jangkaWaktu < 12)
                     {
                         $newWTPD = new WakafTemporerJangkaPendek();
                         $newWTPD->tanggal_transaksi = $request->tanggal_transaksi;
@@ -237,7 +237,7 @@ Class Penerimaan
                 'tanggal_transaksi' => 'required|date_format:Y-m-d',
                 'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
-                'nomor_aiw' => 'required|numeric',
+                'nomor_aiw' => 'required|numeric|unique',
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric',
                 'jenis_wakaf' => 'required|in:temporer,permanen',
@@ -290,7 +290,7 @@ Class Penerimaan
                         //buat fungsi delete di bawah
 
                     case "temporer":
-                        if(($jangkaWaktu <1) && ($request->jangka_waktu_temporer <1) && ($jenisWakaf == $request->jenis_wakaf))
+                        if(($jangkaWaktu < 12) && ($request->jangka_waktu_temporer < 12) && ($jenisWakaf == $request->jenis_wakaf))
                         {
                             $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
                             $newWTPD->modified_by = $this->admin->nama_pengguna;
@@ -313,7 +313,7 @@ Class Penerimaan
                                 return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                             }
 
-                        if(($jangkaWaktu >1) && ($request->jangka_waktu_temporer >1) && ($jenisWakaf == $request->jenis_wakaf))
+                        if(($jangkaWaktu > 12) && ($request->jangka_waktu_temporer > 12) && ($jenisWakaf == $request->jenis_wakaf))
                         {
                             $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
                             $newWTPJ->modified_by = $this->admin->nama_pengguna;
@@ -358,31 +358,34 @@ Class Penerimaan
                         break;
 
                         case "temporer":
-                            if(!($jangkaWaktu <1) && ($request->jangka_waktu_temporer <1))
+                            if(!($jangkaWaktu < 12) && ($request->jangka_waktu_temporer < 12))
                             {
                                 $newWTPD = WakafTemporerJangkaPendek::where('data_wakif_id',$dataWakif->id)->first('id');
                                 $newWTPD->deleted_at = \Carbon\Carbon::now();
                                 $newWTPD->deleted_by = $this->admin->nama_pengguna;
                                 $newWTPD = $newWTPD->save();
-                            }
-        
+
                                 if (!$newWTPD) {
                                     DB::rollBack();
                                     return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                                 }
+                            }
+       
     
-                            if(!($jangkaWaktu >1) && ($request->jangka_waktu_temporer >1))
+                            if(!($jangkaWaktu > 12) && ($request->jangka_waktu_temporer > 12))
                             {
                                 $newWTPJ = WakafTemporerJangkaPanjang::where('data_wakif_id',$dataWakif->id)->first('id');
                                 $newWTPJ->deleted_at = \Carbon\Carbon::now();
                                 $newWTPJ->deleted_by = $this->admin->nama_pengguna;
                                 $newWTPJ = $newWTPJ->save();
-                            }
-        
+
                                 if (!$newWTPJ) {
                                     DB::rollBack();
                                     return Response::HttpResponse(400, null, "Failed to create data wakif", true);
                                 }
+                            }
+        
+                                
         
         
                             break;
