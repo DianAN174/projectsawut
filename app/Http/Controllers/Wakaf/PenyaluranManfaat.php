@@ -924,7 +924,7 @@ Class PenyaluranManfaat
                 }                    
             }
 
-            $nik = $penyaluranBiaya->nik;
+            /* $nik = $penyaluranBiaya->nik;
             $nominalPeminjaman = $penyaluranBiaya->nominal_peminjaman;
             //jika nik diedit, maka nik yang ada di tabel Pelunasan juga diedit agar perhitungan otomatis tidak error
             if ($penyaluranBiaya->nik !== $request->nik){
@@ -944,7 +944,7 @@ Class PenyaluranManfaat
                     $newPelunasan->kekurangan = $jumlahPinjaman - (Pelunasan::where('id','<',$getIdPelunasan[$i])->where('nik','like',$request->nik)->sum('jumlah_cicilan') +  $jumlahCicilanNew->jumlah_cicilan);
                     $newPelunasan = $newPelunasan->save();
                     }
-            }
+            } */
 
             $penyaluranBiaya->nama_penerima = $request->nama_penerima;
             $penyaluranBiaya->nik = $request->nik;
@@ -959,6 +959,7 @@ Class PenyaluranManfaat
             $penyaluranBiaya->periode_awal = $request->periode_awal;
             $penyaluranBiaya->periode_akhir = $request->periode_akhir;
             $penyaluranBiaya->tanggal_transaksi = $request->tanggal_transaksi;
+            $penyaluranBiaya->pelunasan = 0;
             $penyaluranBiaya->created_by = $this->admin->nama_pengguna;
             $penyaluranBiaya->modified_by = $this->admin->nama_pengguna;
 
