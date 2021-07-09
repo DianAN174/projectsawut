@@ -53,9 +53,8 @@ Class PelunasanPiutang
             
             $pelunasanPiutang = new Pelunasan();
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('tanggal_jatuh_tempo',$periodeAkhir->periode_akhir)->sum('nominal_peminjaman');
-            
             //cari data dengan status pelunasan 1
             $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1);
             //cek apakah sudah ada entry dgn nik yg sama sebelumnya
@@ -213,7 +212,7 @@ Class PelunasanPiutang
             $pelunasanPiutang = Pelunasan::find($id);
         
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('tanggal_jatuh_tempo',$periodeAkhir->periode_akhir)->sum('nominal_peminjaman');
+            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             //cari data dengan status pelunasan 1
             $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1);
