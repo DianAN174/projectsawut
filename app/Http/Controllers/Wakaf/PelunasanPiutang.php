@@ -53,7 +53,6 @@ Class PelunasanPiutang
             
             $pelunasanPiutang = new Pelunasan();
             $namaPeminjam = Penyaluran::where('nik',$request->nik)->first('nama_penerima');
-            $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             //cari data dengan status pelunasan 1
             $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1)->first('id');
@@ -68,12 +67,18 @@ Class PelunasanPiutang
                     return Response::HttpResponse(400, null, "NIK not found", true);
                 }
   
+                $penyaluran = Penyaluran::where('nik',$request->nik)->first('id');
+                $penyaluran->pelunasan = 0;
+                $penyaluran = $penyaluran->save();
+
                 if($statusLunas !== null)
                 {
                     $pelunasanPiutang->kekurangan = 0;
                     
                 }
                 else{
+                $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
+            
                 $kekuranganCicilan = $jumlahPinjaman - $request->jumlah_cicilan;
                 $pelunasanPiutang->kekurangan = $kekuranganCicilan;
                 }
@@ -85,6 +90,8 @@ Class PelunasanPiutang
                     $pelunasanPiutang->kekurangan = 0;
                 }
                 else{
+                $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
+            
                 $kekuranganCicilan =  $jumlahPinjaman - (Pelunasan::where('nik',$request->nik)->sum('jumlah_cicilan') + $request->jumlah_cicilan);
                 $pelunasanPiutang->kekurangan = $kekuranganCicilan;
                 }
