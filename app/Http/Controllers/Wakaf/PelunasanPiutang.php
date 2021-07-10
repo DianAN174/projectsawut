@@ -56,7 +56,7 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             //cari data dengan status pelunasan 1
-            $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1);
+            $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1)->first('id');
             //cek apakah sudah ada entry dgn nik yg sama sebelumnya
             $nikPelunasanQuery = Pelunasan::where('nik',$request->nik)->first('nik');
             
@@ -215,8 +215,7 @@ Class PelunasanPiutang
             $jumlahPinjaman = Penyaluran::where('nik',$request->nik)->where('pelunasan',0)->sum('nominal_peminjaman');
             $periodeAkhir = Penyaluran::where('nik',$request->nik)->first('periode_akhir');
             //cari data dengan status pelunasan 1
-            $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1);
-            
+            $statusLunas =  Pelunasan::where('nik',$request->nik)->where('pelunasan',1)->first('id');
 
             $getIdPelunasanLess = Pelunasan::where('nik',$request->nik)->where('id','<',$id)->pluck('id')->toArray();
             $getIdPelunasanGreater = Pelunasan::where('nik',$request->nik)->where('id','>',$id)->pluck('id')->toArray();
