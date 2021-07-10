@@ -13,6 +13,7 @@ use App\Utils\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 use Mockery\Exception;
 
@@ -38,7 +39,7 @@ Class Penerimaan
                 'tanggal_transaksi' => 'required|date_format:Y-m-d',
                 'nama_wakif' => 'required|string|max:255',
                 'nik' => 'required|numeric',
-                'nomor_aiw' => 'required|numeric|unique:data_wakif,nomor_aiw',
+                'nomor_aiw' => ['required','numeric',Rule::unique('data_wakif','nomor_aiw')->ignore($id)],
                 'alamat' => 'required|string|max:255',
                 'telepon' => 'required|numeric',
                 'jenis_wakaf' => 'required|in:temporer,permanen',
