@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000','https://sawut-laravel.herokuapp.com'],
+    'allowed_origins' => ['http://localhost:3000','https://sawut-laravel.herokuapp.com','https://bwutmuidiy-sawut.com'],
 
     'allowed_headers' => ['*'],
 
